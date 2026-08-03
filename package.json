@@ -1,0 +1,23 @@
+{
+  "name": "premsight",
+  "private": true,
+  "version": "0.0.0",
+  "description": "PremSight monorepo — Premier League live football application",
+  "packageManager": "pnpm@11.15.1",
+  "scripts": {
+    "dev:web": "pnpm --filter @premsight/web dev",
+    "build:web": "pnpm --filter @premsight/web build",
+    "lint": "pnpm --filter @premsight/web lint && pnpm --filter @premsight/shared-types lint",
+    "lint:fix": "pnpm --filter @premsight/web lint --fix && prettier --write .",
+    "typecheck": "pnpm --filter @premsight/web typecheck && pnpm --filter @premsight/shared-types typecheck",
+    "test": "pnpm --filter @premsight/web test && pnpm --filter @premsight/shared-types test",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
