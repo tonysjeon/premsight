@@ -146,8 +146,8 @@ Engineering principles for contributors: [`.cursor/rules.md`](./.cursor/rules.md
 
 1. **Bootstrap** (complete) — monorepo, health endpoints, Docker, CI, docs
 2. **Data model** (complete) — core schema, migrations, seed data, schema tests
-3. **Historical data** (next) — provider integration, team/fixture/result imports, standings
-4. **Core API** — fixtures, standings, teams
+3. **Historical data** (complete) — provider integration, team/fixture/result imports, standings
+4. **Core application** (complete) — home, fixtures, matches, teams, and league table
 5. **Live layer** — match events, real-time updates
 6. **Predictions** — Poisson engine, probability APIs
 7. **Product UI** — match hub, team pages, live experience

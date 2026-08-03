@@ -22,6 +22,8 @@ def test_runtime_package_contains_sql_assets() -> None:
         "0002_core_football_schema.up.sql",
         "0003_fixture_integrity.down.sql",
         "0003_fixture_integrity.up.sql",
+        "0004_team_crests.down.sql",
+        "0004_team_crests.up.sql",
     ]
     assert [path.name for path in SEEDS_DIR.glob("*.sql")] == [
         "001_premier_league.sql"
@@ -31,10 +33,10 @@ def test_runtime_package_contains_sql_assets() -> None:
 def test_migrations_apply_on_empty_database(database_url: str) -> None:
     migrate_down_all(database_url)
     applied = migrate_up(database_url)
-    assert applied == ["0001", "0002", "0003"]
+    assert applied == ["0001", "0002", "0003", "0004"]
 
     with psycopg.connect(database_url) as conn:
-        assert applied_versions(conn) == ["0001", "0002", "0003"]
+        assert applied_versions(conn) == ["0001", "0002", "0003", "0004"]
         tables = {
             row[0]
             for row in conn.execute(
@@ -74,12 +76,16 @@ def test_migrations_roll_back_safely(database_url: str) -> None:
     migrate_down_all(database_url)
     migrate_up(database_url)
 
-    assert migrate_down(database_url, steps=1) == ["0003"]
+    assert migrate_down(database_url, steps=1) == ["0004"]
     with psycopg.connect(database_url) as conn:
-        assert applied_versions(conn) == ["0001", "0002"]
+        assert applied_versions(conn) == ["0001", "0002", "0003"]
         assert conn.execute("SELECT to_regclass('public.fixtures')").fetchone() == (
             "fixtures",
         )
+
+    assert migrate_down(database_url, steps=1) == ["0003"]
+    with psycopg.connect(database_url) as conn:
+        assert applied_versions(conn) == ["0001", "0002"]
 
     assert migrate_down(database_url, steps=1) == ["0002"]
     with psycopg.connect(database_url) as conn:

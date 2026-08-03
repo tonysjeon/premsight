@@ -32,7 +32,22 @@ Contracts should eventually be reflected in OpenAPI and `packages/shared-types`.
 | ------ | --------- | ---------------------------------------------------------------- |
 | `GET`  | `/health` | Liveness; `{ "status": "ok", "service": "premsight-ingestion" }` |
 
-## Planned resource areas (not implemented)
+## Phase 4 read API
+
+All product resources are versioned under `/v1`.
+
+| Method | Path                           | Purpose                                      |
+| ------ | ------------------------------ | -------------------------------------------- |
+| `GET`  | `/v1/seasons/current`          | Current Premier League season                |
+| `GET`  | `/v1/teams`                    | Teams with optional `season_id` filter       |
+| `GET`  | `/v1/teams/{id}`               | Team details and fixtures                    |
+| `GET`  | `/v1/fixtures`                 | Fixtures filtered by season, status, or team |
+| `GET`  | `/v1/fixtures/{id}`            | Match detail                                 |
+| `GET`  | `/v1/standings?season_id={id}` | Table computed from completed fixtures       |
+
+List responses use `{ "items": [...], "count": n }`. Missing resources return `404` with FastAPI's standard `detail` field. Invalid UUIDs or query values return `422`.
+
+## Future resource areas
 
 Domain HTTP handlers are **out of scope for the core data model milestone**. The schema in [Database Schema](./03-database-schema.md) shapes these future read APIs:
 

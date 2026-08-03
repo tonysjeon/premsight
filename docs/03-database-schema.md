@@ -89,19 +89,21 @@ A competition season (e.g. `2026/2027`). Supports multiple seasons; MVP seeds on
 
 Club identity used by fixtures and events. No player/lineup data in this phase.
 
-| Column       | Type          | Null | Notes                     |
-| ------------ | ------------- | ---- | ------------------------- |
-| `id`         | `UUID`        | no   | PK                        |
-| `name`       | `TEXT`        | no   | Full club name            |
-| `short_name` | `TEXT`        | yes  | Shorter UI label          |
-| `tla`        | `TEXT`        | yes  | Three-letter abbreviation |
-| `created_at` | `TIMESTAMPTZ` | no   | Default `now()`           |
-| `updated_at` | `TIMESTAMPTZ` | no   | Default `now()`           |
+| Column       | Type          | Null | Notes                                              |
+| ------------ | ------------- | ---- | -------------------------------------------------- |
+| `id`         | `UUID`        | no   | PK                                                 |
+| `name`       | `TEXT`        | no   | Full club name                                     |
+| `short_name` | `TEXT`        | yes  | Shorter UI label                                   |
+| `tla`        | `TEXT`        | yes  | Three-letter abbreviation                          |
+| `crest_url`  | `TEXT`        | yes  | HTTPS club crest URL from the active data provider |
+| `created_at` | `TIMESTAMPTZ` | no   | Default `now()`                                    |
+| `updated_at` | `TIMESTAMPTZ` | no   | Default `now()`                                    |
 
 **Constraints / indexes**
 
 - No global unique on `name` (names can collide across competitions/providers over time; uniqueness comes from provider mappings and application upsert rules)
 - Optional `CHECK (tla IS NULL OR char_length(tla) = 3)`
+- Optional `CHECK (crest_url IS NULL OR crest_url starts with 'https://')`
 
 ### `fixtures`
 

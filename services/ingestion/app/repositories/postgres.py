@@ -112,21 +112,21 @@ class PostgresHistoricalRepository:
         if entity_id is None:
             entity_id = conn.execute(
                 """
-                INSERT INTO teams (name, short_name, tla)
-                VALUES (%s, %s, %s)
+                INSERT INTO teams (name, short_name, tla, crest_url)
+                VALUES (%s, %s, %s, %s)
                 RETURNING id
                 """,
-                (team.name, team.short_name, team.tla),
+                (team.name, team.short_name, team.tla, team.crest_url),
             ).fetchone()[0]
             self._insert_reference(conn, provider, "team", entity_id, team.provider_id)
         else:
             conn.execute(
                 """
                 UPDATE teams
-                SET name = %s, short_name = %s, tla = %s, updated_at = now()
+                SET name = %s, short_name = %s, tla = %s, crest_url = %s, updated_at = now()
                 WHERE id = %s
                 """,
-                (team.name, team.short_name, team.tla, entity_id),
+                (team.name, team.short_name, team.tla, team.crest_url, entity_id),
             )
         return entity_id
 
