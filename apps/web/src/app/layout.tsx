@@ -16,20 +16,25 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <header className="site-header">
-          <div className="wrap nav">
+          <div className="shell">
             <Link className="brand" href="/">
               PREM<span>SIGHT</span>
             </Link>
-            <nav aria-label="Primary">
-              <Link href="/">Home</Link>
+            <nav aria-label="Primary" className="nav-tabs">
+              <Link href="/">Matches</Link>
               <Link href="/fixtures">Fixtures</Link>
               <Link href="/table">Table</Link>
             </nav>
           </div>
         </header>
         {children}
-        <footer>
-          <div className="wrap">PremSight · Premier League intelligence</div>
+        <footer className="site-footer">
+          <div className="shell">
+            PremSight · Premier League intelligence ·{' '}
+            <a href="https://www.football-data.org/" rel="noreferrer" target="_blank">
+              Football data provided by the Football-Data.org API
+            </a>
+          </div>
         </footer>
       </body>
     </html>
