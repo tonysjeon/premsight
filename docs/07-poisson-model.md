@@ -17,6 +17,8 @@ Each historical result contains:
 
 The target contains distinct home and away team IDs. Training history must contain at least one home and one away appearance for each target team. Incomplete history returns an explicit insufficient-data error rather than a fabricated estimate.
 
+For a fixture prediction, the product API supplies completed matches from the same competition with kickoff times before the target fixture. This allows opening-week predictions to use prior-season form while preventing future results from leaking into an estimate.
+
 ## Team strengths
 
 Let league home and away scoring averages be calculated across all supplied results.
