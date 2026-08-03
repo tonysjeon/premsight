@@ -39,3 +39,25 @@ class RatingSet(DomainModel):
 class ExpectedGoals(DomainModel):
     home: float
     away: float
+
+
+class ScoreProbability(DomainModel):
+    home_goals: int
+    away_goals: int
+    probability: float
+
+
+class OutcomeProbabilities(DomainModel):
+    home_win: float
+    draw: float
+    away_win: float
+
+
+class Prediction(DomainModel):
+    model_version: str
+    home_team_id: str
+    away_team_id: str
+    expected_goals: ExpectedGoals
+    score_matrix: tuple[tuple[float, ...], ...]
+    outcomes: OutcomeProbabilities
+    likely_scores: tuple[ScoreProbability, ...]
