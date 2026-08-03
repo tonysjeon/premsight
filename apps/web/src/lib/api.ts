@@ -1,5 +1,12 @@
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
-export type Season = { id: string; name: string; competition_name: string };
+export type Season = {
+  id: string;
+  name: string;
+  competition_name: string;
+  start_date: string;
+  end_date: string;
+  is_current: boolean;
+};
 export type FixtureStatus = 'scheduled' | 'live' | 'postponed' | 'cancelled' | 'completed';
 export type Fixture = {
   id: string;
@@ -54,6 +61,7 @@ async function get<T>(path: string): Promise<T> {
 }
 export const api = {
   currentSeason: () => get<Season>('/v1/seasons/current'),
+  seasons: async () => (await get<{ items: Season[] }>('/v1/seasons')).items,
   teams: async (q = '') => (await get<{ items: Team[] }>(`/v1/teams${q ? `?${q}` : ''}`)).items,
   fixtures: async (q = '') =>
     (await get<{ items: Fixture[] }>(`/v1/fixtures${q ? `?${q}` : ''}`)).items,

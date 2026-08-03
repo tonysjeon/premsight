@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Card } from '@/components/card';
 import { MatchList } from '@/components/match-list';
+import { SeasonSelect } from '@/components/season-select';
 import { StatTile } from '@/components/stat-tile';
 import { Table, TableLegend } from '@/components/table';
 import { api, type Fixture } from '@/lib/api';
@@ -22,10 +23,12 @@ const UPCOMING_ROWS = 5;
 export default async function Home({
   searchParams,
 }: {
-  searchParams: Promise<{ matchday?: string | string[] }>;
+  searchParams: Promise<{ matchday?: string | string[]; season?: string | string[] }>;
 }) {
-  const { matchday: requestedMatchday } = await searchParams;
-  const season = await api.currentSeason();
+  const { matchday: requestedMatchday, season: requestedSeason } = await searchParams;
+  const [currentSeason, seasons] = await Promise.all([api.currentSeason(), api.seasons()]);
+  const requestedSeasonId = Array.isArray(requestedSeason) ? requestedSeason[0] : requestedSeason;
+  const season = seasons.find((item) => item.id === requestedSeasonId) ?? currentSeason;
   const [fixtures, standings, teams] = await Promise.all([
     api.fixtures(`season_id=${season.id}`),
     api.standings(season.id),
@@ -36,13 +39,17 @@ export default async function Home({
   const summary = seasonSummary(fixtures);
   const form = formTable(fixtures);
   const allMatchdays = matchdays(fixtures);
-  const selected = resolveMatchday(fixtures, requestedMatchday);
-  const selectedFixtures = selected === null ? [] : fixturesInMatchday(fixtures, selected);
+  const selectedMatchday = resolveMatchday(fixtures, requestedMatchday);
+  const selectedFixtures =
+    selectedMatchday === null ? [] : fixturesInMatchday(fixtures, selectedMatchday);
   const upcoming = fixtures
     .filter((fixture: Fixture) => fixture.status === 'scheduled')
     .slice(0, UPCOMING_ROWS);
   return (
     <main className="shell">
+      <div className="home-toolbar">
+        <SeasonSelect seasons={seasons} value={season.id} />
+      </div>
       <div className="home-grid">
         <div>
           {upcoming.length ? (
@@ -55,15 +62,15 @@ export default async function Home({
             action={{ href: '/fixtures', label: 'All fixtures' }}
             flush
             note={matchdayDateWindow(selectedFixtures)}
-            title={selected === null ? 'Matches' : `Matchday ${selected}`}
+            title={selectedMatchday === null ? 'Matches' : `Matchday ${selectedMatchday}`}
           >
             {allMatchdays.length > 1 ? (
               <nav aria-label="Select matchday" className="chips">
-                {matchdayWindow(allMatchdays, selected).map((matchday) => (
+                {matchdayWindow(allMatchdays, selectedMatchday).map((matchday) => (
                   <Link
-                    aria-current={matchday === selected}
+                    aria-current={matchday === selectedMatchday}
                     className="chip"
-                    href={`/?matchday=${matchday}`}
+                    href={`/?season=${season.id}&matchday=${matchday}`}
                     key={matchday}
                   >
                     MD {matchday}
