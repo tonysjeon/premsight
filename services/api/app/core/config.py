@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     port: int = 8000
     database_url: str = "postgresql://premsight:premsight@localhost:5432/premsight"
     redis_url: str = "redis://localhost:6379/0"
+    prediction_engine_url: str = "http://localhost:8001"
     cors_origins: str = "http://localhost:3000"
 
     @property

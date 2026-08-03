@@ -60,6 +60,16 @@ class FootballRepository:
     def fixture(self, fixture_id: UUID) -> dict[str, Any] | None:
         return self._one(self._fixture_select() + " WHERE f.id=%s", (fixture_id,))
 
+    def prediction_history(self, season_id: UUID) -> list[dict[str, Any]]:
+        return self._all(
+            """SELECT home_team_id::text, away_team_id::text, home_score, away_score
+               FROM fixtures
+               WHERE season_id=%s AND status='completed'
+                 AND home_score IS NOT NULL AND away_score IS NOT NULL
+               ORDER BY kickoff_at""",
+            (season_id,),
+        )
+
     def standings(self, season_id: UUID) -> list[dict[str, Any]]:
         return self._all(
             """WITH results AS (

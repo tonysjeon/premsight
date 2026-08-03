@@ -5,6 +5,7 @@ import pytest
 from fastapi.testclient import TestClient
 from premsight_database.migrator import migrate_down_all, migrate_up, seed
 
+from app.api.routes.football import prediction_client
 from app.core.config import get_settings
 from app.main import app
 
@@ -63,3 +64,26 @@ def test_core_read_endpoints(client: TestClient) -> None:
 def test_validation_and_missing_resources(client: TestClient) -> None:
     assert client.get("/v1/fixtures", params={"status": "unknown"}).status_code == 422
     assert client.get("/v1/fixtures/00000000-0000-0000-0000-000000000000").status_code == 404
+
+
+def test_fixture_prediction_coordinates_history(client: TestClient) -> None:
+    calls: list[tuple[str, str, list[dict]]] = []
+
+    class FakePredictionClient:
+        def predict(self, home_team_id: str, away_team_id: str, results: list[dict]) -> dict:
+            calls.append((home_team_id, away_team_id, results))
+            return {
+                "model_version": "poisson-v1",
+                "outcomes": {"home_win": 0.5, "draw": 0.25, "away_win": 0.25},
+            }
+
+    app.dependency_overrides[prediction_client] = FakePredictionClient
+    try:
+        response = client.get(f"/v1/fixtures/{app.state.ids['fixture']}/prediction")
+    finally:
+        app.dependency_overrides.pop(prediction_client, None)
+
+    assert response.status_code == 200
+    assert response.json()["model_version"] == "poisson-v1"
+    assert len(calls) == 1
+    assert len(calls[0][2]) == 1
