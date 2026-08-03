@@ -49,6 +49,8 @@ All product resources are versioned under `/v1`.
 
 List responses use `{ "items": [...], "count": n }`. Missing resources return `404` with FastAPI's standard `detail` field. Invalid UUIDs or query values return `422`.
 
+Standings include every team with a fixture in the requested season. Before a team has completed a match, its played, result, goal, and points values are zero so an upcoming season still renders a complete league table.
+
 ## Future resource areas
 
 Domain HTTP handlers are **out of scope for the core data model milestone**. The schema in [Database Schema](./03-database-schema.md) shapes these future read APIs:
