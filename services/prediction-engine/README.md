@@ -2,7 +2,7 @@
 
 Isolated FastAPI service for Poisson-based predictions.
 
-NumPy, pandas, and SciPy are installed for future model work. **No prediction logic is implemented yet.**
+Implements the versioned `poisson-v1` pre-match model. Prediction calculations remain isolated from the product API and frontend.
 
 ## Run locally
 
