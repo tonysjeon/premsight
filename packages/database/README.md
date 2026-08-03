@@ -27,10 +27,11 @@ uv run premsight-db status
 uv run premsight-db down
 ```
 
-Run the integration tests against a disposable PostgreSQL database:
+Run integration tests only against a disposable database. The test fixtures reject database names that do not end in `_test` because they rebuild the schema:
 
 ```bash
-DATABASE_URL=postgresql://premsight:premsight@localhost:5433/premsight \
+docker compose exec postgres createdb -U premsight premsight_test
+DATABASE_URL=postgresql://premsight:premsight@localhost:5433/premsight_test \
   uv run pytest
 ```
 

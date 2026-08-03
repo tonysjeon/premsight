@@ -4,10 +4,17 @@ import psycopg
 import pytest
 from fastapi.testclient import TestClient
 from premsight_database.migrator import migrate_down_all, migrate_up, seed
+from psycopg.conninfo import conninfo_to_dict
 
 from app.api.routes.football import prediction_client
 from app.core.config import get_settings
 from app.main import app
+
+
+def _require_disposable_database(database_url: str) -> None:
+    database_name = conninfo_to_dict(database_url).get("dbname", "")
+    if not database_name.endswith("_test"):
+        pytest.fail("API integration tests require a database name ending in '_test'")
 
 
 @pytest.fixture
@@ -15,6 +22,7 @@ def client() -> TestClient:
     database_url = os.environ.get("DATABASE_URL")
     if not database_url:
         pytest.skip("DATABASE_URL is required for API integration tests")
+    _require_disposable_database(database_url)
     migrate_down_all(database_url)
     migrate_up(database_url)
     seed(database_url)

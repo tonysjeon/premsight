@@ -5,6 +5,7 @@ from collections.abc import Iterator
 
 import psycopg
 import pytest
+from psycopg.conninfo import conninfo_to_dict
 
 from premsight_database.migrator import migrate_down_all, migrate_up
 
@@ -13,6 +14,9 @@ def _database_url() -> str:
     url = os.environ.get("DATABASE_URL")
     if not url:
         pytest.skip("DATABASE_URL is required for database tests")
+    database_name = conninfo_to_dict(url).get("dbname", "")
+    if not database_name.endswith("_test"):
+        pytest.fail("Database integration tests require a database name ending in '_test'")
     return url
 
 
