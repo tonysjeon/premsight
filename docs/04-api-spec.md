@@ -16,21 +16,21 @@ Contracts should eventually be reflected in OpenAPI and `packages/shared-types`.
 
 ### API (`services/api`)
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/health` | Liveness; `{ "status": "ok", "service": "premsight-api" }` |
+| Method | Path      | Description                                                |
+| ------ | --------- | ---------------------------------------------------------- |
+| `GET`  | `/health` | Liveness; `{ "status": "ok", "service": "premsight-api" }` |
 
 ### Prediction engine
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/health` | Liveness; `{ "status": "ok", "service": "premsight-prediction-engine" }` |
+| Method | Path      | Description                                                              |
+| ------ | --------- | ------------------------------------------------------------------------ |
+| `GET`  | `/health` | Liveness; `{ "status": "ok", "service": "premsight-prediction-engine" }` |
 
 ### Ingestion
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/health` | Liveness; `{ "status": "ok", "service": "premsight-ingestion" }` |
+| Method | Path      | Description                                                      |
+| ------ | --------- | ---------------------------------------------------------------- |
+| `GET`  | `/health` | Liveness; `{ "status": "ok", "service": "premsight-ingestion" }` |
 
 ## Planned resource areas (not implemented)
 

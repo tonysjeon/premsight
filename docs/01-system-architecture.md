@@ -48,34 +48,34 @@ infrastructure/
 
 ### Frontend
 
-* Next.js
-* TypeScript
-* Tailwind CSS
+- Next.js
+- TypeScript
+- Tailwind CSS
 
 ### Backend
 
-* FastAPI
-* Python
+- FastAPI
+- Python
 
 ### Prediction Engine
 
-* Python
-* NumPy
-* pandas
-* SciPy
+- Python
+- NumPy
+- pandas
+- SciPy
 
 ### Database
 
-* PostgreSQL
+- PostgreSQL
 
 ### Cache
 
-* Redis
+- Redis
 
 ### Infrastructure
 
-* Docker
-* GitHub Actions
+- Docker
+- GitHub Actions
 
 ---
 
@@ -85,10 +85,10 @@ infrastructure/
 
 Responsible for:
 
-* UI
-* Routing
-* Live updates
-* User interactions
+- UI
+- Routing
+- Live updates
+- User interactions
 
 The frontend must never contain business or prediction logic.
 
@@ -98,10 +98,10 @@ The frontend must never contain business or prediction logic.
 
 Responsible for:
 
-* Public endpoints
-* Authentication
-* Database access
-* Coordinating services
+- Public endpoints
+- Authentication
+- Database access
+- Coordinating services
 
 ---
 
@@ -109,10 +109,10 @@ Responsible for:
 
 Responsible for:
 
-* Team ratings
-* Poisson calculations
-* Probability generation
-* Model versioning
+- Team ratings
+- Poisson calculations
+- Probability generation
+- Model versioning
 
 The prediction engine must remain independent of the frontend.
 
@@ -122,18 +122,18 @@ The prediction engine must remain independent of the frontend.
 
 Responsible for:
 
-* Historical imports
-* Live provider synchronization
-* Event normalization
-* Match-state updates
+- Historical imports
+- Live provider synchronization
+- Event normalization
+- Match-state updates
 
 ---
 
 ## Architectural Principles
 
-* Single responsibility per service.
-* Loose coupling.
-* Strong typing.
-* Versioned prediction models.
-* Stateless services where practical.
-* Documentation-first development.
+- Single responsibility per service.
+- Loose coupling.
+- Strong typing.
+- Versioned prediction models.
+- Stateless services where practical.
+- Documentation-first development.

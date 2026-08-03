@@ -24,12 +24,12 @@ Migrations should be reviewed against this document before merge.
 
 ## Planned entities (names TBD)
 
-| Area | Intent |
-|------|--------|
-| Teams | Club identity and display metadata |
-| Fixtures / matches | Scheduled and live match records |
-| Standings | League table snapshots |
-| Live events | Goals, cards, substitutions, etc. |
+| Area                 | Intent                              |
+| -------------------- | ----------------------------------- |
+| Teams                | Club identity and display metadata  |
+| Fixtures / matches   | Scheduled and live match records    |
+| Standings            | League table snapshots              |
+| Live events          | Goals, cards, substitutions, etc.   |
 | Prediction snapshots | Model outputs keyed to match + time |
 
 Exact columns, keys, and indexes will be specified here before the first domain migration.

@@ -16,11 +16,11 @@ Deliver the best Premier League match companion by combining reliable live data 
 
 ## Target Users
 
-* Premier League fans
-* Fantasy Premier League players
-* Football analytics enthusiasts
-* Sports bettors seeking objective probabilities (without offering betting advice)
-* Developers interested in football data and statistics
+- Premier League fans
+- Fantasy Premier League players
+- Football analytics enthusiasts
+- Sports bettors seeking objective probabilities (without offering betting advice)
+- Developers interested in football data and statistics
 
 ---
 
@@ -28,26 +28,26 @@ Deliver the best Premier League match companion by combining reliable live data 
 
 ### Live Matches
 
-* Live scores
-* Match timeline
-* Match statistics
-* Live league table updates
+- Live scores
+- Match timeline
+- Match statistics
+- Live league table updates
 
 ### Match Predictions
 
-* Pre-match win probabilities
-* Live win/draw/loss probabilities
-* Expected goals
-* Most likely scorelines
-* Remaining expected goals
+- Pre-match win probabilities
+- Live win/draw/loss probabilities
+- Expected goals
+- Most likely scorelines
+- Remaining expected goals
 
 ### Competition
 
-* Fixtures
-* Results
-* Standings
-* Team pages
-* Player pages (future)
+- Fixtures
+- Results
+- Standings
+- Team pages
+- Player pages (future)
 
 ---
 
@@ -55,29 +55,29 @@ Deliver the best Premier League match companion by combining reliable live data 
 
 Version 1 will include:
 
-* Premier League only
-* Fixtures
-* Results
-* Standings
-* Team pages
-* Match pages
-* Live scores
-* Live timeline
-* Pre-match prediction engine
-* Live probability engine
-* Favorite teams
+- Premier League only
+- Fixtures
+- Results
+- Standings
+- Team pages
+- Match pages
+- Live scores
+- Live timeline
+- Pre-match prediction engine
+- Live probability engine
+- Favorite teams
 
 ---
 
 ## Future Features
 
-* Multiple leagues
-* Push notifications
-* Player analytics
-* Historical match explorer
-* Advanced xG models
-* Lineup-adjusted predictions
-* Mobile applications
+- Multiple leagues
+- Push notifications
+- Player analytics
+- Historical match explorer
+- Advanced xG models
+- Lineup-adjusted predictions
+- Mobile applications
 
 ---
 
@@ -85,12 +85,12 @@ Version 1 will include:
 
 The initial release will not include:
 
-* Fantasy football
-* Social feeds
-* User comments
-* Betting functionality
-* Community predictions
-* AI-generated news
+- Fantasy football
+- Social feeds
+- User comments
+- Betting functionality
+- Community predictions
+- AI-generated news
 
 ---
 
@@ -108,8 +108,8 @@ The MVP is considered successful when users can:
 
 ## Guiding Principles
 
-* Simplicity over feature bloat.
-* Accuracy over quantity.
-* Performance first.
-* Data-driven decisions.
-* Clear separation between presentation and statistical modeling.
+- Simplicity over feature bloat.
+- Accuracy over quantity.
+- Performance first.
+- Data-driven decisions.
+- Clear separation between presentation and statistical modeling.

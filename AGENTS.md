@@ -6,18 +6,18 @@ This document defines the engineering standards that all AI coding agents must f
 
 ## Project Goals
 
-* Build a production-quality Premier League application.
-* Keep the codebase modular and maintainable.
-* Prioritize correctness over speed.
-* Favor clear architecture over clever implementations.
+- Build a production-quality Premier League application.
+- Keep the codebase modular and maintainable.
+- Prioritize correctness over speed.
+- Favor clear architecture over clever implementations.
 
 ## Engineering Principles
 
-* Follow the documented architecture before introducing new patterns.
-* Keep services loosely coupled.
-* Separate UI, API, ingestion, and prediction responsibilities.
-* Prefer composition over duplication.
-* Write readable code with clear names.
+- Follow the documented architecture before introducing new patterns.
+- Keep services loosely coupled.
+- Separate UI, API, ingestion, and prediction responsibilities.
+- Prefer composition over duplication.
+- Write readable code with clear names.
 
 ## Documentation
 
@@ -29,30 +29,30 @@ Before implementing a new subsystem:
 
 ## Coding Standards
 
-* Use strict typing.
-* Keep functions focused and testable.
-* Avoid hidden side effects.
-* Validate all external input.
-* Handle errors explicitly.
+- Use strict typing.
+- Keep functions focused and testable.
+- Avoid hidden side effects.
+- Validate all external input.
+- Handle errors explicitly.
 
 ## Prediction Engine
 
-* Keep statistical models isolated from API and UI code.
-* Version prediction models.
-* Ensure probability outputs are normalized and tested.
-* Write deterministic calculations whenever possible.
+- Keep statistical models isolated from API and UI code.
+- Version prediction models.
+- Ensure probability outputs are normalized and tested.
+- Write deterministic calculations whenever possible.
 
 ## Testing Expectations
 
-* Add unit tests for core business logic.
-* Add integration tests for service boundaries.
-* Do not merge code that breaks existing tests.
+- Add unit tests for core business logic.
+- Add integration tests for service boundaries.
+- Do not merge code that breaks existing tests.
 
 ## Repository Rules
 
-* Keep commits focused on a single logical change.
-* Avoid unrelated refactors in feature branches.
-* Update documentation when architecture changes.
+- Keep commits focused on a single logical change.
+- Avoid unrelated refactors in feature branches.
+- Update documentation when architecture changes.
 
 ## Guiding Philosophy
 

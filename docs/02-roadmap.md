@@ -8,14 +8,14 @@ Create the repository and development environment.
 
 ### Deliverables
 
-* Monorepo
-* Next.js
-* FastAPI
-* Docker
-* PostgreSQL
-* Redis
-* CI
-* Documentation
+- Monorepo
+- Next.js
+- FastAPI
+- Docker
+- PostgreSQL
+- Redis
+- CI
+- Documentation
 
 ---
 
@@ -23,10 +23,10 @@ Create the repository and development environment.
 
 ### Deliverables
 
-* Database schema
-* Core entities
-* Migrations
-* Seed data
+- Database schema
+- Core entities
+- Migrations
+- Seed data
 
 ---
 
@@ -34,10 +34,10 @@ Create the repository and development environment.
 
 ### Deliverables
 
-* Fixture import
-* Results import
-* Team import
-* Standings generation
+- Fixture import
+- Results import
+- Team import
+- Standings generation
 
 ---
 
@@ -45,11 +45,11 @@ Create the repository and development environment.
 
 ### Deliverables
 
-* Home page
-* Fixtures
-* Match pages
-* Team pages
-* League table
+- Home page
+- Fixtures
+- Match pages
+- Team pages
+- League table
 
 ---
 
@@ -57,10 +57,10 @@ Create the repository and development environment.
 
 ### Deliverables
 
-* Team ratings
-* Expected goals
-* Score probability matrix
-* Win/draw/loss probabilities
+- Team ratings
+- Expected goals
+- Score probability matrix
+- Win/draw/loss probabilities
 
 ---
 
@@ -68,9 +68,9 @@ Create the repository and development environment.
 
 ### Deliverables
 
-* Historical backtesting
-* Calibration
-* Performance metrics
+- Historical backtesting
+- Calibration
+- Performance metrics
 
 ---
 
@@ -78,9 +78,9 @@ Create the repository and development environment.
 
 ### Deliverables
 
-* Live event ingestion
-* Match-state updates
-* Live database synchronization
+- Live event ingestion
+- Match-state updates
+- Live database synchronization
 
 ---
 
@@ -88,10 +88,10 @@ Create the repository and development environment.
 
 ### Deliverables
 
-* Remaining-goal model
-* Live probability updates
-* Score-state adjustments
-* Red-card adjustments
+- Remaining-goal model
+- Live probability updates
+- Score-state adjustments
+- Red-card adjustments
 
 ---
 
@@ -99,10 +99,10 @@ Create the repository and development environment.
 
 ### Deliverables
 
-* Live UI updates
-* Probability animations
-* Match timeline
-* Live statistics
+- Live UI updates
+- Probability animations
+- Match timeline
+- Live statistics
 
 ---
 
@@ -110,10 +110,10 @@ Create the repository and development environment.
 
 ### Deliverables
 
-* Authentication
-* Favorite teams
-* Favorite matches
-* Personalized home page
+- Authentication
+- Favorite teams
+- Favorite matches
+- Personalized home page
 
 ---
 
@@ -121,11 +121,11 @@ Create the repository and development environment.
 
 ### Deliverables
 
-* Monitoring
-* Logging
-* Error handling
-* Performance optimization
-* Deployment
+- Monitoring
+- Logging
+- Error handling
+- Performance optimization
+- Deployment
 
 ---
 
@@ -133,7 +133,7 @@ Create the repository and development environment.
 
 ### Deliverables
 
-* Dixon–Coles model
-* Bivariate Poisson
-* Lineup adjustments
-* Advanced calibration
+- Dixon–Coles model
+- Bivariate Poisson
+- Lineup adjustments
+- Advanced calibration

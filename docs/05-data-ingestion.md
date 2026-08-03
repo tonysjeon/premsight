@@ -23,11 +23,11 @@ The API should read persisted data; it should not scrape providers directly.
 
 ## Planned responsibilities
 
-| Concern | Owner |
-|---------|--------|
-| Provider auth & HTTP | ingestion |
-| Normalize → DB | ingestion |
-| Serve product reads | api |
+| Concern                    | Owner             |
+| -------------------------- | ----------------- |
+| Provider auth & HTTP       | ingestion         |
+| Normalize → DB             | ingestion         |
+| Serve product reads        | api               |
 | Model inputs from DB / API | prediction-engine |
 
 ## Feed types (planned)
