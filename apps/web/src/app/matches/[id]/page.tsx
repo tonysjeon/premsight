@@ -95,6 +95,15 @@ export default async function Match({ params }: { params: Promise<{ id: string }
             </span>
           </div>
         </section>
+      ) : canPredict ? (
+        <section className="prediction-card prediction-empty" aria-labelledby="prediction-heading">
+          <p className="eyebrow">Pre-match probabilities</p>
+          <h2 id="prediction-heading">Model estimate unavailable</h2>
+          <p>
+            An estimate is not ready for this fixture. This can happen when a team lacks completed
+            league history or the prediction service is temporarily unavailable.
+          </p>
+        </section>
       ) : null}
     </main>
   );
