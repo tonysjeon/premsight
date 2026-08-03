@@ -112,3 +112,44 @@ jobs:
 
       - name: Test migrations and schema
         run: uv run pytest
+
+  ingestion-database:
+    name: Ingestion (PostgreSQL integration)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: premsight
+          POSTGRES_PASSWORD: premsight
+          POSTGRES_DB: premsight_ingestion_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U premsight -d premsight_ingestion_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    defaults:
+      run:
+        working-directory: services/ingestion
+    env:
+      DATABASE_URL: postgresql://premsight:premsight@localhost:5432/premsight_ingestion_test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: uv sync --all-groups
+
+      - name: Lint
+        run: uv run ruff check .
+
+      - name: Test historical ingestion
+        run: uv run pytest
