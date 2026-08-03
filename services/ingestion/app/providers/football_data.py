@@ -59,6 +59,7 @@ class TeamPayload(ProviderPayload):
     short_name: str | None = Field(default=None, alias="shortName")
     tla: str | None = None
     venue: str | None = None
+    crest: str | None = None
 
 
 class TeamsResponse(ProviderPayload):
@@ -184,6 +185,7 @@ class FootballDataProvider:
             short_name=team.short_name,
             tla=tla,
             venue=team.venue,
+            crest_url=team.crest,
         )
 
     @staticmethod

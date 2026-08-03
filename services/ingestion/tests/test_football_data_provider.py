@@ -13,6 +13,7 @@ def _team(team_id: int, name: str, tla: str, venue: str) -> dict[str, object]:
         "shortName": name,
         "tla": tla,
         "venue": venue,
+        "crest": f"https://crests.football-data.org/{team_id}.png",
     }
 
 
@@ -72,6 +73,7 @@ def test_provider_normalizes_teams_fixtures_and_results() -> None:
     assert snapshot.competition.code == "PL"
     assert snapshot.season.name == "2025/2026"
     assert [team.provider_id for team in snapshot.teams] == ["57", "61"]
+    assert snapshot.teams[0].crest_url == "https://crests.football-data.org/57.png"
     assert snapshot.fixtures[0].status == "completed"
     assert snapshot.fixtures[0].home_score == 2
     assert snapshot.fixtures[0].venue == "Emirates Stadium"

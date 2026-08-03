@@ -32,6 +32,7 @@ class ProviderTeam(NormalizedModel):
     short_name: str | None = None
     tla: str | None = None
     venue: str | None = None
+    crest_url: str | None = None
 
 
 class ProviderFixture(NormalizedModel):

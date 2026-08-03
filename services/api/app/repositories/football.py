@@ -27,16 +27,18 @@ class FootballRepository:
 
     def teams(self, season_id: UUID | None = None) -> list[dict[str, Any]]:
         if season_id is None:
-            return self._all("SELECT id,name,short_name,tla FROM teams ORDER BY name")
+            return self._all("SELECT id,name,short_name,tla,crest_url FROM teams ORDER BY name")
         return self._all(
-            """SELECT DISTINCT t.id,t.name,t.short_name,t.tla FROM teams t
+            """SELECT DISTINCT t.id,t.name,t.short_name,t.tla,t.crest_url FROM teams t
                JOIN fixtures f ON t.id IN (f.home_team_id,f.away_team_id)
                WHERE f.season_id=%s ORDER BY t.name""",
             (season_id,),
         )
 
     def team(self, team_id: UUID) -> dict[str, Any] | None:
-        return self._one("SELECT id,name,short_name,tla FROM teams WHERE id=%s", (team_id,))
+        return self._one(
+            "SELECT id,name,short_name,tla,crest_url FROM teams WHERE id=%s", (team_id,)
+        )
 
     def fixtures(
         self, season_id: UUID | None = None, status: str | None = None, team_id: UUID | None = None
