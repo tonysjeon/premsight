@@ -4,7 +4,7 @@
 
 The web application provides five server-rendered product surfaces:
 
-- `/` — matchday feed for the current season, with a league table and season summary rail
+- `/` — matchday feed for a selected season, with a league table and season summary rail
 - `/fixtures` — season fixture list grouped by date
 - `/matches/{id}` — fixture identity, kickoff/status, and score
 - `/teams/{id}` — team details with recent and upcoming fixtures
@@ -12,9 +12,9 @@ The web application provides five server-rendered product surfaces:
 
 ## Home page composition
 
-The home page leads with the matchday a visitor most likely wants: the next matchday that still has unplayed fixtures, or the most recently completed one once the season is over. Matchday chips link to `/?matchday=N`.
+The home page defaults to the season marked current by the API. A season selector lists available Premier League seasons and links to `/?season={id}`; changing seasons clears any selected matchday. The page leads with the matchday a visitor most likely wants: the next matchday that still has unplayed fixtures, or the most recently completed one once the season is over. Matchday chips retain the selected season while linking to a different matchday.
 
-`matchday` is untrusted input. It is accepted only when it matches `^\d{1,2}$` and names a matchday that exists in the season; anything else falls back to the default matchday rather than erroring.
+`season` and `matchday` are untrusted input. A season is accepted only when its ID appears in the API season list. A matchday is accepted only when it matches `^\d{1,2}$` and names a matchday that exists in the selected season. Invalid values fall back to the current season or its default matchday rather than erroring.
 
 The rail shows the leading table positions with qualification zones and form, plus season aggregates (matches played, goals, goals per game, share of home wins, biggest win). An "Up next" card renders only when scheduled fixtures exist, so a completed season shows no empty placeholder.
 

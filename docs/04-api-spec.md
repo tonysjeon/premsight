@@ -39,6 +39,7 @@ All product resources are versioned under `/v1`.
 | Method | Path                           | Purpose                                      |
 | ------ | ------------------------------ | -------------------------------------------- |
 | `GET`  | `/v1/seasons/current`          | Current Premier League season                |
+| `GET`  | `/v1/seasons`                  | Available seasons, newest first              |
 | `GET`  | `/v1/teams`                    | Teams with optional `season_id` filter       |
 | `GET`  | `/v1/teams/{id}`               | Team details and fixtures                    |
 | `GET`  | `/v1/fixtures`                 | Fixtures filtered by season, status, or team |
