@@ -1,6 +1,6 @@
 # PremSight API
 
-FastAPI HTTP API for PremSight. Domain endpoints are not implemented yet.
+FastAPI HTTP API for PremSight health, fixtures, teams, seasons, and standings.
 
 ## Run locally
 
