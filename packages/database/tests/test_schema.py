@@ -11,6 +11,21 @@ from premsight_database.migrator import (
     migrate_up,
     seed,
 )
+from premsight_database.paths import MIGRATIONS_DIR, SEEDS_DIR
+
+
+def test_runtime_package_contains_sql_assets() -> None:
+    assert sorted(path.name for path in MIGRATIONS_DIR.glob("*.sql")) == [
+        "0001_placeholder.down.sql",
+        "0001_placeholder.up.sql",
+        "0002_core_football_schema.down.sql",
+        "0002_core_football_schema.up.sql",
+        "0003_fixture_integrity.down.sql",
+        "0003_fixture_integrity.up.sql",
+    ]
+    assert [path.name for path in SEEDS_DIR.glob("*.sql")] == [
+        "001_premier_league.sql"
+    ]
 
 
 def test_migrations_apply_on_empty_database(database_url: str) -> None:

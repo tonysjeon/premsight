@@ -1,0 +1,1 @@
+"""Normalized ingestion domain models."""

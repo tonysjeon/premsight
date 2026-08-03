@@ -24,6 +24,10 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["premsight_database"]
 
+[tool.hatch.build.targets.wheel.force-include]
+"migrations" = "migrations"
+"seeds" = "seeds"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
