@@ -33,6 +33,12 @@ def current_season(repo: Repo) -> dict:
     return item
 
 
+@router.get("/seasons")
+def seasons(repo: Repo) -> dict:
+    items = repo.seasons()
+    return {"items": items, "count": len(items)}
+
+
 @router.get("/teams")
 def teams(repo: Repo, season_id: UUID | None = None) -> dict:
     items = repo.teams(season_id)

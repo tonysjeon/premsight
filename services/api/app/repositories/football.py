@@ -25,6 +25,14 @@ class FootballRepository:
                WHERE s.is_current ORDER BY s.start_date DESC LIMIT 1"""
         )
 
+    def seasons(self) -> list[dict[str, Any]]:
+        return self._all(
+            """SELECT s.id, s.competition_id, c.name competition_name, s.name,
+                      s.start_date, s.end_date, s.is_current
+               FROM seasons s JOIN competitions c ON c.id=s.competition_id
+               ORDER BY s.start_date DESC"""
+        )
+
     def teams(self, season_id: UUID | None = None) -> list[dict[str, Any]]:
         if season_id is None:
             return self._all("SELECT id,name,short_name,tla,crest_url FROM teams ORDER BY name")

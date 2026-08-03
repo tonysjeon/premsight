@@ -55,6 +55,9 @@ def client() -> TestClient:
 def test_core_read_endpoints(client: TestClient) -> None:
     ids = app.state.ids
     assert client.get("/v1/seasons/current").status_code == 200
+    seasons = client.get("/v1/seasons").json()
+    assert seasons["count"] == 1
+    assert seasons["items"][0]["id"] == str(ids["season"])
     teams = client.get("/v1/teams", params={"season_id": ids["season"]}).json()
     assert teams["count"] == 2
     fixtures = client.get("/v1/fixtures", params={"status": "completed"}).json()
