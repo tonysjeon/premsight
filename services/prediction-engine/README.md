@@ -16,6 +16,12 @@ uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8001
 
 `GET /health` → `{ "status": "ok", "service": "premsight-prediction-engine" }`
 
+## Predict
+
+`POST /v1/predict` accepts completed fixture history plus the home and away team IDs. It returns the `poisson-v1` expected goals, normalized outcome probabilities, score matrix, and most likely scores.
+
+The product API exposes these estimates for scheduled fixtures at `GET /v1/fixtures/{id}/prediction`.
+
 ## Tests
 
 ```bash
