@@ -1,6 +1,6 @@
 # PremSight
 
-Premier League–focused live football application. Monorepo bootstrap only — product features are not implemented yet.
+Premier League–focused live football application. The repository foundation and core football data model are implemented; historical ingestion is the next roadmap phase.
 
 ## Overview
 
@@ -51,7 +51,7 @@ premsight/
 │   └── ingestion/             # Future data ingestion
 ├── packages/
 │   ├── shared-types/          # Shared TypeScript contracts
-│   └── database/              # SQL migrations (placeholder)
+│   └── database/              # SQL migrations, seeds, and schema tests
 ├── docs/                      # Product & engineering docs
 ├── infrastructure/            # Future IaC
 ├── .github/workflows/         # CI
@@ -144,12 +144,13 @@ Engineering principles for contributors: [`.cursor/rules.md`](./.cursor/rules.md
 
 ## Roadmap summary
 
-1. **Bootstrap** (current) — monorepo, health endpoints, Docker, CI, docs stubs
-2. **Data foundation** — schema, migrations, ingestion providers
-3. **Core API** — fixtures, standings, teams
-4. **Live layer** — match events, real-time updates
-5. **Predictions** — Poisson engine, probability APIs
-6. **Product UI** — match hub, team pages, live experience
+1. **Bootstrap** (complete) — monorepo, health endpoints, Docker, CI, docs
+2. **Data model** (complete) — core schema, migrations, seed data, schema tests
+3. **Historical data** (next) — provider integration, team/fixture/result imports, standings
+4. **Core API** — fixtures, standings, teams
+5. **Live layer** — match events, real-time updates
+6. **Predictions** — Poisson engine, probability APIs
+7. **Product UI** — match hub, team pages, live experience
 
 ## License
 
