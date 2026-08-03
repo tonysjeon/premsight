@@ -2,52 +2,283 @@
 
 ## Purpose
 
-Define how PremSight persists Premier League data in PostgreSQL and how migrations are managed—before any football tables are created.
+Define how PremSight persists football data in PostgreSQL for historical fixtures and future live matches, and how migrations, seeds, and constraints are managed.
 
 ## Overview
 
-Schema lives under `packages/database`. Today only a placeholder migration exists (`schema_meta`). Football entities are **planned, not implemented**.
+Schema lives under `packages/database`. Bootstrap left a placeholder `schema_meta` marker only. This document specifies the first domain schema for Phase 2 (core data model).
 
-Migrations should be reviewed against this document before merge.
+Internal application IDs are independent of external provider IDs. Provider mappings live in `provider_references`.
+
+All timestamps are stored as `TIMESTAMPTZ` and treated as UTC.
 
 ## Goals
 
-- Single source of truth in PostgreSQL for teams, fixtures/matches, standings, events, and prediction snapshots
-- Ordered, reviewable migrations under `packages/database/migrations/`
-- Explicit naming and nullability rules once tables are introduced
+- Persist competitions, seasons, teams, fixtures, and match events needed for historical and live match flows
+- Keep PremSight entity IDs stable across provider changes
+- Enforce integrity with foreign keys, unique constraints, and check constraints
+- Ship ordered, reversible migrations plus seed data and automated tests
 
-## Non-goals (current phase)
+## Non-goals (this phase)
 
-- Creating teams/fixtures/standings/events tables yet
-- Choosing a final ORM (SQLAlchemy/Alembic wiring deferred until first real migration)
-- Denormalized analytics warehouses
+- Players, lineups, users, favorites, predictions, team ratings, standings snapshots
+- Live ingestion jobs or football-provider SDK integrations
+- Poisson / prediction tables
+- Choosing a production ORM for the API (SQLAlchemy remains deferred; migrations use plain SQL + `premsight-db`)
 
-## Planned entities (names TBD)
+## Entity relationship overview
 
-| Area                 | Intent                              |
-| -------------------- | ----------------------------------- |
-| Teams                | Club identity and display metadata  |
-| Fixtures / matches   | Scheduled and live match records    |
-| Standings            | League table snapshots              |
-| Live events          | Goals, cards, substitutions, etc.   |
-| Prediction snapshots | Model outputs keyed to match + time |
+```text
+competitions 1──* seasons
+competitions 1──* fixtures
+seasons      1──* fixtures
+teams        1──* fixtures (as home)
+teams        1──* fixtures (as away)
+fixtures     1──* match_events
+teams        1──* match_events (optional team side)
 
-Exact columns, keys, and indexes will be specified here before the first domain migration.
+provider_references  (polymorphic map: provider + entity_type + provider_entity_id
+                      ↔ internal entity_id)
+```
+
+## Tables
+
+### `competitions`
+
+A football competition PremSight can track (MVP: Premier League only).
+
+| Column         | Type          | Null | Notes                              |
+| -------------- | ------------- | ---- | ---------------------------------- |
+| `id`           | `UUID`        | no   | PK; internal ID                    |
+| `code`         | `TEXT`        | no   | Stable short code, e.g. `PL`       |
+| `name`         | `TEXT`        | no   | Display name                       |
+| `country_code` | `TEXT`        | yes  | ISO 3166-1 alpha-2 when applicable |
+| `created_at`   | `TIMESTAMPTZ` | no   | Default `now()`                    |
+| `updated_at`   | `TIMESTAMPTZ` | no   | Default `now()`                    |
+
+**Constraints / indexes**
+
+- `UNIQUE (code)`
+- Index on `name` not required for MVP
+
+### `seasons`
+
+A competition season (e.g. `2026/2027`). Supports multiple seasons; MVP seeds one current Premier League season.
+
+| Column           | Type          | Null | Notes                                  |
+| ---------------- | ------------- | ---- | -------------------------------------- |
+| `id`             | `UUID`        | no   | PK                                     |
+| `competition_id` | `UUID`        | no   | FK → `competitions.id`                 |
+| `name`           | `TEXT`        | no   | Human label, e.g. `2026/2027`          |
+| `start_date`     | `DATE`        | no   | Inclusive season start (calendar date) |
+| `end_date`       | `DATE`        | no   | Inclusive season end                   |
+| `is_current`     | `BOOLEAN`     | no   | Default `false`                        |
+| `created_at`     | `TIMESTAMPTZ` | no   | Default `now()`                        |
+| `updated_at`     | `TIMESTAMPTZ` | no   | Default `now()`                        |
+
+**Constraints / indexes**
+
+- `FOREIGN KEY (competition_id) REFERENCES competitions(id)`
+- `UNIQUE (competition_id, name)`
+- `CHECK (end_date >= start_date)`
+- Partial unique index: at most one `is_current = true` per competition  
+  `UNIQUE (competition_id) WHERE is_current`
+
+### `teams`
+
+Club identity used by fixtures and events. No player/lineup data in this phase.
+
+| Column       | Type          | Null | Notes                     |
+| ------------ | ------------- | ---- | ------------------------- |
+| `id`         | `UUID`        | no   | PK                        |
+| `name`       | `TEXT`        | no   | Full club name            |
+| `short_name` | `TEXT`        | yes  | Shorter UI label          |
+| `tla`        | `TEXT`        | yes  | Three-letter abbreviation |
+| `created_at` | `TIMESTAMPTZ` | no   | Default `now()`           |
+| `updated_at` | `TIMESTAMPTZ` | no   | Default `now()`           |
+
+**Constraints / indexes**
+
+- No global unique on `name` (names can collide across competitions/providers over time; uniqueness comes from provider mappings and application upsert rules)
+- Optional `CHECK (tla IS NULL OR char_length(tla) = 3)`
+
+### `fixtures`
+
+A scheduled or played match. Always references competition, season, home team, and away team.
+
+| Column           | Type          | Null | Notes                                                    |
+| ---------------- | ------------- | ---- | -------------------------------------------------------- |
+| `id`             | `UUID`        | no   | PK                                                       |
+| `competition_id` | `UUID`        | no   | FK → `competitions.id`                                   |
+| `season_id`      | `UUID`        | no   | FK → `seasons.id`                                        |
+| `home_team_id`   | `UUID`        | no   | FK → `teams.id`                                          |
+| `away_team_id`   | `UUID`        | no   | FK → `teams.id`                                          |
+| `status`         | `TEXT`        | no   | See status enum below                                    |
+| `kickoff_at`     | `TIMESTAMPTZ` | no   | Scheduled kickoff (UTC)                                  |
+| `matchday`       | `INT`         | yes  | Gameweek / matchday when known                           |
+| `home_score`     | `INT`         | yes  | Set when available; required conceptually when completed |
+| `away_score`     | `INT`         | yes  | Same as `home_score`                                     |
+| `venue`          | `TEXT`        | yes  | Optional venue label                                     |
+| `created_at`     | `TIMESTAMPTZ` | no   | Default `now()`                                          |
+| `updated_at`     | `TIMESTAMPTZ` | no   | Default `now()`                                          |
+
+**Fixture status values**
+
+| Status      | Meaning                               |
+| ----------- | ------------------------------------- |
+| `scheduled` | Future or not-yet-started match       |
+| `live`      | In progress                           |
+| `postponed` | Delayed; kickoff may be updated later |
+| `cancelled` | Will not be played                    |
+| `completed` | Finished with a final score           |
+
+Stored as `TEXT` with a check constraint (not a Postgres `ENUM`) so new statuses can be added via migration without `ALTER TYPE` friction.
+
+**Constraints / indexes**
+
+- FKs for `competition_id`, `season_id`, `home_team_id`, `away_team_id`
+- `CHECK (home_team_id <> away_team_id)`
+- `CHECK (status IN ('scheduled', 'live', 'postponed', 'cancelled', 'completed'))`
+- `CHECK (home_score IS NULL OR home_score >= 0)`
+- `CHECK (away_score IS NULL OR away_score >= 0)`
+- Index `(season_id, kickoff_at)`
+- Index `(status)`
+- Index `(home_team_id)`
+- Index `(away_team_id)`
+- Index `(competition_id, season_id)`
+
+**Integrity note:** season must belong to the same competition as the fixture. Enforce in application/repository tests in this phase; a deferred DB trigger or composite FK can be added later if needed.
+
+### `match_events`
+
+Timeline / incident log for a fixture. Supports goals, cards, substitutions, period changes, and provider corrections without requiring every subtype to be fully modeled yet.
+
+| Column                | Type          | Null | Notes                                               |
+| --------------------- | ------------- | ---- | --------------------------------------------------- |
+| `id`                  | `UUID`        | no   | PK                                                  |
+| `fixture_id`          | `UUID`        | no   | FK → `fixtures.id` ON DELETE CASCADE                |
+| `event_type`          | `TEXT`        | no   | See event types below                               |
+| `minute`              | `INT`         | yes  | Clock minute when known                             |
+| `extra_minute`        | `INT`         | yes  | Stoppage-time minute                                |
+| `period`              | `TEXT`        | yes  | e.g. `1H`, `2H`, `ET`, `PEN`                        |
+| `team_id`             | `UUID`        | yes  | FK → `teams.id`; side associated with the event     |
+| `player_name`         | `TEXT`        | yes  | Display name only (no `players` table yet)          |
+| `related_player_name` | `TEXT`        | yes  | Assist / player replaced / etc.                     |
+| `detail`              | `JSONB`       | yes  | Extensible payload (card color, score state, notes) |
+| `sort_key`            | `INT`         | no   | Ordering within a fixture when timestamps collide   |
+| `occurred_at`         | `TIMESTAMPTZ` | yes  | Provider/event time when known                      |
+| `created_at`          | `TIMESTAMPTZ` | no   | Default `now()`                                     |
+| `updated_at`          | `TIMESTAMPTZ` | no   | Default `now()`                                     |
+
+**Event types (initial allowed set)**
+
+| `event_type`          | Intent                                     |
+| --------------------- | ------------------------------------------ |
+| `goal`                | Goal scored                                |
+| `card`                | Yellow / red / second yellow (detail JSON) |
+| `substitution`        | Player on/off                              |
+| `period_change`       | Kickoff, HT, FT, ET boundaries             |
+| `provider_correction` | Correction / void emitted by a provider    |
+
+Stored as `TEXT` + `CHECK` for the same migration-friendliness reason as fixture status.
+
+**Constraints / indexes**
+
+- `FOREIGN KEY (fixture_id) REFERENCES fixtures(id) ON DELETE CASCADE`
+- `FOREIGN KEY (team_id) REFERENCES teams(id)`
+- `CHECK (event_type IN ('goal', 'card', 'substitution', 'period_change', 'provider_correction'))`
+- `CHECK (minute IS NULL OR minute >= 0)`
+- `CHECK (extra_minute IS NULL OR extra_minute >= 0)`
+- Index `(fixture_id, sort_key)`
+- Index `(fixture_id, event_type)`
+
+Player identity is intentionally a free-text name until a later `players` table exists. Corrections are modeled as first-class events rather than destructive updates to prior rows; consumers should treat `provider_correction` as a signal to reinterpret earlier events.
+
+### `provider_references`
+
+Maps one PremSight entity to an external provider’s ID. Enables multi-provider ingestion without coupling internal PKs to any vendor.
+
+| Column               | Type          | Null | Notes                                                             |
+| -------------------- | ------------- | ---- | ----------------------------------------------------------------- |
+| `id`                 | `UUID`        | no   | PK                                                                |
+| `provider`           | `TEXT`        | no   | Provider key, e.g. `football-data`                                |
+| `entity_type`        | `TEXT`        | no   | `competition` \| `season` \| `team` \| `fixture` \| `match_event` |
+| `entity_id`          | `UUID`        | no   | Internal PremSight ID (polymorphic)                               |
+| `provider_entity_id` | `TEXT`        | no   | ID as issued by the provider                                      |
+| `created_at`         | `TIMESTAMPTZ` | no   | Default `now()`                                                   |
+| `updated_at`         | `TIMESTAMPTZ` | no   | Default `now()`                                                   |
+
+**Constraints / indexes**
+
+- `CHECK (entity_type IN ('competition', 'season', 'team', 'fixture', 'match_event'))`
+- `UNIQUE (provider, entity_type, provider_entity_id)` — same provider ID cannot map twice
+- `UNIQUE (provider, entity_type, entity_id)` — one internal entity has at most one ID per provider
+- Index `(entity_type, entity_id)` for reverse lookups
+
+`entity_id` is polymorphic (no single FK). Referential integrity to the concrete table is enforced in repository/application code and tests in this phase. A later ADR may split this into per-entity mapping tables if stronger DB-level FKs are required.
+
+## Deferred entities
+
+Explicitly out of scope until later phases:
+
+| Entity     | Reason                                    |
+| ---------- | ----------------------------------------- |
+| Player     | Not required for fixture/event MVP        |
+| Lineup     | Depends on Player                         |
+| User       | Auth phase                                |
+| Favorite   | Personalization phase                     |
+| Prediction | Prediction engine phase                   |
+| TeamRating | Prediction engine phase                   |
+| Standing   | Historical/standings phase after fixtures |
+
+## Seed data
+
+Minimum seed (idempotent):
+
+1. Competition: Premier League (`code = 'PL'`)
+2. Current season row for that competition (`is_current = true`), named for the active PL season at seed time
+3. Optional small set of example teams only if useful for local demos; tests should insert their own teams/fixtures
+
+Seeds must not invent provider-specific IDs unless accompanying `provider_references` rows are also seeded for a named test provider.
 
 ## Migration rules
 
-1. Update this doc → then author SQL (or Alembic revision once adopted)
-2. No football tables in bootstrap / placeholder migrations
-3. Prefer additive migrations; document breaking changes explicitly
+1. Update this document → then author migration SQL
+2. Migrations are paired files: `NNNN_name.up.sql` / `NNNN_name.down.sql` under `packages/database/migrations/`
+3. Apply with `uv run premsight-db up` (see `packages/database/README.md`); versions are recorded in `schema_migrations`
+4. Every migration must have a safe down/rollback path (`premsight-db down`)
+5. Prefer additive migrations; document breaking changes explicitly
+6. Use `UUID` primary keys generated by the database (`gen_random_uuid()` via `pgcrypto`) or by the application before insert
+7. Prefer `TEXT` + `CHECK` over Postgres `ENUM` for evolving vocabularies
 
-## Open questions
+## Testing expectations (schema milestone)
 
-- UUID vs serial primary keys
-- How to version standings and prediction snapshots historically
-- Soft-delete vs immutable event log for live events
+Automated tests must prove:
+
+- Migrations apply on an empty database
+- Migrations roll back safely
+- Seed creates Premier League + current season
+- Teams and fixtures can be inserted and queried
+- Duplicate provider mappings are rejected
+- A fixture cannot reference the same team as home and away
+- Documented check/unique constraints hold
+
+## Decisions (this milestone)
+
+1. **Migration runner:** plain SQL + Python `premsight-db` CLI (not Alembic)
+2. **UUID generation:** database default via `pgcrypto.gen_random_uuid()` (UUID v4)
+3. **Provider mapping:** single polymorphic `provider_references` table
+4. **Match events:** mutable rows allowed; `provider_correction` is a first-class event type for vendor fixes
+
+## Remaining ADR candidates
+
+- Split polymorphic `provider_references` into per-entity mapping tables if stronger FKs are needed
+- Adopt UUID v7 later for time-sortable IDs
+- Introduce Alembic only if/when SQLAlchemy becomes the API data layer
 
 ## References
 
 - [packages/database/README.md](../packages/database/README.md)
 - [API Spec](./04-api-spec.md)
 - [Data Ingestion](./05-data-ingestion.md)
+- [Roadmap](./02-roadmap.md)

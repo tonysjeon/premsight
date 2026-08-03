@@ -34,11 +34,26 @@ Contracts should eventually be reflected in OpenAPI and `packages/shared-types`.
 
 ## Planned resource areas (not implemented)
 
-- Fixtures / matches
-- Live match state and events
-- Standings
-- Teams
-- Probabilities (proxied or composed via prediction-engine)
+Domain HTTP handlers are **out of scope for the core data model milestone**. The schema in [Database Schema](./03-database-schema.md) shapes these future read APIs:
+
+| Area          | Likely future resources                                              |
+| ------------- | -------------------------------------------------------------------- |
+| Competitions  | `GET /competitions`, `GET /competitions/{id}`                        |
+| Seasons       | `GET /competitions/{id}/seasons`, `GET /seasons/{id}`                |
+| Teams         | `GET /teams`, `GET /teams/{id}`                                      |
+| Fixtures      | `GET /fixtures` (filter by season/status/date), `GET /fixtures/{id}` |
+| Match events  | `GET /fixtures/{id}/events`                                          |
+| Standings     | Deferred until standings tables exist                                |
+| Probabilities | Proxied/composed via prediction-engine after prediction tables exist |
+
+### API implications of the schema milestone
+
+- Public IDs will be PremSight internal UUIDs, never raw provider IDs.
+- Fixture payloads should include `competition_id`, `season_id`, `home_team_id`, `away_team_id`, `status`, `kickoff_at` (UTC ISO-8601), and nullable scores.
+- Fixture `status` values exposed by the API must match the database vocabulary: `scheduled`, `live`, `postponed`, `cancelled`, `completed`.
+- Match event `event_type` values: `goal`, `card`, `substitution`, `period_change`, `provider_correction`.
+- `provider_references` are an ingestion/internal concern and should not be exposed on public product endpoints in v1.
+- Player fields on events, if returned before a `players` table exists, remain display strings (`player_name`, `related_player_name`), not player resource links.
 
 ## Goals
 
@@ -50,12 +65,14 @@ Contracts should eventually be reflected in OpenAPI and `packages/shared-types`.
 
 - GraphQL in v1
 - Embedding prediction math in API handlers
+- Implementing domain routes in the core data model milestone
 
 ## Conventions (draft)
 
 - JSON request/response bodies
 - UTC timestamps in ISO-8601
 - Explicit `service` field on health payloads
+- Resource IDs are UUIDs
 
 ## Open questions
 
