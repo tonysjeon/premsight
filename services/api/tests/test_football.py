@@ -83,6 +83,29 @@ def test_validation_and_missing_resources(client: TestClient) -> None:
     assert client.get("/v1/fixtures/00000000-0000-0000-0000-000000000000").status_code == 404
 
 
+def test_preseason_standings_include_scheduled_teams(client: TestClient) -> None:
+    ids = app.state.ids
+    with psycopg.connect(os.environ["DATABASE_URL"]) as conn:
+        season_id = conn.execute(
+            """INSERT INTO seasons(competition_id,name,start_date,end_date,is_current)
+               VALUES(%s,'2027/2028','2027-08-01','2028-05-31',false) RETURNING id""",
+            (ids["competition"],),
+        ).fetchone()[0]
+        conn.execute(
+            """INSERT INTO fixtures(competition_id,season_id,home_team_id,away_team_id,
+                 status,kickoff_at,matchday)
+               VALUES(%s,%s,%s,%s,'scheduled','2027-08-14T14:00:00Z',1)""",
+            (ids["competition"], season_id, ids["home"], ids["away"]),
+        )
+
+    table = client.get("/v1/standings", params={"season_id": season_id}).json()
+    assert table["count"] == 2
+    assert [(row["team_name"], row["played"], row["points"]) for row in table["items"]] == [
+        ("Arsenal", 0, 0),
+        ("Chelsea", 0, 0),
+    ]
+
+
 def test_fixture_prediction_coordinates_history(client: TestClient) -> None:
     calls: list[tuple[str, str, list[dict]]] = []
     ids = app.state.ids
