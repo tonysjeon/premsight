@@ -35,6 +35,18 @@ export type Standing = {
   goal_difference: number;
   points: number;
 };
+export type Prediction = {
+  model_version: string;
+  home_team_id: string;
+  away_team_id: string;
+  expected_goals: { home: number; away: number };
+  outcomes: { home_win: number; draw: number; away_win: number };
+  likely_scores: Array<{
+    home_goals: number;
+    away_goals: number;
+    probability: number;
+  }>;
+};
 async function get<T>(path: string): Promise<T> {
   const response = await fetch(`${BASE}${path}`, { cache: 'no-store' });
   if (!response.ok) throw new Error(`API request failed: ${response.status}`);
@@ -49,4 +61,12 @@ export const api = {
   team: (id: string) => get<Team>(`/v1/teams/${id}`),
   standings: async (id: string) =>
     (await get<{ items: Standing[] }>(`/v1/standings?season_id=${id}`)).items,
+  prediction: async (id: string): Promise<Prediction | null> => {
+    const response = await fetch(`${BASE}/v1/fixtures/${id}/prediction`, {
+      cache: 'no-store',
+    });
+    if (response.status === 422 || response.status === 503) return null;
+    if (!response.ok) throw new Error(`API request failed: ${response.status}`);
+    return response.json() as Promise<Prediction>;
+  },
 };
