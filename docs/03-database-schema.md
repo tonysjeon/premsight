@@ -80,6 +80,7 @@ A competition season (e.g. `2026/2027`). Supports multiple seasons; MVP seeds on
 
 - `FOREIGN KEY (competition_id) REFERENCES competitions(id)`
 - `UNIQUE (competition_id, name)`
+- `UNIQUE (id, competition_id)` to support fixture/season competition integrity
 - `CHECK (end_date >= start_date)`
 - Partial unique index: at most one `is_current = true` per competition  
   `UNIQUE (competition_id) WHERE is_current`
@@ -137,17 +138,19 @@ Stored as `TEXT` with a check constraint (not a Postgres `ENUM`) so new statuses
 **Constraints / indexes**
 
 - FKs for `competition_id`, `season_id`, `home_team_id`, `away_team_id`
+- Composite FK `(season_id, competition_id) → seasons(id, competition_id)`
 - `CHECK (home_team_id <> away_team_id)`
 - `CHECK (status IN ('scheduled', 'live', 'postponed', 'cancelled', 'completed'))`
 - `CHECK (home_score IS NULL OR home_score >= 0)`
 - `CHECK (away_score IS NULL OR away_score >= 0)`
+- `CHECK (status <> 'completed' OR (home_score IS NOT NULL AND away_score IS NOT NULL))`
 - Index `(season_id, kickoff_at)`
 - Index `(status)`
 - Index `(home_team_id)`
 - Index `(away_team_id)`
 - Index `(competition_id, season_id)`
 
-**Integrity note:** season must belong to the same competition as the fixture. Enforce in application/repository tests in this phase; a deferred DB trigger or composite FK can be added later if needed.
+The composite season/competition foreign key prevents a fixture from pairing a season with the wrong competition.
 
 ### `match_events`
 
@@ -261,6 +264,8 @@ Automated tests must prove:
 - Teams and fixtures can be inserted and queried
 - Duplicate provider mappings are rejected
 - A fixture cannot reference the same team as home and away
+- A fixture cannot reference a season from another competition
+- A completed fixture must have both scores
 - Documented check/unique constraints hold
 
 ## Decisions (this milestone)

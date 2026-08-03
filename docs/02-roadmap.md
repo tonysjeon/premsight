@@ -1,5 +1,13 @@
 # PremSight Roadmap
 
+## Current status
+
+- Phase 1 — Foundation: complete
+- Phase 2 — Data Model: complete
+- Phase 3 — Historical Data: next
+
+Phase completion means its documented deliverables are implemented and covered by the relevant automated checks. Product endpoints and UI remain intentionally deferred to their roadmap phases.
+
 ## Phase 1 — Foundation
 
 ### Goal

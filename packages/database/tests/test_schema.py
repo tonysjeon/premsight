@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import psycopg
 import pytest
-from psycopg.errors import CheckViolation, UniqueViolation
+from psycopg.errors import CheckViolation, ForeignKeyViolation, UniqueViolation
 
 from premsight_database.migrator import (
     applied_versions,
@@ -16,10 +16,10 @@ from premsight_database.migrator import (
 def test_migrations_apply_on_empty_database(database_url: str) -> None:
     migrate_down_all(database_url)
     applied = migrate_up(database_url)
-    assert applied == ["0001", "0002"]
+    assert applied == ["0001", "0002", "0003"]
 
     with psycopg.connect(database_url) as conn:
-        assert applied_versions(conn) == ["0001", "0002"]
+        assert applied_versions(conn) == ["0001", "0002", "0003"]
         tables = {
             row[0]
             for row in conn.execute(
@@ -58,6 +58,13 @@ def test_migrations_apply_on_empty_database(database_url: str) -> None:
 def test_migrations_roll_back_safely(database_url: str) -> None:
     migrate_down_all(database_url)
     migrate_up(database_url)
+
+    assert migrate_down(database_url, steps=1) == ["0003"]
+    with psycopg.connect(database_url) as conn:
+        assert applied_versions(conn) == ["0001", "0002"]
+        assert conn.execute("SELECT to_regclass('public.fixtures')").fetchone() == (
+            "fixtures",
+        )
 
     assert migrate_down(database_url, steps=1) == ["0002"]
     with psycopg.connect(database_url) as conn:
@@ -272,4 +279,72 @@ def test_fixture_cannot_use_same_home_and_away_team(migrated_db: str) -> None:
                 VALUES (%s, %s, %s, %s, 'scheduled', now())
                 """,
                 (competition_id, season_id, team_id, team_id),
+            )
+
+
+def test_fixture_season_must_belong_to_competition(migrated_db: str) -> None:
+    with psycopg.connect(migrated_db) as conn:
+        first_competition = conn.execute(
+            "INSERT INTO competitions (code, name) VALUES ('PL', 'Premier League') RETURNING id"
+        ).fetchone()[0]
+        second_competition = conn.execute(
+            "INSERT INTO competitions (code, name) VALUES ('FAC', 'FA Cup') RETURNING id"
+        ).fetchone()[0]
+        season_id = conn.execute(
+            """
+            INSERT INTO seasons (competition_id, name, start_date, end_date)
+            VALUES (%s, '2026/2027', DATE '2026-08-01', DATE '2027-05-31')
+            RETURNING id
+            """,
+            (first_competition,),
+        ).fetchone()[0]
+        home_id = conn.execute(
+            "INSERT INTO teams (name) VALUES ('Arsenal') RETURNING id"
+        ).fetchone()[0]
+        away_id = conn.execute(
+            "INSERT INTO teams (name) VALUES ('Chelsea') RETURNING id"
+        ).fetchone()[0]
+
+        with pytest.raises(ForeignKeyViolation):
+            conn.execute(
+                """
+                INSERT INTO fixtures (
+                    competition_id, season_id, home_team_id, away_team_id,
+                    status, kickoff_at
+                )
+                VALUES (%s, %s, %s, %s, 'scheduled', now())
+                """,
+                (second_competition, season_id, home_id, away_id),
+            )
+
+
+def test_completed_fixture_requires_both_scores(migrated_db: str) -> None:
+    seed(migrated_db)
+
+    with psycopg.connect(migrated_db) as conn:
+        competition_id, season_id = conn.execute(
+            """
+            SELECT c.id, s.id
+            FROM competitions c
+            JOIN seasons s ON s.competition_id = c.id
+            WHERE c.code = 'PL' AND s.is_current
+            """
+        ).fetchone()
+        home_id = conn.execute(
+            "INSERT INTO teams (name) VALUES ('Arsenal') RETURNING id"
+        ).fetchone()[0]
+        away_id = conn.execute(
+            "INSERT INTO teams (name) VALUES ('Chelsea') RETURNING id"
+        ).fetchone()[0]
+
+        with pytest.raises(CheckViolation):
+            conn.execute(
+                """
+                INSERT INTO fixtures (
+                    competition_id, season_id, home_team_id, away_team_id,
+                    status, kickoff_at, home_score
+                )
+                VALUES (%s, %s, %s, %s, 'completed', now(), 2)
+                """,
+                (competition_id, season_id, home_id, away_id),
             )

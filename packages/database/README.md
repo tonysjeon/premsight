@@ -4,25 +4,35 @@ SQL migrations and schema documentation for PremSight's PostgreSQL database.
 
 ## Status
 
-Bootstrap only. **No football-specific tables** are defined yet.
+Phase 2 core football data model implemented.
 
-## Future tables (planned, not implemented)
+The package owns ordered, reversible SQL migrations, idempotent seed data, and PostgreSQL integration tests for:
 
-When product and API specs land, expect entities such as:
+- competitions and seasons
+- teams and fixtures
+- match events
+- external provider references
 
-- Teams
-- Fixtures / matches
-- Standings
-- Live events
-- Prediction snapshots
-
-Exact names, columns, and relationships will be specified in `docs/03-database-schema.md` before any migration is authored.
+Standings, players, users, and prediction data are deferred to later roadmap phases.
 
 ## Migrations
 
-Place ordered SQL (or Alembic revisions, once wired) under `migrations/`.
+Migrations are paired `NNNN_name.up.sql` and `NNNN_name.down.sql` files under `migrations/`. Applied versions are recorded in `schema_migrations`.
 
-The placeholder migration establishes a `schema_meta` marker only so the folder is usable in CI and local tooling.
+```bash
+uv sync --all-groups
+uv run premsight-db up
+uv run premsight-db seed
+uv run premsight-db status
+uv run premsight-db down
+```
+
+Run the integration tests against a disposable PostgreSQL database:
+
+```bash
+DATABASE_URL=postgresql://premsight:premsight@localhost:5433/premsight \
+  uv run pytest
+```
 
 ## Local connection
 
