@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any
 from uuid import UUID
 
@@ -68,14 +69,16 @@ class FootballRepository:
     def fixture(self, fixture_id: UUID) -> dict[str, Any] | None:
         return self._one(self._fixture_select() + " WHERE f.id=%s", (fixture_id,))
 
-    def prediction_history(self, season_id: UUID) -> list[dict[str, Any]]:
+    def prediction_history(
+        self, competition_id: UUID, before_kickoff: datetime
+    ) -> list[dict[str, Any]]:
         return self._all(
             """SELECT home_team_id::text, away_team_id::text, home_score, away_score
                FROM fixtures
-               WHERE season_id=%s AND status='completed'
+               WHERE competition_id=%s AND kickoff_at<%s AND status='completed'
                  AND home_score IS NOT NULL AND away_score IS NOT NULL
                ORDER BY kickoff_at""",
-            (season_id,),
+            (competition_id, before_kickoff),
         )
 
     def standings(self, season_id: UUID) -> list[dict[str, Any]]:

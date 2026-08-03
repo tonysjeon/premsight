@@ -45,7 +45,13 @@ def client() -> TestClient:
         ).fetchone()[0]
     os.environ["DATABASE_URL"] = database_url
     get_settings.cache_clear()
-    app.state.ids = {"season": season_id, "home": home_id, "fixture": fixture_id}
+    app.state.ids = {
+        "competition": competition_id,
+        "season": season_id,
+        "home": home_id,
+        "away": away_id,
+        "fixture": fixture_id,
+    }
     try:
         yield TestClient(app)
     finally:
@@ -79,6 +85,14 @@ def test_validation_and_missing_resources(client: TestClient) -> None:
 
 def test_fixture_prediction_coordinates_history(client: TestClient) -> None:
     calls: list[tuple[str, str, list[dict]]] = []
+    ids = app.state.ids
+    with psycopg.connect(os.environ["DATABASE_URL"]) as conn:
+        conn.execute(
+            """INSERT INTO fixtures(competition_id,season_id,home_team_id,away_team_id,
+                 status,kickoff_at,matchday,home_score,away_score)
+               VALUES(%s,%s,%s,%s,'completed','2026-08-01T14:00:00Z',1,1,1)""",
+            (ids["competition"], ids["season"], ids["away"], ids["home"]),
+        )
 
     class FakePredictionClient:
         def predict(self, home_team_id: str, away_team_id: str, results: list[dict]) -> dict:
@@ -90,7 +104,7 @@ def test_fixture_prediction_coordinates_history(client: TestClient) -> None:
 
     app.dependency_overrides[prediction_client] = FakePredictionClient
     try:
-        response = client.get(f"/v1/fixtures/{app.state.ids['fixture']}/prediction")
+        response = client.get(f"/v1/fixtures/{ids['fixture']}/prediction")
     finally:
         app.dependency_overrides.pop(prediction_client, None)
 

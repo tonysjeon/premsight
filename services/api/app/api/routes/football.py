@@ -78,7 +78,9 @@ def fixture_prediction(fixture_id: UUID, repo: Repo, client: Prediction) -> dict
     fixture_item = repo.fixture(fixture_id)
     if fixture_item is None:
         raise HTTPException(404, "Fixture not found")
-    results = repo.prediction_history(fixture_item["season_id"])
+    results = repo.prediction_history(
+        fixture_item["competition_id"], fixture_item["kickoff_at"]
+    )
     try:
         return client.predict(
             str(fixture_item["home_team_id"]),
