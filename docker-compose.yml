@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-premsight}
       POSTGRES_DB: ${POSTGRES_DB:-premsight}
     ports:
-      - '${POSTGRES_PORT:-5432}:5432'
+      - '${POSTGRES_PORT:-5433}:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -76,6 +76,7 @@ services:
       target: dev
     restart: unless-stopped
     environment:
+      CI: 'true'
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
       NEXT_PUBLIC_PREDICTION_ENGINE_URL: ${NEXT_PUBLIC_PREDICTION_ENGINE_URL:-http://localhost:8001}
     ports:

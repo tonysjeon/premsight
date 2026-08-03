@@ -86,7 +86,7 @@ docker compose up --build
 | Web                      | http://localhost:3000        |
 | API health               | http://localhost:8000/health |
 | Prediction engine health | http://localhost:8001/health |
-| PostgreSQL               | localhost:5432               |
+| PostgreSQL               | localhost:5433               |
 | Redis                    | localhost:6379               |
 
 Ingestion is scaffolded under `services/ingestion` but is not part of Compose yet.
