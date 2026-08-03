@@ -1,25 +1,139 @@
-# System Architecture
+# PremSight System Architecture
 
-## Purpose
+## High-Level Overview
 
-Placeholder document for PremSight System Architecture. Expand this file as the project evolves.
+PremSight follows a modular service-oriented architecture where each service owns a single responsibility.
 
-## Overview
+```text
+Next.js Frontend
+        │
+        ▼
+Main API
+        │
+ ┌──────┴────────┐
+ │               │
+ ▼               ▼
+Prediction    Ingestion
+ Engine        Service
+ │               │
+ └──────┬────────┘
+        ▼
+ PostgreSQL + Redis
+```
 
-_TBD_
+---
 
-## Goals
+## Repository Structure
 
-_TBD_
+```text
+apps/
+    web/
 
-## Non-goals
+services/
+    api/
+    prediction-engine/
+    ingestion/
 
-_TBD_
+packages/
+    database/
+    shared-types/
 
-## Open questions
+docs/
+infrastructure/
+```
 
-_TBD_
+---
 
-## References
+## Technology Stack
 
-_TBD_
+### Frontend
+
+* Next.js
+* TypeScript
+* Tailwind CSS
+
+### Backend
+
+* FastAPI
+* Python
+
+### Prediction Engine
+
+* Python
+* NumPy
+* pandas
+* SciPy
+
+### Database
+
+* PostgreSQL
+
+### Cache
+
+* Redis
+
+### Infrastructure
+
+* Docker
+* GitHub Actions
+
+---
+
+## Service Responsibilities
+
+### Frontend
+
+Responsible for:
+
+* UI
+* Routing
+* Live updates
+* User interactions
+
+The frontend must never contain business or prediction logic.
+
+---
+
+### API
+
+Responsible for:
+
+* Public endpoints
+* Authentication
+* Database access
+* Coordinating services
+
+---
+
+### Prediction Engine
+
+Responsible for:
+
+* Team ratings
+* Poisson calculations
+* Probability generation
+* Model versioning
+
+The prediction engine must remain independent of the frontend.
+
+---
+
+### Ingestion Service
+
+Responsible for:
+
+* Historical imports
+* Live provider synchronization
+* Event normalization
+* Match-state updates
+
+---
+
+## Architectural Principles
+
+* Single responsibility per service.
+* Loose coupling.
+* Strong typing.
+* Versioned prediction models.
+* Stateless services where practical.
+* Documentation-first development.
