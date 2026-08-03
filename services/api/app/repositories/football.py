@@ -89,4 +89,4 @@ class FootballRepository:
         return """SELECT f.id,f.competition_id,f.season_id,f.home_team_id,h.name home_team_name,
           f.away_team_id,a.name away_team_name,f.status,f.kickoff_at,f.matchday,
           f.home_score,f.away_score,f.venue FROM fixtures f
-          JOIN teams h ON h.id=f.home_team_id JOIN teams a ON a.id=f.away_team_id"""
+          JOIN teams h ON h.id=f.home_team_id JOIN teams a ON a.id=f.away_team_id """
