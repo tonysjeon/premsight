@@ -370,6 +370,7 @@ button:focus-visible {
 
 .round-match:hover {
   background: var(--surface-hover);
+  border-radius: var(--radius);
 }
 
 /* ---------- Chips ---------- */
@@ -680,7 +681,7 @@ button:focus-visible {
 }
 
 .home-grid > .card .table-scroll {
-  padding-inline: 10px;
+  padding-inline: 0;
 }
 
 .home-grid .league-table--overview thead th.col-next {
@@ -691,13 +692,33 @@ button:focus-visible {
   border-bottom: 0;
 }
 
+.home-grid .league-table--overview tbody tr:hover {
+  background: transparent;
+}
+
+.home-grid .league-table--overview tbody tr:hover td {
+  background: var(--surface-hover);
+}
+
+.home-grid .league-table--overview tbody tr:hover td:first-child {
+  border-radius: var(--radius) 0 0 var(--radius);
+}
+
+.home-grid .league-table--overview tbody tr:hover td:last-child {
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
 .home-grid .league-table--overview .crest {
   width: 24px;
   height: 24px;
 }
 
 .home-grid .league-table--overview col.w-overview-pos {
-  width: 46px;
+  width: 56px;
+}
+
+.home-grid .league-table--overview col.w-overview-metric:last-child {
+  width: 60px;
 }
 
 .home-grid .league-table--overview .team-cell span {
@@ -843,7 +864,7 @@ button:focus-visible {
 .league-table--overview .col-pos .zone {
   position: absolute;
   top: 50%;
-  left: -10px;
+  left: 0;
   width: 3px;
   height: 30px;
   margin: 0;
