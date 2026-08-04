@@ -32,7 +32,7 @@ The UI uses the locally bundled Manrope variable font, with the system sans stac
 ## Components
 
 - **Card** — titled container with optional note and a single action link. `flush` mode removes padding so rows and tables meet the card edge.
-- **Team badge** — the provider crest when available, with a coloured monogram fallback. Club fallback colours remain presentation-only in `apps/web/src/lib/teams.ts`.
+- **Team badge** — the normalized FotMob crest when mapped, then the ingestion-provider crest, with a coloured monogram as the final fallback. The explicit crest map covers clubs in the available seasons so compact badges use a consistent, current set without per-club scaling. Club fallback colours and crest overrides remain presentation-only in `apps/web/src/lib/teams.ts`.
 - **Match row** — status on the left, both teams stacked in the middle with their goals, chevron on the right. The losing side is muted so results read at a glance.
 - **Matchday chips** — horizontally scrollable links that set the selected matchday. The active chip carries `aria-current`.
 - **League table** — position, badge, team, and figures, with a qualification zone bar, optional form guide, and a legend explaining the zone colours. The home overview gives the team identity most of the row, aligns fixed-width metrics on the right, omits the visible Team heading, and adds combined goals for/against plus the next opponent crest.

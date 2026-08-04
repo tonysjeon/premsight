@@ -12,7 +12,7 @@ The web application provides five server-rendered product surfaces:
 
 ## Home page composition
 
-The home page defaults to the season marked current by the API. A season selector lists available Premier League seasons and links to `/?season={id}`; changing seasons clears any selected matchday. The full league table is the primary content column. The selected matchday sits in a narrower right column for quick context, following the information hierarchy of established football score applications.
+The home page defaults to the season marked current by the API. A shared header selector lists available Premier League seasons; changing seasons clears any selected matchday. The full league table is the primary content column. The selected matchday sits in a narrower right column for quick context, following the information hierarchy of established football score applications. Previous and next controls step through matchdays, while the matchday title opens a compact selector for direct navigation. The compact header does not repeat the date window or link to the full fixtures view.
 
 The fixtures page owns the deeper schedule experience. It leads with the next scheduled matches, followed by a matchday browser with two-column fixture rows on wide screens. Its season and matchday controls use `/fixtures?season={id}&matchday={n}`.
 
@@ -30,7 +30,7 @@ API failures produce a clear unavailable state; empty datasets produce intention
 
 ## Navigation and layout
 
-Every page shares a sticky header with Matches, Fixtures, and Table navigation. Content uses a centered responsive container, readable maximum widths, visible keyboard focus, and semantic tables/lists. Mobile layouts preserve scores and team names without horizontal page scrolling; wide tables scroll within their card.
+Every page shares a sticky header with Matches, Fixtures, and Table navigation plus the season selector. Navigation among those three surfaces preserves the selected season. Changing seasons from a match or team detail returns to the overview because those routes are not season-scoped. Content uses a centered responsive container, readable maximum widths, visible keyboard focus, and semantic tables/lists. Mobile layouts preserve scores and team names without horizontal page scrolling; wide tables scroll within their card.
 
 ## Rendering
 
