@@ -280,6 +280,10 @@ button:focus-visible {
   margin-top: 16px;
 }
 
+.home-page {
+  width: min(1220px, calc(100% - 28px));
+}
+
 .home-rail {
   position: sticky;
   top: 76px;
@@ -290,7 +294,15 @@ button:focus-visible {
   border: 0;
 }
 
+.home-grid > .card {
+  padding: 3px 10px;
+}
+
 /* ---------- Matchday snapshot ---------- */
+
+.round-list > div {
+  padding-bottom: 3px;
+}
 
 .round-day {
   margin: 12px var(--pad) 4px;
@@ -313,6 +325,7 @@ button:focus-visible {
   align-items: center;
   gap: 8px;
   min-height: 54px;
+  margin-inline: var(--pad);
   padding: 9px var(--pad);
   font-size: 0.78rem;
 }
@@ -672,7 +685,7 @@ button:focus-visible {
 
 .home-grid .league-table--overview thead th {
   height: auto;
-  padding-top: 21px;
+  padding-top: 23px;
   padding-bottom: 8px;
   border-bottom: 0;
   background: var(--surface);
@@ -681,6 +694,8 @@ button:focus-visible {
 }
 
 .home-grid > .card .table-scroll {
+  width: calc(100% + 20px);
+  margin-left: -10px;
   padding-inline: 0;
 }
 
@@ -714,15 +729,19 @@ button:focus-visible {
 }
 
 .home-grid .league-table--overview col.w-overview-pos {
-  width: 56px;
+  width: 54px;
 }
 
 .home-grid .league-table--overview col.w-overview-metric:last-child {
-  width: 60px;
+  width: 62px;
 }
 
 .home-grid .league-table--overview .team-cell span {
   font-size: 0.86rem;
+}
+
+.home-grid .league-table--overview tbody .col-team {
+  padding-left: 4px !important;
 }
 
 .league-table--overview tbody td:nth-child(n + 3) {
@@ -737,8 +756,13 @@ button:focus-visible {
 }
 
 .league-table--overview tbody td.points {
-  color: color-mix(in srgb, var(--text) 86%, var(--muted));
-  font-weight: 650;
+  color: #fff;
+  font-weight: 700;
+}
+
+.home-grid .league-table--overview thead th.col-points {
+  color: #fff;
+  font-weight: 750;
 }
 
 .league-table--compact th,
@@ -863,10 +887,10 @@ button:focus-visible {
 
 .league-table--overview .col-pos .zone {
   position: absolute;
-  top: 50%;
-  left: 0;
+  top: calc(50% - 1px);
+  left: 1px;
   width: 3px;
-  height: 30px;
+  height: 34px;
   margin: 0;
   transform: translateY(-50%);
 }
@@ -1024,9 +1048,9 @@ button:focus-visible {
 }
 
 .home-grid > .card .legend {
-  padding-bottom: 21px;
-  padding-right: 20px;
-  padding-left: 20px;
+  padding-bottom: 23px;
+  padding-right: 22px;
+  padding-left: 22px;
   border-top: 0;
 }
 

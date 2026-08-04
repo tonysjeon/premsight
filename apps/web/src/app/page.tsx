@@ -33,7 +33,7 @@ export default async function Home({
   const selectedFixtures =
     selectedMatchday === null ? [] : fixturesInMatchday(fixtures, selectedMatchday);
   return (
-    <main className="shell">
+    <main className="shell home-page">
       <div className="home-grid">
         <Card flush>
           <Table

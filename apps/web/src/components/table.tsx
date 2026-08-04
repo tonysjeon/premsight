@@ -120,7 +120,7 @@ export function Table({
             <th className={overview ? 'hide-narrow' : undefined} scope="col">
               <abbr title="Goal difference">GD</abbr>
             </th>
-            <th scope="col">
+            <th className={overview ? 'col-points' : undefined} scope="col">
               <abbr title="Points">Pts</abbr>
             </th>
             {overview ? (

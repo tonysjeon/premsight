@@ -13,6 +13,13 @@ const MATCHDAY_TEAM_LABELS: Readonly<Record<string, string>> = {
   NOT: 'Nottm Forest',
 };
 
+const MATCHDAY_DAY_LABEL = new Intl.DateTimeFormat('en-US', {
+  weekday: 'long',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
+
 function matchdayTeamLabel(abbr: string, fallback: string): string {
   return MATCHDAY_TEAM_LABELS[abbr] ?? fallback;
 }
@@ -63,7 +70,9 @@ export function MatchdaySnapshot({
     <div className="round-list">
       {groupByDay(items).map((day) => (
         <div key={day.key}>
-          <h3 className="round-day">{day.label}</h3>
+          <h3 className="round-day">
+            {MATCHDAY_DAY_LABEL.format(new Date(day.fixtures[0]!.kickoff_at))}
+          </h3>
           {day.fixtures.map((fixture) => {
             const home = teamVisual(teams, fixture.home_team_id, fixture.home_team_name);
             const away = teamVisual(teams, fixture.away_team_id, fixture.away_team_name);
