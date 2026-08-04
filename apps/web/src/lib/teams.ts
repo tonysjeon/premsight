@@ -54,6 +54,15 @@ const CREST_OVERRIDES: Readonly<Record<string, string>> = {
   WOL: 'https://images.fotmob.com/image_resources/logo/teamlogo/8602.png',
 };
 
+const MATCHDAY_TEAM_LABELS: Readonly<Record<string, string>> = {
+  BHA: 'Brighton',
+  COV: 'Coventry',
+  HUL: 'Hull',
+  IPS: 'Ipswich',
+  LEE: 'Leeds',
+  NOT: 'Nottm Forest',
+};
+
 const NAME_NOISE = /^(afc|fc)$|^&$/i;
 
 export type TeamDirectory = ReadonlyMap<string, Team>;
@@ -84,6 +93,10 @@ export type TeamVisual = {
   textColor: string;
   crestUrl?: string | null;
 };
+
+export function matchdayTeamLabel(visual: Pick<TeamVisual, 'abbr' | 'label'>): string {
+  return MATCHDAY_TEAM_LABELS[visual.abbr] ?? visual.label;
+}
 
 export function teamVisual(
   directory: TeamDirectory | undefined,

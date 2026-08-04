@@ -19,14 +19,24 @@ export function SiteHeader({ currentSeasonId, seasons }: { currentSeasonId: stri
 
   return (
     <header className="site-header">
-      <div className="shell">
-        <Link className="brand" href={href('/')}>
-          PREM<span>SIGHT</span>
-        </Link>
+      <div className="site-brand-bar">
+        <div className="shell home-page">
+          <Link className="brand" href={href('/')}>
+            PREM<span>SIGHT</span>
+          </Link>
+        </div>
+      </div>
+      <div className="shell home-page site-header-card">
         <nav aria-label="Primary" className="nav-tabs">
-          <Link href={href('/')}>Matches</Link>
-          <Link href={href('/fixtures')}>Fixtures</Link>
-          <Link href={href('/table')}>Table</Link>
+          <Link aria-current={pathname === '/' ? 'page' : undefined} href={href('/')}>
+            Overview
+          </Link>
+          <Link aria-current={pathname === '/fixtures' ? 'page' : undefined} href={href('/fixtures')}>
+            Fixtures
+          </Link>
+          <Link aria-current={pathname === '/table' ? 'page' : undefined} href={href('/table')}>
+            Table
+          </Link>
         </nav>
         <SeasonSelect basePath={selectPath} seasons={seasons} value={seasonId} />
       </div>

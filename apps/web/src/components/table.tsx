@@ -3,7 +3,7 @@ import { FormGuide } from '@/components/form-guide';
 import { TeamBadge } from '@/components/team-badge';
 import type { Fixture, Standing } from '@/lib/api';
 import type { ResultMark } from '@/lib/season';
-import { teamVisual, type TeamDirectory } from '@/lib/teams';
+import { matchdayTeamLabel, teamVisual, type TeamDirectory } from '@/lib/teams';
 
 type Zone = 'ucl' | 'uel' | 'drop' | null;
 
@@ -15,6 +15,12 @@ const TABLE_TEAM_LABELS: Readonly<Record<string, string>> = {
   NOT: 'Nottingham Forest',
   TOT: 'Tottenham Hotspur',
 };
+
+const NEXT_FIXTURE_DATE = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
 
 function zoneFor(position: number, leagueSize: number): Zone {
   if (position <= 4) return 'ucl';
@@ -146,11 +152,16 @@ export function Table({
                 ? teamVisual(teams, nextFixture.away_team_id, nextFixture.away_team_name)
                 : teamVisual(teams, nextFixture.home_team_id, nextFixture.home_team_name)
               : null;
-            const opponentId = nextFixture
-              ? nextFixture.home_team_id === row.team_id
-                ? nextFixture.away_team_id
-                : nextFixture.home_team_id
+            const nextHome = nextFixture
+              ? teamVisual(teams, nextFixture.home_team_id, nextFixture.home_team_name)
               : null;
+            const nextAway = nextFixture
+              ? teamVisual(teams, nextFixture.away_team_id, nextFixture.away_team_name)
+              : null;
+            const nextFixtureLabel =
+              nextFixture && nextHome && nextAway
+                ? `${NEXT_FIXTURE_DATE.format(new Date(nextFixture.kickoff_at))}: ${matchdayTeamLabel(nextHome)} vs. ${matchdayTeamLabel(nextAway)}`
+                : null;
             return (
               <tr key={row.team_id}>
                 <td className="col-pos">
@@ -189,12 +200,12 @@ export function Table({
                 {overview ? (
                   <>
                     <td className="col-next">
-                      {opponent && opponentId ? (
+                      {opponent && nextFixture && nextFixtureLabel ? (
                         <Link
-                          aria-label={`Next opponent: ${opponent.label}`}
+                          aria-label={`View ${nextFixtureLabel}`}
                           className="next-opponent"
-                          href={`/teams/${opponentId}`}
-                          title={opponent.label}
+                          data-tooltip={nextFixtureLabel}
+                          href={`/matches/${nextFixture.id}`}
                         >
                           <TeamBadge visual={opponent} />
                         </Link>
