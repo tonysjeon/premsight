@@ -6,7 +6,7 @@
 - Phase 2 — Data Model: complete
 - Phase 3 — Historical Data: complete
 - Phase 4 — Core Application: complete
-- Phase 5 — Pre-Match Prediction Engine: next
+- Phase 5 — Pre-Match Prediction Engine: complete
 
 Phase completion means its documented deliverables are implemented and covered by the relevant automated checks. Product endpoints and UI remain intentionally deferred to their roadmap phases.
 
@@ -71,6 +71,8 @@ Create the repository and development environment.
 - Expected goals
 - Score probability matrix
 - Win/draw/loss probabilities
+- Fixture prediction API
+- Match-page model estimates
 
 ---
 

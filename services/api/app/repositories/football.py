@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any
 from uuid import UUID
 
@@ -23,6 +24,14 @@ class FootballRepository:
                       s.start_date, s.end_date, s.is_current
                FROM seasons s JOIN competitions c ON c.id=s.competition_id
                WHERE s.is_current ORDER BY s.start_date DESC LIMIT 1"""
+        )
+
+    def seasons(self) -> list[dict[str, Any]]:
+        return self._all(
+            """SELECT s.id, s.competition_id, c.name competition_name, s.name,
+                      s.start_date, s.end_date, s.is_current
+               FROM seasons s JOIN competitions c ON c.id=s.competition_id
+               ORDER BY s.start_date DESC"""
         )
 
     def teams(self, season_id: UUID | None = None) -> list[dict[str, Any]]:
@@ -60,9 +69,25 @@ class FootballRepository:
     def fixture(self, fixture_id: UUID) -> dict[str, Any] | None:
         return self._one(self._fixture_select() + " WHERE f.id=%s", (fixture_id,))
 
+    def prediction_history(
+        self, competition_id: UUID, before_kickoff: datetime
+    ) -> list[dict[str, Any]]:
+        return self._all(
+            """SELECT home_team_id::text, away_team_id::text, home_score, away_score
+               FROM fixtures
+               WHERE competition_id=%s AND kickoff_at<%s AND status='completed'
+                 AND home_score IS NOT NULL AND away_score IS NOT NULL
+               ORDER BY kickoff_at""",
+            (competition_id, before_kickoff),
+        )
+
     def standings(self, season_id: UUID) -> list[dict[str, Any]]:
         return self._all(
-            """WITH results AS (
+            """WITH season_teams AS (
+                 SELECT home_team_id team_id FROM fixtures WHERE season_id=%s
+                 UNION
+                 SELECT away_team_id FROM fixtures WHERE season_id=%s
+               ), results AS (
                  SELECT home_team_id team_id,1 played,(home_score>away_score)::int won,
                    (home_score=away_score)::int drawn,(home_score<away_score)::int lost,
                    home_score gf,away_score ga FROM fixtures
@@ -77,13 +102,18 @@ class FootballRepository:
                    (sum(gf)-sum(ga))::int goal_difference,(sum(won)*3+sum(drawn))::int points
                  FROM results GROUP BY team_id
                ) SELECT row_number() OVER (
-                   ORDER BY points DESC,goal_difference DESC,goals_for DESC,t.name
+                   ORDER BY coalesce(points,0) DESC,coalesce(goal_difference,0) DESC,
+                     coalesce(goals_for,0) DESC,t.name
                  )::int position,
-                   t.id team_id,t.name team_name,played,won,drawn,lost,
-                   goals_for,goals_against,goal_difference,points
-                 FROM totals x JOIN teams t ON t.id=x.team_id
+                   t.id team_id,t.name team_name,coalesce(played,0)::int played,
+                   coalesce(won,0)::int won,coalesce(drawn,0)::int drawn,
+                   coalesce(lost,0)::int lost,coalesce(goals_for,0)::int goals_for,
+                   coalesce(goals_against,0)::int goals_against,
+                   coalesce(goal_difference,0)::int goal_difference,coalesce(points,0)::int points
+                 FROM season_teams s JOIN teams t ON t.id=s.team_id
+                 LEFT JOIN totals x ON x.team_id=s.team_id
                  ORDER BY position""",
-            (season_id, season_id),
+            (season_id, season_id, season_id, season_id),
         )
 
     @staticmethod

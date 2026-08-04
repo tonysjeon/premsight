@@ -3,6 +3,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
+from app.clients.prediction import PredictionClient, PredictionServiceError
 from app.core.config import get_settings
 from app.repositories.football import FootballRepository
 
@@ -14,6 +15,13 @@ def repository() -> FootballRepository:
 
 
 Repo = Annotated[FootballRepository, Depends(repository)]
+
+
+def prediction_client() -> PredictionClient:
+    return PredictionClient(get_settings().prediction_engine_url)
+
+
+Prediction = Annotated[PredictionClient, Depends(prediction_client)]
 Status = Literal["scheduled", "live", "postponed", "cancelled", "completed"]
 
 
@@ -23,6 +31,12 @@ def current_season(repo: Repo) -> dict:
     if item is None:
         raise HTTPException(404, "Current season not found")
     return item
+
+
+@router.get("/seasons")
+def seasons(repo: Repo) -> dict:
+    items = repo.seasons()
+    return {"items": items, "count": len(items)}
 
 
 @router.get("/teams")
@@ -57,6 +71,24 @@ def fixture(fixture_id: UUID, repo: Repo) -> dict:
     if item is None:
         raise HTTPException(404, "Fixture not found")
     return item
+
+
+@router.get("/fixtures/{fixture_id}/prediction")
+def fixture_prediction(fixture_id: UUID, repo: Repo, client: Prediction) -> dict:
+    fixture_item = repo.fixture(fixture_id)
+    if fixture_item is None:
+        raise HTTPException(404, "Fixture not found")
+    results = repo.prediction_history(
+        fixture_item["competition_id"], fixture_item["kickoff_at"]
+    )
+    try:
+        return client.predict(
+            str(fixture_item["home_team_id"]),
+            str(fixture_item["away_team_id"]),
+            results,
+        )
+    except PredictionServiceError as error:
+        raise HTTPException(error.status_code, error.detail) from error
 
 
 @router.get("/standings")

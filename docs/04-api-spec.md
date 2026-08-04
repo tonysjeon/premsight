@@ -39,13 +39,17 @@ All product resources are versioned under `/v1`.
 | Method | Path                           | Purpose                                      |
 | ------ | ------------------------------ | -------------------------------------------- |
 | `GET`  | `/v1/seasons/current`          | Current Premier League season                |
+| `GET`  | `/v1/seasons`                  | Available seasons, newest first              |
 | `GET`  | `/v1/teams`                    | Teams with optional `season_id` filter       |
 | `GET`  | `/v1/teams/{id}`               | Team details and fixtures                    |
 | `GET`  | `/v1/fixtures`                 | Fixtures filtered by season, status, or team |
 | `GET`  | `/v1/fixtures/{id}`            | Match detail                                 |
+| `GET`  | `/v1/fixtures/{id}/prediction` | Versioned pre-match probabilities            |
 | `GET`  | `/v1/standings?season_id={id}` | Table computed from completed fixtures       |
 
 List responses use `{ "items": [...], "count": n }`. Missing resources return `404` with FastAPI's standard `detail` field. Invalid UUIDs or query values return `422`.
+
+Standings include every team with a fixture in the requested season. Before a team has completed a match, its played, result, goal, and points values are zero so an upcoming season still renders a complete league table.
 
 ## Future resource areas
 

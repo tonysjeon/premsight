@@ -3,9 +3,16 @@ import os
 import psycopg
 import pytest
 from premsight_database.migrator import migrate_down_all, migrate_up
+from psycopg.conninfo import conninfo_to_dict
 
 from app.repositories.postgres import PostgresHistoricalRepository
 from tests.snapshots import historical_snapshot
+
+
+def _require_disposable_database(database_url: str) -> None:
+    database_name = conninfo_to_dict(database_url).get("dbname", "")
+    if not database_name.endswith("_test"):
+        pytest.fail("Ingestion integration tests require a database name ending in '_test'")
 
 
 @pytest.fixture
@@ -13,6 +20,7 @@ def database_url() -> str:
     url = os.environ.get("DATABASE_URL")
     if not url:
         pytest.skip("DATABASE_URL is required for repository integration tests")
+    _require_disposable_database(url)
     migrate_down_all(url)
     migrate_up(url)
     try:

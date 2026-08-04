@@ -4,19 +4,21 @@
 
 The web application provides five server-rendered product surfaces:
 
-- `/` — matchday feed for the current season, with a league table and season summary rail
-- `/fixtures` — season fixture list grouped by date
+- `/` — table-first season overview with the selected matchday alongside it
+- `/fixtures` — upcoming fixtures and matchday browser for a selected season
 - `/matches/{id}` — fixture identity, kickoff/status, and score
 - `/teams/{id}` — team details with recent and upcoming fixtures
 - `/table` — full current-season league table
 
 ## Home page composition
 
-The home page leads with the matchday a visitor most likely wants: the next matchday that still has unplayed fixtures, or the most recently completed one once the season is over. Matchday chips link to `/?matchday=N`.
+The home page defaults to the season marked current by the API. A season selector lists available Premier League seasons and links to `/?season={id}`; changing seasons clears any selected matchday. The full league table is the primary content column. The selected matchday sits in a narrower right column for quick context, following the information hierarchy of established football score applications.
 
-`matchday` is untrusted input. It is accepted only when it matches `^\d{1,2}$` and names a matchday that exists in the season; anything else falls back to the default matchday rather than erroring.
+The fixtures page owns the deeper schedule experience. It leads with the next scheduled matches, followed by a matchday browser with two-column fixture rows on wide screens. Its season and matchday controls use `/fixtures?season={id}&matchday={n}`.
 
-The rail shows the leading table positions with qualification zones and form, plus season aggregates (matches played, goals, goals per game, share of home wins, biggest win). An "Up next" card renders only when scheduled fixtures exist, so a completed season shows no empty placeholder.
+`season` and `matchday` are untrusted input. A season is accepted only when its ID appears in the API season list. A matchday is accepted only when it matches `^\d{1,2}$` and names a matchday that exists in the selected season. Invalid values fall back to the current season or its default matchday rather than erroring.
+
+The default matchday is the next round that still has unplayed fixtures, or the most recently completed round once the season is over. Matchday chips retain the selected season. An "Up next" card renders only on the fixtures page and only when scheduled fixtures exist, so a completed season shows no empty placeholder.
 
 ## Data boundary
 
