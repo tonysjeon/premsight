@@ -43,6 +43,19 @@ def client() -> TestClient:
                VALUES(%s,%s,%s,%s,'completed','2026-08-15T14:00:00Z',1,2,1) RETURNING id""",
             (competition_id, season_id, home_id, away_id),
         ).fetchone()[0]
+        snapshot_id = conn.execute(
+            """INSERT INTO player_snapshot_runs(season_id,provider,captured_at)
+               VALUES(%s,'fpl','2026-08-04T12:00:00Z') RETURNING id""",
+            (season_id,),
+        ).fetchone()[0]
+        conn.execute(
+            """INSERT INTO player_snapshot_entries(
+                 snapshot_id,team_id,provider_player_id,first_name,last_name,
+                 display_name,position,nationality_code,photo_url,club_rank,global_rank)
+               VALUES(%s,%s,'1','David','Raya','Raya','GK','ES',
+                      'https://resources.premierleague.com/raya.png',1,1)""",
+            (snapshot_id, home_id),
+        )
     os.environ["DATABASE_URL"] = database_url
     get_settings.cache_clear()
     app.state.ids = {
@@ -76,6 +89,12 @@ def test_core_read_endpoints(client: TestClient) -> None:
         ("Arsenal", 3),
         ("Chelsea", 0),
     ]
+    snapshot = client.get("/v1/player-snapshots/latest").json()
+    assert snapshot["count"] == 1
+    assert snapshot["players"][0]["display_name"] == "Raya"
+    assert snapshot["players"][0]["global_rank"] == 1
+    assert snapshot["players"][0]["nationality_code"] == "ES"
+    assert snapshot["players"][0]["photo_url"].endswith("/raya.png")
 
 
 def test_validation_and_missing_resources(client: TestClient) -> None:

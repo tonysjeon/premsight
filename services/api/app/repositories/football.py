@@ -116,6 +116,30 @@ class FootballRepository:
             (season_id, season_id, season_id, season_id),
         )
 
+    def latest_player_snapshot(self) -> dict[str, Any] | None:
+        snapshot = self._one(
+            """SELECT r.id,r.season_id,r.provider,r.captured_at
+               FROM player_snapshot_runs r
+               JOIN seasons s ON s.id=r.season_id
+               JOIN competitions c ON c.id=s.competition_id
+               WHERE s.is_current AND c.code='PL'
+               ORDER BY r.captured_at DESC,r.created_at DESC LIMIT 1"""
+        )
+        if snapshot is None:
+            return None
+        snapshot["players"] = self._all(
+            """SELECT e.provider_player_id id,e.first_name,e.last_name,e.display_name,
+                      e.position,e.nationality_code,e.photo_url,e.club_rank,e.global_rank,e.team_id,
+                      t.name team_name,
+                      t.crest_url team_crest_url
+               FROM player_snapshot_entries e JOIN teams t ON t.id=e.team_id
+               WHERE e.snapshot_id=%s
+               ORDER BY t.name,e.club_rank""",
+            (snapshot["id"],),
+        )
+        snapshot["count"] = len(snapshot["players"])
+        return snapshot
+
     @staticmethod
     def _fixture_select() -> str:
         return """SELECT f.id,f.competition_id,f.season_id,f.home_team_id,h.name home_team_name,

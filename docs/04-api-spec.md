@@ -46,10 +46,13 @@ All product resources are versioned under `/v1`.
 | `GET`  | `/v1/fixtures/{id}`            | Match detail                                 |
 | `GET`  | `/v1/fixtures/{id}/prediction` | Versioned pre-match probabilities            |
 | `GET`  | `/v1/standings?season_id={id}` | Table computed from completed fixtures       |
+| `GET`  | `/v1/player-snapshots/latest`  | Latest complete current-season draft pool    |
 
 List responses use `{ "items": [...], "count": n }`. Missing resources return `404` with FastAPI's standard `detail` field. Invalid UUIDs or query values return `422`.
 
 Standings include every team with a fixture in the requested season. Before a team has completed a match, its played, result, goal, and points values are zero so an upcoming season still renders a complete league table.
+
+The latest player snapshot response includes snapshot metadata plus a `players` list and `count`. Each player exposes its provider-scoped snapshot ID, PremSight `team_id`, captured names, broad provider position, nullable FPL nationality code, nullable Premier League headshot URL, team name, team crest URL, deterministic `club_rank`, and `global_rank`. The endpoint returns `404` until the first successful snapshot is ingested. Rankings are draft metadata only; no starter or bench role is exposed. Team-name boilerplate such as `AFC` and `FC` is removed by the presentation layer, not from canonical team records. Nationality and headshot remain null when the provider omits their source fields.
 
 ## Future resource areas
 

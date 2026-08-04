@@ -78,9 +78,7 @@ def fixture_prediction(fixture_id: UUID, repo: Repo, client: Prediction) -> dict
     fixture_item = repo.fixture(fixture_id)
     if fixture_item is None:
         raise HTTPException(404, "Fixture not found")
-    results = repo.prediction_history(
-        fixture_item["competition_id"], fixture_item["kickoff_at"]
-    )
+    results = repo.prediction_history(fixture_item["competition_id"], fixture_item["kickoff_at"])
     try:
         return client.predict(
             str(fixture_item["home_team_id"]),
@@ -95,3 +93,11 @@ def fixture_prediction(fixture_id: UUID, repo: Repo, client: Prediction) -> dict
 def standings(season_id: UUID, repo: Repo) -> dict:
     items = repo.standings(season_id)
     return {"items": items, "count": len(items)}
+
+
+@router.get("/player-snapshots/latest")
+def latest_player_snapshot(repo: Repo) -> dict:
+    item = repo.latest_player_snapshot()
+    if item is None:
+        raise HTTPException(404, "Player snapshot not found")
+    return item
