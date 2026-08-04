@@ -475,7 +475,7 @@ button:focus-visible {
 .kickoff-time small {
   color: inherit;
   font-size: 0.82em;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.02em;
 }
 
@@ -1231,6 +1231,7 @@ button:focus-visible {
 }
 
 .matchday-menu a[aria-current='page'] {
+  background: var(--surface-hover);
   color: var(--text);
 }
 
