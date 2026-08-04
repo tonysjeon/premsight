@@ -24,7 +24,6 @@ export default function RootLayout({
             <nav aria-label="Primary" className="nav-tabs">
               <Link href="/">Matches</Link>
               <Link href="/fixtures">Fixtures</Link>
-              <Link href="/table">Table</Link>
             </nav>
           </div>
         </header>

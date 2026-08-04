@@ -38,7 +38,7 @@ export default async function Home({
         <SeasonSelect seasons={seasons} value={season.id} />
       </div>
       <div className="home-grid">
-        <Card action={{ href: '/table', label: 'Full table' }} flush title="League table">
+        <Card flush>
           <Table
             items={standings}
             leagueSize={standings.length}
