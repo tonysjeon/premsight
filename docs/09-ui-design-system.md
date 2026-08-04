@@ -35,7 +35,7 @@ The UI uses the platform rounded system stack—SF Pro Rounded on supported Appl
 - **Team badge** — the provider crest when available, with a coloured monogram fallback. Club fallback colours remain presentation-only in `apps/web/src/lib/teams.ts`.
 - **Match row** — status on the left, both teams stacked in the middle with their goals, chevron on the right. The losing side is muted so results read at a glance.
 - **Matchday chips** — horizontally scrollable links that set the selected matchday. The active chip carries `aria-current`.
-- **League table** — position, badge, team, and figures, with a qualification zone bar, optional form guide, and a legend explaining the zone colours. The home overview adds combined goals for/against and the next opponent crest.
+- **League table** — position, badge, team, and figures, with a qualification zone bar, optional form guide, and a legend explaining the zone colours. The home overview gives the team identity most of the row, aligns fixed-width metrics on the right, omits the visible Team heading, and adds combined goals for/against plus the next opponent crest.
 - **Form guide** — last five results as W/D/L marks, exposed to assistive technology as a text label.
 - **Stat tile** — a single figure with an uppercase label.
 
