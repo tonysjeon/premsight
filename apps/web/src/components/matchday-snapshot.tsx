@@ -4,6 +4,19 @@ import type { Fixture } from '@/lib/api';
 import { groupByDay } from '@/lib/season';
 import { teamVisual, type TeamDirectory } from '@/lib/teams';
 
+const MATCHDAY_TEAM_LABELS: Readonly<Record<string, string>> = {
+  BHA: 'Brighton',
+  COV: 'Coventry',
+  HUL: 'Hull',
+  IPS: 'Ipswich',
+  LEE: 'Leeds',
+  NOT: 'Nottm Forest',
+};
+
+function matchdayTeamLabel(abbr: string, fallback: string): string {
+  return MATCHDAY_TEAM_LABELS[abbr] ?? fallback;
+}
+
 const KICKOFF_TIME = new Intl.DateTimeFormat('en-US', {
   hour: 'numeric',
   minute: '2-digit',
@@ -61,11 +74,11 @@ export function MatchdaySnapshot({
                 href={`/matches/${fixture.id}`}
                 key={fixture.id}
               >
-                <span>{home.label}</span>
+                <span>{matchdayTeamLabel(home.abbr, home.label)}</span>
                 <TeamBadge visual={home} />
                 <strong>{matchLabel(fixture)}</strong>
                 <TeamBadge visual={away} />
-                <span>{away.label}</span>
+                <span>{matchdayTeamLabel(away.abbr, away.label)}</span>
               </Link>
             );
           })}

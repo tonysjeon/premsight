@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 export function MatchdayNavigation({
@@ -28,27 +29,25 @@ export function MatchdayNavigation({
           <path d="m10 3.5-4.5 4.5 4.5 4.5" />
         </svg>
       </button>
-      <label className="matchday-picker">
-        <span aria-hidden="true" className="matchday-picker-value">
-          {value === null ? 'Matches' : `Matchday ${value}`}
+      <details className="matchday-picker">
+        <summary>
+          <span>{value === null ? 'Matches' : `Matchday ${value}`}</span>
           <svg viewBox="0 0 12 12">
             <path d="m3 4.5 3 3 3-3" />
           </svg>
-        </span>
-        <select
-          aria-label="Matchday"
-          disabled={value === null}
-          onChange={(event) => goTo(Number(event.target.value))}
-          value={value ?? ''}
-        >
-          {value === null ? <option value="">Matches</option> : null}
+        </summary>
+        <div className="matchday-menu">
           {matchdays.map((matchday) => (
-            <option key={matchday} value={matchday}>
+            <Link
+              aria-current={matchday === value ? 'page' : undefined}
+              href={`/?season=${encodeURIComponent(seasonId)}&matchday=${matchday}`}
+              key={matchday}
+            >
               Matchday {matchday}
-            </option>
+            </Link>
           ))}
-        </select>
-      </label>
+        </div>
+      </details>
       <button
         aria-label="Next matchday"
         disabled={index < 0 || index >= matchdays.length - 1}

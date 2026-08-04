@@ -274,7 +274,7 @@ button:focus-visible {
 
 .home-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.8fr) minmax(340px, 0.75fr);
+  grid-template-columns: minmax(0, 1.7fr) minmax(390px, 0.85fr);
   gap: 16px;
   align-items: start;
   margin-top: 16px;
@@ -697,7 +697,7 @@ button:focus-visible {
 }
 
 .home-grid .league-table--overview col.w-overview-pos {
-  width: 50px;
+  width: 46px;
 }
 
 .home-grid .league-table--overview .team-cell span {
@@ -889,21 +889,30 @@ button:focus-visible {
 
 .matchday-picker {
   position: relative;
-  display: inline-grid;
   justify-self: center;
 }
 
-.matchday-picker-value {
+.matchday-picker summary {
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  list-style: none;
   color: var(--text);
   font-size: 0.9rem;
   font-weight: 700;
   white-space: nowrap;
+  cursor: pointer;
 }
 
-.matchday-picker-value svg {
+.matchday-picker summary::-webkit-details-marker {
+  display: none;
+}
+
+.matchday-picker summary:hover {
+  color: var(--muted);
+}
+
+.matchday-picker summary svg {
   width: 12px;
   height: 12px;
   fill: none;
@@ -913,15 +922,58 @@ button:focus-visible {
   stroke-width: 1.5;
 }
 
-.matchday-picker select {
+.matchday-picker[open] summary svg {
+  transform: rotate(180deg);
+}
+
+.matchday-menu {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  border: 0;
-  opacity: 0;
-  cursor: pointer;
+  z-index: 5;
+  top: calc(100% + 10px);
+  left: -16px;
+  display: grid;
+  width: max-content;
+  min-width: 124px;
+  max-height: 240px;
+  padding: 6px;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  box-shadow: 0 12px 28px #0008;
+  scrollbar-color: var(--line-strong) transparent;
+  scrollbar-width: thin;
+}
+
+.matchday-menu::-webkit-scrollbar {
+  width: 4px;
+}
+
+.matchday-menu::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.matchday-menu::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: var(--line-strong);
+}
+
+.matchday-menu a {
+  padding: 7px 10px;
+  border-radius: 7px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: left;
+}
+
+.matchday-menu a:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.matchday-menu a[aria-current='page'] {
+  color: var(--text);
 }
 
 .zone--ucl {

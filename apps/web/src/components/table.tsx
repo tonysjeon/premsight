@@ -8,8 +8,12 @@ import { teamVisual, type TeamDirectory } from '@/lib/teams';
 type Zone = 'ucl' | 'uel' | 'drop' | null;
 
 const TABLE_TEAM_LABELS: Readonly<Record<string, string>> = {
-  BHA: 'Bright & Hove Albion',
+  BHA: 'Brighton & Hove Albion',
+  MCI: 'Manchester City',
+  MUN: 'Manchester United',
+  NEW: 'Newcastle United',
   NOT: 'Nottingham Forest',
+  TOT: 'Tottenham Hotspur',
 };
 
 function zoneFor(position: number, leagueSize: number): Zone {
