@@ -38,9 +38,14 @@ export function Table({
   nextByTeam,
 }: TableProps) {
   const size = leagueSize ?? items.length;
+  const tableClass = compact
+    ? 'league-table league-table--compact'
+    : overview
+      ? 'league-table league-table--overview'
+      : 'league-table';
   return (
     <div className="table-scroll">
-      <table className={compact ? 'league-table league-table--compact' : 'league-table'}>
+      <table className={tableClass}>
         {compact ? (
           <colgroup>
             <col className="w-pos" />
@@ -50,6 +55,19 @@ export function Table({
             <col className="w-num" />
             {form ? <col className="w-form" /> : null}
           </colgroup>
+        ) : overview ? (
+          <colgroup>
+            <col className="w-overview-pos" />
+            <col />
+            <col className="w-overview-metric" />
+            <col className="w-overview-metric" />
+            <col className="w-overview-metric" />
+            <col className="w-overview-metric" />
+            <col className="w-overview-metric" />
+            <col className="w-overview-metric" />
+            <col className="w-overview-metric" />
+            <col className="w-overview-metric" />
+          </colgroup>
         ) : null}
         <thead>
           <tr>
@@ -57,10 +75,10 @@ export function Table({
               #
             </th>
             <th className="col-team" scope="col">
-              Team
+              {overview ? <span className="sr-only">Team</span> : 'Team'}
             </th>
             <th scope="col">
-              <abbr title="Played">P</abbr>
+              <abbr title="Played">{overview ? 'PL' : 'P'}</abbr>
             </th>
             {compact ? null : (
               <>

@@ -26,6 +26,18 @@
   box-sizing: border-box;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 html {
   background: var(--ink);
   -webkit-text-size-adjust: 100%;
@@ -605,6 +617,10 @@ button:focus-visible {
   table-layout: fixed;
 }
 
+.league-table--overview {
+  table-layout: fixed;
+}
+
 .league-table--compact th,
 .league-table--compact td {
   padding: 10px 5px;
@@ -620,6 +636,14 @@ button:focus-visible {
 
 .w-form {
   width: 84px;
+}
+
+.w-overview-pos {
+  width: 54px;
+}
+
+.w-overview-metric {
+  width: 54px;
 }
 
 .col-pos {
@@ -711,6 +735,13 @@ button:focus-visible {
   margin-right: 7px;
   border-radius: 2px;
   vertical-align: -2px;
+}
+
+.league-table--overview .col-pos .zone {
+  height: 30px;
+  margin-left: -8px;
+  margin-right: 9px;
+  vertical-align: middle;
 }
 
 .zone--ucl {
@@ -1024,6 +1055,18 @@ button:focus-visible {
 
   .hide-narrow {
     display: none;
+  }
+
+  .league-table--overview {
+    table-layout: auto;
+  }
+
+  .league-table--overview col.w-overview-pos {
+    width: 42px;
+  }
+
+  .league-table--overview col.w-overview-metric {
+    width: auto;
   }
 
   .match-row {
