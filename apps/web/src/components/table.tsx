@@ -90,7 +90,7 @@ export function Table({
                 <abbr title="Goals for and against">+/-</abbr>
               </th>
             ) : null}
-            <th scope="col">
+            <th className={overview ? 'hide-narrow' : undefined} scope="col">
               <abbr title="Goal difference">GD</abbr>
             </th>
             <th scope="col">
@@ -154,7 +154,9 @@ export function Table({
                     {row.goals_for}–{row.goals_against}
                   </td>
                 ) : null}
-                <td>{row.goal_difference > 0 ? `+${row.goal_difference}` : row.goal_difference}</td>
+                <td className={overview ? 'hide-narrow' : undefined}>
+                  {row.goal_difference > 0 ? `+${row.goal_difference}` : row.goal_difference}
+                </td>
                 <td className="points">{row.points}</td>
                 {overview ? (
                   <>

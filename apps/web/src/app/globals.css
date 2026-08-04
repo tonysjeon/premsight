@@ -1,21 +1,22 @@
 @import 'tailwindcss';
 
 :root {
-  --ink: #f1efe9;
-  --surface: #fffefb;
-  --surface-hover: #f7f5ef;
-  --surface-sunken: #e9e6de;
-  --line: #d9d5cb;
-  --line-strong: #b9b4a9;
-  --text: #18201d;
-  --muted: #66706b;
-  --muted-dim: #969d98;
-  --accent: #176b45;
-  --accent-ink: #ffffff;
-  --live: #ba3046;
-  --zone-ucl: #315da8;
-  --zone-uel: #b66b16;
-  --zone-drop: #b83a3a;
+  color-scheme: dark;
+  --ink: #101110;
+  --surface: #1b1c1b;
+  --surface-hover: #242624;
+  --surface-sunken: #252625;
+  --line: #303230;
+  --line-strong: #4a4d4a;
+  --text: #f3f4f2;
+  --muted: #a1a5a1;
+  --muted-dim: #707570;
+  --accent: #4fd18b;
+  --accent-ink: #0c2116;
+  --live: #f05c72;
+  --zone-ucl: #4385e0;
+  --zone-uel: #d58a31;
+  --zone-drop: #e25757;
   --radius: 16px;
   --radius-sm: 11px;
   --pad: 14px;
@@ -134,7 +135,7 @@ button:focus-visible {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   overflow: hidden;
-  box-shadow: 0 1px 2px #18201d0a;
+  box-shadow: 0 1px 2px #0000003d;
 }
 
 .card + .card {
@@ -944,7 +945,7 @@ button:focus-visible {
 }
 
 .probability strong {
-  color: var(--ink);
+  color: var(--text);
   font-size: 1rem;
   font-variant-numeric: tabular-nums;
 }
@@ -977,7 +978,7 @@ button:focus-visible {
 }
 
 .prediction-summary strong {
-  color: var(--ink);
+  color: var(--text);
   font-variant-numeric: tabular-nums;
 }
 
@@ -1018,6 +1019,10 @@ button:focus-visible {
   }
 
   .hide-mobile {
+    display: none;
+  }
+
+  .hide-narrow {
     display: none;
   }
 
