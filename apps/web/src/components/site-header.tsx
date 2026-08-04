@@ -46,6 +46,9 @@ export function SiteHeader({
           >
             Fixtures
           </Link>
+          <Link aria-current={pathname === '/draft' ? 'page' : undefined} href="/draft">
+            Draft
+          </Link>
         </nav>
         <SeasonSelect basePath={selectPath} seasons={seasons} value={seasonId} />
       </div>
