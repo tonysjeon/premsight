@@ -908,6 +908,10 @@ button:focus-visible {
   display: none;
 }
 
+.matchday-picker summary:focus {
+  outline: none;
+}
+
 .matchday-picker summary:hover {
   color: var(--muted);
 }
