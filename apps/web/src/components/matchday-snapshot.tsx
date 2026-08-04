@@ -44,42 +44,61 @@ function matchLabel(fixture: Fixture) {
   return <KickoffTime value={fixture.kickoff_at} />;
 }
 
+function FixtureDays({ items, teams }: { items: readonly Fixture[]; teams: TeamDirectory }) {
+  return groupByDay(items).map((day) => (
+    <div key={day.key}>
+      <h3 className="round-day">
+        {MATCHDAY_DAY_LABEL.format(new Date(day.fixtures[0]!.kickoff_at))}
+      </h3>
+      {day.fixtures.map((fixture) => {
+        const home = teamVisual(teams, fixture.home_team_id, fixture.home_team_name);
+        const away = teamVisual(teams, fixture.away_team_id, fixture.away_team_name);
+        return (
+          <Link
+            aria-label={`${fixture.home_team_name} versus ${fixture.away_team_name}`}
+            className="round-match"
+            href={`/matches/${fixture.id}`}
+            key={fixture.id}
+          >
+            <span>{matchdayTeamLabel(home)}</span>
+            <TeamBadge visual={home} />
+            <strong>{matchLabel(fixture)}</strong>
+            <TeamBadge visual={away} />
+            <span>{matchdayTeamLabel(away)}</span>
+          </Link>
+        );
+      })}
+    </div>
+  ));
+}
+
 export function MatchdaySnapshot({
   items,
+  periodLabel,
   teams,
 }: {
   items: readonly Fixture[];
+  periodLabel?: string;
   teams: TeamDirectory;
 }) {
   if (!items.length) return <p className="empty">No matches are available for this matchday.</p>;
 
+  if (periodLabel) {
+    return (
+      <div className="fixture-period-list">
+        <section className="fixture-period">
+          <h2 className="fixture-period-title">{periodLabel}</h2>
+          <div className="round-list">
+            <FixtureDays items={items} teams={teams} />
+          </div>
+        </section>
+      </div>
+    );
+  }
+
   return (
-    <div className="round-list">
-      {groupByDay(items).map((day) => (
-        <div key={day.key}>
-          <h3 className="round-day">
-            {MATCHDAY_DAY_LABEL.format(new Date(day.fixtures[0]!.kickoff_at))}
-          </h3>
-          {day.fixtures.map((fixture) => {
-            const home = teamVisual(teams, fixture.home_team_id, fixture.home_team_name);
-            const away = teamVisual(teams, fixture.away_team_id, fixture.away_team_name);
-            return (
-              <Link
-                aria-label={`${fixture.home_team_name} versus ${fixture.away_team_name}`}
-                className="round-match"
-                href={`/matches/${fixture.id}`}
-                key={fixture.id}
-              >
-                <span>{matchdayTeamLabel(home)}</span>
-                <TeamBadge visual={home} />
-                <strong>{matchLabel(fixture)}</strong>
-                <TeamBadge visual={away} />
-                <span>{matchdayTeamLabel(away)}</span>
-              </Link>
-            );
-          })}
-        </div>
-      ))}
+    <div className="round-list round-list--matchday">
+      <FixtureDays items={items} teams={teams} />
     </div>
   );
 }

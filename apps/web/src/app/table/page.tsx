@@ -35,7 +35,7 @@ export default async function TablePage({
     <main className="shell home-page page table-page">
       <div className="table-page-overview">
         <Card flush>
-          <nav aria-label="Filter table by venue" className="chips table-venue-filters">
+          <nav aria-label="Filter table by venue" className="chips view-filters">
             {venueFilters.map((filter) => (
               <Link
                 aria-current={filter.value === venue ? 'true' : undefined}

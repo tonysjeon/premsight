@@ -416,6 +416,95 @@ button:focus-visible {
   margin-top: 4px;
 }
 
+.round-list--matchday > div {
+  padding-bottom: 0;
+}
+
+.round-list--matchday .round-day {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.round-list--matchday > div + div .round-day {
+  margin-top: 0;
+}
+
+.fixture-period + .fixture-period {
+  margin-top: 8px;
+}
+
+.fixture-period-list {
+  padding-inline: var(--pad);
+}
+
+.fixture-period-title {
+  margin: 0 0 8px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.fixture-period .round-day {
+  position: absolute;
+  z-index: 1;
+  top: 14px;
+  left: 20px;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.fixture-period .round-list > div {
+  position: relative;
+  padding-bottom: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.fixture-period .round-list > div:hover {
+  background: var(--surface-hover);
+}
+
+.fixture-period .round-match {
+  min-height: 104px;
+  margin-inline: 0;
+  padding-top: 34px;
+}
+
+.fixture-period .round-match:hover {
+  background: transparent;
+}
+
+.fixture-period-navigation {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px;
+}
+
+.fixture-period-navigation a,
+.fixture-period-navigation span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--surface-sunken);
+  color: var(--text);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.fixture-period-navigation span {
+  color: var(--muted-dim);
+  opacity: 0.45;
+}
+
 .round-match {
   position: relative;
   display: grid;
@@ -818,13 +907,13 @@ button:focus-visible {
   overflow: visible;
 }
 
-.table-venue-filters {
+.view-filters {
   gap: 10px;
   border-bottom: 1px solid var(--line);
   padding: 16px 20px;
 }
 
-.table-venue-filters .chip {
+.view-filters .chip {
   min-width: 72px;
   padding: 6px 14px;
   border-color: transparent;
@@ -835,13 +924,13 @@ button:focus-visible {
   text-align: center;
 }
 
-.table-venue-filters .chip:hover {
+.view-filters .chip:hover {
   border-color: transparent;
   background: #404140;
   color: #fff;
 }
 
-.table-venue-filters .chip[aria-current='true'] {
+.view-filters .chip[aria-current='true'] {
   border-color: #f4f4f4;
   background: #f4f4f4;
   color: #202120;
@@ -1112,6 +1201,10 @@ button:focus-visible {
   padding: 12px var(--pad);
 }
 
+.matchday-navigation--picker-only {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .matchday-navigation button {
   display: grid;
   place-items: center;
@@ -1168,6 +1261,18 @@ button:focus-visible {
 
 .matchday-picker summary:hover {
   color: var(--muted);
+}
+
+.selection-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.selection-option .crest {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
 }
 
 .matchday-picker summary svg {
@@ -1318,6 +1423,14 @@ button:focus-visible {
 
 .table-page {
   padding-top: 16px;
+}
+
+.fixtures-page {
+  padding-top: 16px;
+}
+
+.fixtures-page > .card {
+  border: 0;
 }
 
 .eyebrow {

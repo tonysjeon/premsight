@@ -30,6 +30,7 @@ const WINDOW_EDGE_LABEL = new Intl.DateTimeFormat('en-US', {
 export type ResultMark = 'W' | 'D' | 'L';
 export type DayGroup = { key: string; label: string; fixtures: Fixture[] };
 export type VenueFilter = 'all' | 'home' | 'away';
+export type FixturePeriod = { key: string; label: string; fixtures: Fixture[] };
 
 function byKickoff(a: Fixture, b: Fixture): number {
   return a.kickoff_at.localeCompare(b.kickoff_at);
@@ -55,6 +56,36 @@ export function groupByDay(fixtures: readonly Fixture[]): DayGroup[] {
       });
   }
   return [...groups.values()];
+}
+
+/** Schedule blocks sized to cover roughly two months of one team's league fixtures. */
+export function groupByTwoMonthPeriod(fixtures: readonly Fixture[], size = 8): FixturePeriod[] {
+  const sorted = [...fixtures].sort(byKickoff);
+  if (!sorted.length) return [];
+  const shortDate = new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'UTC',
+  });
+  const datedYear = new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
+
+  const periods: FixturePeriod[] = [];
+  for (let start = 0; start < sorted.length; start += size) {
+    const periodFixtures = sorted.slice(start, start + size);
+    const first = new Date(periodFixtures[0]!.kickoff_at);
+    const last = new Date(periodFixtures[periodFixtures.length - 1]!.kickoff_at);
+    const label =
+      first.getUTCFullYear() === last.getUTCFullYear()
+        ? `${shortDate.format(first)} – ${shortDate.format(last)}`
+        : `${datedYear.format(first)} – ${datedYear.format(last)}`;
+    periods.push({ key: String(periods.length), label, fixtures: periodFixtures });
+  }
+  return periods;
 }
 
 export function matchdays(fixtures: readonly Fixture[]): number[] {
