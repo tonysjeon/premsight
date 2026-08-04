@@ -103,8 +103,8 @@ button:focus-visible {
 .site-header-card {
   display: flex;
   align-items: center;
-  gap: 24px;
-  height: 52px;
+  gap: 14px;
+  height: 56px;
   margin-top: 10px;
   padding: 0 14px;
   border-radius: var(--radius);
@@ -280,32 +280,93 @@ button:focus-visible {
 /* ---------- Home grid ---------- */
 
 .season-select {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  color: var(--muted);
-  font-size: 0.78rem;
-  font-weight: 700;
+  position: relative;
 }
 
-.season-select select {
-  min-width: 128px;
-  padding: 8px 34px 8px 12px;
+.season-select summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 116px;
+  padding: 8px 30px 8px 16px;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--text);
-  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  list-style: none;
   cursor: pointer;
 }
 
-.season-select select:hover {
-  border-color: var(--line-strong);
+.season-select summary::-webkit-details-marker {
+  display: none;
 }
 
-.season-select select:focus-visible {
+.season-select summary:hover {
+  border-color: var(--line-strong);
+  background: var(--surface-hover);
+}
+
+.season-select summary:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+.season-select summary svg {
+  position: absolute;
+  right: 12px;
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.5;
+}
+
+.season-select[open] summary svg {
+  transform: rotate(180deg);
+}
+
+.season-menu {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 8px);
+  right: 0;
+  display: grid;
+  min-width: 100%;
+  width: max-content;
+  max-height: 240px;
+  padding: 6px;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  box-shadow: 0 12px 28px #0008;
+  scrollbar-color: var(--line-strong) transparent;
+  scrollbar-width: thin;
+}
+
+.season-menu a {
+  padding: 7px 10px;
+  border-radius: 7px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.season-menu a:hover,
+.season-menu a:focus-visible {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.season-menu a[aria-current='page'] {
+  background: var(--surface-hover);
+  color: var(--text);
 }
 
 .home-grid {
@@ -1433,12 +1494,8 @@ button:focus-visible {
     padding: 10px 12px;
   }
 
-  .site-header .season-select span {
-    display: none;
-  }
-
-  .site-header .season-select select {
-    min-width: 112px;
+  .site-header .season-select summary {
+    min-width: 104px;
     padding-block: 7px;
   }
 

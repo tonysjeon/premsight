@@ -31,11 +31,11 @@ export function SiteHeader({ currentSeasonId, seasons }: { currentSeasonId: stri
           <Link aria-current={pathname === '/' ? 'page' : undefined} href={href('/')}>
             Overview
           </Link>
-          <Link aria-current={pathname === '/fixtures' ? 'page' : undefined} href={href('/fixtures')}>
-            Fixtures
-          </Link>
           <Link aria-current={pathname === '/table' ? 'page' : undefined} href={href('/table')}>
             Table
+          </Link>
+          <Link aria-current={pathname === '/fixtures' ? 'page' : undefined} href={href('/fixtures')}>
+            Fixtures
           </Link>
         </nav>
         <SeasonSelect basePath={selectPath} seasons={seasons} value={seasonId} />
