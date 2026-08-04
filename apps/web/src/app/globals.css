@@ -312,10 +312,12 @@ button:focus-visible {
 
 .round-match > span:first-child {
   text-align: right;
+  font-weight: 550;
 }
 
 .round-match > span:last-child {
   text-align: left;
+  font-weight: 550;
 }
 
 .round-match > span:not(.crest) {
