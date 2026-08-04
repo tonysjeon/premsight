@@ -3,7 +3,12 @@ import { MatchdaySnapshot } from '@/components/matchday-snapshot';
 import { SeasonSelect } from '@/components/season-select';
 import { Table, TableLegend } from '@/components/table';
 import { api } from '@/lib/api';
-import { fixturesInMatchday, matchdayDateWindow, resolveMatchday } from '@/lib/season';
+import {
+  fixturesInMatchday,
+  matchdayDateWindow,
+  nextFixtures,
+  resolveMatchday,
+} from '@/lib/season';
 import { buildTeamDirectory } from '@/lib/teams';
 
 export const dynamic = 'force-dynamic';
@@ -34,7 +39,13 @@ export default async function Home({
       </div>
       <div className="home-grid">
         <Card action={{ href: '/table', label: 'Full table' }} flush title="League table">
-          <Table items={standings} leagueSize={standings.length} overview teams={directory} />
+          <Table
+            items={standings}
+            leagueSize={standings.length}
+            nextByTeam={nextFixtures(fixtures)}
+            overview
+            teams={directory}
+          />
           <TableLegend />
         </Card>
 

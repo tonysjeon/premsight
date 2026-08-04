@@ -670,6 +670,29 @@ button:focus-visible {
   color: var(--accent);
 }
 
+.goals-pair {
+  white-space: nowrap;
+}
+
+.col-next {
+  width: 48px;
+  text-align: center !important;
+}
+
+.next-opponent {
+  display: inline-grid;
+  place-items: center;
+  border-radius: 7px;
+}
+
+.next-opponent:hover {
+  background: var(--surface-sunken);
+}
+
+.next-none {
+  color: var(--muted-dim);
+}
+
 .zone {
   display: inline-block;
   flex: none;

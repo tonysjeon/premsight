@@ -102,6 +102,19 @@ export function fixturesInMatchday(fixtures: readonly Fixture[], matchday: numbe
   return fixtures.filter((fixture) => fixture.matchday === matchday).sort(byKickoff);
 }
 
+/** Earliest unplayed fixture for each team in a season. */
+export function nextFixtures(fixtures: readonly Fixture[]): ReadonlyMap<string, Fixture> {
+  const next = new Map<string, Fixture>();
+  const upcoming = fixtures
+    .filter((fixture) => fixture.status !== 'completed' && fixture.status !== 'cancelled')
+    .sort(byKickoff);
+  for (const fixture of upcoming) {
+    if (!next.has(fixture.home_team_id)) next.set(fixture.home_team_id, fixture);
+    if (!next.has(fixture.away_team_id)) next.set(fixture.away_team_id, fixture);
+  }
+  return next;
+}
+
 /** Compact UTC date window for the fixtures assigned to one matchday. */
 export function matchdayDateWindow(fixtures: readonly Fixture[]): string | undefined {
   if (!fixtures.length) return undefined;
