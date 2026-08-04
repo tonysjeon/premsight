@@ -339,11 +339,12 @@ button:focus-visible {
   align-items: baseline;
   justify-content: center;
   gap: 3px;
+  color: var(--muted-dim);
 }
 
 .kickoff-time small {
-  color: var(--muted-dim);
-  font-size: 0.68em;
+  color: inherit;
+  font-size: 0.78em;
   font-weight: 600;
   letter-spacing: 0.02em;
 }
