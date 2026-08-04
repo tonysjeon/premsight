@@ -264,7 +264,7 @@ button:focus-visible {
 
 .home-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 344px;
+  grid-template-columns: minmax(0, 1.7fr) minmax(340px, 0.8fr);
   gap: 16px;
   align-items: start;
   margin-top: 12px;
@@ -273,6 +273,55 @@ button:focus-visible {
 .home-rail {
   position: sticky;
   top: 76px;
+}
+
+/* ---------- Matchday snapshot ---------- */
+
+.round-day {
+  margin: 12px var(--pad) 4px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.round-match {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 22px auto 22px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-height: 54px;
+  padding: 9px var(--pad);
+  border-bottom: 1px solid var(--line);
+  font-size: 0.78rem;
+}
+
+.round-match > span:first-child {
+  text-align: right;
+}
+
+.round-match > span:last-child {
+  text-align: left;
+}
+
+.round-match > span:not(.crest) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.round-match strong {
+  min-width: 58px;
+  text-align: center;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.round-match:hover {
+  background: var(--surface-hover);
 }
 
 /* ---------- Chips ---------- */

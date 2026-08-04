@@ -22,9 +22,18 @@ type TableProps = {
   leagueSize?: number;
   /** Drops per-result and goal columns for narrow layouts such as the home rail. */
   compact?: boolean;
+  /** Keeps core result columns while omitting goals for/against on overview layouts. */
+  overview?: boolean;
 };
 
-export function Table({ items, teams, form, leagueSize, compact = false }: TableProps) {
+export function Table({
+  items,
+  teams,
+  form,
+  leagueSize,
+  compact = false,
+  overview = false,
+}: TableProps) {
   const size = leagueSize ?? items.length;
   return (
     <div className="table-scroll">
@@ -61,12 +70,16 @@ export function Table({ items, teams, form, leagueSize, compact = false }: Table
                 <th className="hide-mobile" scope="col">
                   <abbr title="Lost">L</abbr>
                 </th>
-                <th className="hide-mobile" scope="col">
-                  <abbr title="Goals for">GF</abbr>
-                </th>
-                <th className="hide-mobile" scope="col">
-                  <abbr title="Goals against">GA</abbr>
-                </th>
+                {overview ? null : (
+                  <>
+                    <th className="hide-mobile" scope="col">
+                      <abbr title="Goals for">GF</abbr>
+                    </th>
+                    <th className="hide-mobile" scope="col">
+                      <abbr title="Goals against">GA</abbr>
+                    </th>
+                  </>
+                )}
               </>
             )}
             <th scope="col">
@@ -104,8 +117,12 @@ export function Table({ items, teams, form, leagueSize, compact = false }: Table
                     <td className="hide-mobile">{row.won}</td>
                     <td className="hide-mobile">{row.drawn}</td>
                     <td className="hide-mobile">{row.lost}</td>
-                    <td className="hide-mobile">{row.goals_for}</td>
-                    <td className="hide-mobile">{row.goals_against}</td>
+                    {overview ? null : (
+                      <>
+                        <td className="hide-mobile">{row.goals_for}</td>
+                        <td className="hide-mobile">{row.goals_against}</td>
+                      </>
+                    )}
                   </>
                 )}
                 <td>{row.goal_difference > 0 ? `+${row.goal_difference}` : row.goal_difference}</td>
