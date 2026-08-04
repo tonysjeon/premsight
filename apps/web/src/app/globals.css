@@ -334,6 +334,20 @@ button:focus-visible {
   white-space: nowrap;
 }
 
+.kickoff-time {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 3px;
+}
+
+.kickoff-time small {
+  color: var(--muted-dim);
+  font-size: 0.68em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
 .round-match:hover {
   background: var(--surface-hover);
 }

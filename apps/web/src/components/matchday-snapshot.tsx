@@ -11,14 +11,30 @@ const KICKOFF_TIME = new Intl.DateTimeFormat('en-US', {
   timeZone: 'UTC',
 });
 
-function matchLabel(fixture: Fixture): string {
+function KickoffTime({ value }: { value: string }) {
+  const parts = KICKOFF_TIME.formatToParts(new Date(value));
+  const period = parts.find((part) => part.type === 'dayPeriod')?.value;
+  const clock = parts
+    .filter((part) => part.type !== 'dayPeriod')
+    .map((part) => part.value)
+    .join('')
+    .trim();
+  return (
+    <span className="kickoff-time">
+      <span>{clock}</span>
+      {period ? <small>{period}</small> : null}
+    </span>
+  );
+}
+
+function matchLabel(fixture: Fixture) {
   if (fixture.home_score !== null && fixture.away_score !== null) {
     return `${fixture.home_score}–${fixture.away_score}`;
   }
   if (fixture.status === 'live') return 'Live';
   if (fixture.status === 'postponed') return 'Postp.';
   if (fixture.status === 'cancelled') return 'Canc.';
-  return KICKOFF_TIME.format(new Date(fixture.kickoff_at));
+  return <KickoffTime value={fixture.kickoff_at} />;
 }
 
 export function MatchdaySnapshot({
