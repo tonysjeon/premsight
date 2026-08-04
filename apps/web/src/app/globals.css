@@ -734,6 +734,17 @@ button:focus-visible {
   color: var(--muted);
 }
 
+.page-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.page-title-row .season-select {
+  margin-top: 4px;
+}
+
 .empty {
   margin: 0;
   padding: 28px var(--pad);
@@ -924,6 +935,14 @@ button:focus-visible {
 @media (max-width: 620px) {
   .site-header .shell {
     gap: 12px;
+  }
+
+  .page-title-row {
+    display: block;
+  }
+
+  .page-title-row .season-select {
+    margin: -8px 0 20px;
   }
 
   .hide-mobile {

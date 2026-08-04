@@ -3,7 +3,15 @@
 import { useRouter } from 'next/navigation';
 import type { Season } from '@/lib/api';
 
-export function SeasonSelect({ seasons, value }: { seasons: Season[]; value: string }) {
+export function SeasonSelect({
+  seasons,
+  value,
+  basePath = '/',
+}: {
+  seasons: Season[];
+  value: string;
+  basePath?: string;
+}) {
   const router = useRouter();
 
   return (
@@ -11,7 +19,9 @@ export function SeasonSelect({ seasons, value }: { seasons: Season[]; value: str
       <span>Season</span>
       <select
         aria-label="Season"
-        onChange={(event) => router.push(`/?season=${encodeURIComponent(event.target.value)}`)}
+        onChange={(event) =>
+          router.push(`${basePath}?season=${encodeURIComponent(event.target.value)}`)
+        }
         value={value}
       >
         {seasons.map((season) => (
