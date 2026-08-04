@@ -630,10 +630,19 @@ button:focus-visible {
 
 .league-table--overview thead th:nth-child(n + 3) {
   font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.035em;
 }
 
 .league-table--overview tbody td:nth-child(n + 3) {
   font-size: 0.82rem;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--text) 86%, var(--muted));
+}
+
+.league-table--overview tbody td.points {
+  color: var(--accent);
+  font-weight: 650;
 }
 
 .league-table--compact th,
@@ -658,7 +667,7 @@ button:focus-visible {
 }
 
 .w-overview-metric {
-  width: 54px;
+  width: 50px;
 }
 
 .col-pos {
