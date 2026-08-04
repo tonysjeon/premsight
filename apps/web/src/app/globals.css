@@ -338,13 +338,13 @@ button:focus-visible {
   display: inline-flex;
   align-items: baseline;
   justify-content: center;
-  gap: 3px;
-  color: var(--muted-dim);
+  gap: 2px;
+  color: #858a85;
 }
 
 .kickoff-time small {
   color: inherit;
-  font-size: 0.78em;
+  font-size: 0.82em;
   font-weight: 600;
   letter-spacing: 0.02em;
 }

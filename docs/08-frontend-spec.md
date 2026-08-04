@@ -8,6 +8,7 @@ The web application provides five server-rendered product surfaces:
 - `/fixtures` — upcoming fixtures and matchday browser for a selected season
 - `/matches/{id}` — fixture identity, kickoff/status, and score
 - `/teams/{id}` — team details with recent and upcoming fixtures
+- `/table` — full current-season league table
 
 ## Home page composition
 
@@ -29,7 +30,7 @@ API failures produce a clear unavailable state; empty datasets produce intention
 
 ## Navigation and layout
 
-Every page shares a sticky header with Matches and Fixtures navigation. The league table is the homepage focus rather than a separate destination. Content uses a centered responsive container, readable maximum widths, visible keyboard focus, and semantic tables/lists. Mobile layouts preserve scores and team names without horizontal page scrolling; wide tables scroll within their card.
+Every page shares a sticky header with Matches, Fixtures, and Table navigation. Content uses a centered responsive container, readable maximum widths, visible keyboard focus, and semantic tables/lists. Mobile layouts preserve scores and team names without horizontal page scrolling; wide tables scroll within their card.
 
 ## Rendering
 
