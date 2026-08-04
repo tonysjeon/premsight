@@ -48,9 +48,8 @@ body {
   background: var(--ink);
   color: var(--text);
   font-family:
-    ui-rounded,
-    'SF Pro Rounded',
-    'SF Pro Display',
+    Inter,
+    'SF Pro Text',
     -apple-system,
     BlinkMacSystemFont,
     'Segoe UI Variable',
@@ -638,6 +637,11 @@ button:focus-visible {
   font-size: 0.82rem;
   font-weight: 500;
   color: color-mix(in srgb, var(--text) 86%, var(--muted));
+}
+
+.league-table--overview .team-cell {
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
 
 .league-table--overview tbody td.points {
