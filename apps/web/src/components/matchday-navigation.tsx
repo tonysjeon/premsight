@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 
 export function MatchdayNavigation({
   matchdays,
@@ -13,9 +14,31 @@ export function MatchdayNavigation({
   value: number | null;
 }) {
   const router = useRouter();
+  const pickerRef = useRef<HTMLDetailsElement>(null);
   const index = value === null ? -1 : matchdays.indexOf(value);
   const goTo = (matchday: number) =>
     router.push(`/?season=${encodeURIComponent(seasonId)}&matchday=${matchday}`);
+
+  useEffect(() => {
+    const closePicker = () => {
+      if (pickerRef.current) pickerRef.current.open = false;
+    };
+    const handlePointerDown = (event: PointerEvent) => {
+      if (event.target instanceof Node && !pickerRef.current?.contains(event.target)) closePicker();
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape' || !pickerRef.current?.open) return;
+      closePicker();
+      pickerRef.current.querySelector('summary')?.focus();
+    };
+
+    document.addEventListener('pointerdown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   return (
     <nav aria-label="Select matchday" className="matchday-navigation">
@@ -29,7 +52,7 @@ export function MatchdayNavigation({
           <path d="m10 3.5-4.5 4.5 4.5 4.5" />
         </svg>
       </button>
-      <details className="matchday-picker">
+      <details className="matchday-picker" ref={pickerRef}>
         <summary>
           <span>{value === null ? 'Matches' : `Matchday ${value}`}</span>
           <svg viewBox="0 0 12 12">
