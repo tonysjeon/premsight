@@ -16,6 +16,8 @@ The home page defaults to the season marked current by the API. A shared header 
 
 The fixtures page owns the deeper schedule experience. It leads with the next scheduled matches, followed by a matchday browser with two-column fixture rows on wide screens. Its season and matchday controls use `/fixtures?season={id}&matchday={n}`.
 
+The full Table page exposes All, Home, and Away pills. Home and Away recalculate every displayed statistic and rank from completed fixtures at that venue only. The filter uses `/table?season={id}&venue={home|away}`; missing or invalid venue values resolve to All.
+
 `season` and `matchday` are untrusted input. A season is accepted only when its ID appears in the API season list. A matchday is accepted only when it matches `^\d{1,2}$` and names a matchday that exists in the selected season. Invalid values fall back to the current season or its default matchday rather than erroring.
 
 The default matchday is the next round that still has unplayed fixtures, or the most recently completed round once the season is over. Matchday chips retain the selected season. An "Up next" card renders only on the fixtures page and only when scheduled fixtures exist, so a completed season shows no empty placeholder.
@@ -30,7 +32,7 @@ API failures produce a clear unavailable state; empty datasets produce intention
 
 ## Navigation and layout
 
-Every page shares a sticky header with Matches, Fixtures, and Table navigation plus the season selector. Navigation among those three surfaces preserves the selected season. Changing seasons from a match or team detail returns to the overview because those routes are not season-scoped. Content uses a centered responsive container, readable maximum widths, visible keyboard focus, and semantic tables/lists. Mobile layouts preserve scores and team names without horizontal page scrolling; wide tables scroll within their card.
+Every page shares a sticky header with Overview, Table, and Fixtures navigation plus the season selector. Navigation among those three surfaces preserves the selected season. Changing seasons from a match or team detail returns to the overview because those routes are not season-scoped. Content uses a centered responsive container, readable maximum widths, visible keyboard focus, and semantic tables/lists. Mobile layouts preserve scores and team names without horizontal page scrolling; wide tables scroll within their card.
 
 ## Rendering
 
