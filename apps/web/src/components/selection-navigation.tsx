@@ -57,7 +57,9 @@ export function SelectionNavigation({
   return (
     <nav
       aria-label={ariaLabel}
-      className={showArrows ? 'matchday-navigation' : 'matchday-navigation matchday-navigation--picker-only'}
+      className={
+        showArrows ? 'matchday-navigation' : 'matchday-navigation matchday-navigation--picker-only'
+      }
     >
       {showArrows ? (
         <button

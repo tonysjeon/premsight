@@ -7,7 +7,13 @@ import type { Season } from '@/lib/api';
 
 const SEASON_ROUTES = ['/', '/fixtures', '/table'];
 
-export function SiteHeader({ currentSeasonId, seasons }: { currentSeasonId: string; seasons: Season[] }) {
+export function SiteHeader({
+  currentSeasonId,
+  seasons,
+}: {
+  currentSeasonId: string;
+  seasons: Season[];
+}) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const requestedSeasonId = searchParams.get('season');
@@ -34,7 +40,10 @@ export function SiteHeader({ currentSeasonId, seasons }: { currentSeasonId: stri
           <Link aria-current={pathname === '/table' ? 'page' : undefined} href={href('/table')}>
             Table
           </Link>
-          <Link aria-current={pathname === '/fixtures' ? 'page' : undefined} href={href('/fixtures')}>
+          <Link
+            aria-current={pathname === '/fixtures' ? 'page' : undefined}
+            href={href('/fixtures')}
+          >
             Fixtures
           </Link>
         </nav>

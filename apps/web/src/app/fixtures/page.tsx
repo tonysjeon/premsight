@@ -67,7 +67,8 @@ export default async function Fixtures({
         );
   const fixturePeriods = groupByTwoMonthPeriod(teamFixtures);
   const rawPeriod = Array.isArray(requestedPeriod) ? requestedPeriod[0] : requestedPeriod;
-  const parsedPeriod = rawPeriod !== undefined && /^\d{1,2}$/.test(rawPeriod) ? Number(rawPeriod) : 0;
+  const parsedPeriod =
+    rawPeriod !== undefined && /^\d{1,2}$/.test(rawPeriod) ? Number(rawPeriod) : 0;
   const periodIndex = parsedPeriod >= 0 && parsedPeriod < fixturePeriods.length ? parsedPeriod : 0;
   const selectedPeriod = fixturePeriods[periodIndex] ?? null;
   const selectedFixtures =
@@ -83,10 +84,18 @@ export default async function Fixtures({
     <main className="shell home-page page fixtures-page">
       <Card flush>
         <nav aria-label="Group fixtures" className="chips view-filters">
-          <Link aria-current={view === 'matchday' ? 'true' : undefined} className="chip" href={matchdayHref}>
+          <Link
+            aria-current={view === 'matchday' ? 'true' : undefined}
+            className="chip"
+            href={matchdayHref}
+          >
             By Matchday
           </Link>
-          <Link aria-current={view === 'team' ? 'true' : undefined} className="chip" href={teamHref}>
+          <Link
+            aria-current={view === 'team' ? 'true' : undefined}
+            className="chip"
+            href={teamHref}
+          >
             By Team
           </Link>
         </nav>

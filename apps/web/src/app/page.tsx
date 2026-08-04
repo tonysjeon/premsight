@@ -3,12 +3,7 @@ import { MatchdayNavigation } from '@/components/matchday-navigation';
 import { MatchdaySnapshot } from '@/components/matchday-snapshot';
 import { Table, TableLegend } from '@/components/table';
 import { api } from '@/lib/api';
-import {
-  fixturesInMatchday,
-  matchdays,
-  nextFixtures,
-  resolveMatchday,
-} from '@/lib/season';
+import { fixturesInMatchday, matchdays, nextFixtures, resolveMatchday } from '@/lib/season';
 import { buildTeamDirectory } from '@/lib/teams';
 
 export const dynamic = 'force-dynamic';
