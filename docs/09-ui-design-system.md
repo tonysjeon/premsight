@@ -27,7 +27,7 @@ Radii are 16px for cards and 11px for nested tiles. Matchday filters use compact
 
 ## Typography
 
-The UI uses a neutral system grotesk stack: installed Inter first, then SF Pro Text on Apple devices, Segoe UI Variable on Windows, and standard system fallbacks. No webfont is fetched at build or request time. Headlines are tight (`-0.03em`) and modest in size; the interface leans on weight and density rather than scale. Scores, points, and every table figure use `font-variant-numeric: tabular-nums` so columns align.
+The UI uses the locally bundled Manrope variable font, with the system sans stack as a loading fallback. Its geometric shapes and open counters give the interface a softer identity without sacrificing dense-table legibility. No webfont is fetched at request time. Headlines are tight (`-0.03em`) and modest in size; the interface leans on weight and density rather than scale. Scores, points, and every table figure use `font-variant-numeric: tabular-nums` so columns align.
 
 ## Components
 
