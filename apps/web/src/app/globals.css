@@ -621,6 +621,21 @@ button:focus-visible {
   table-layout: fixed;
 }
 
+.league-table--overview th:nth-child(n + 3),
+.league-table--overview td:nth-child(n + 3) {
+  padding-right: 4px;
+  padding-left: 4px;
+  text-align: center;
+}
+
+.league-table--overview thead th:nth-child(n + 3) {
+  font-size: 0.64rem;
+}
+
+.league-table--overview tbody td:nth-child(n + 3) {
+  font-size: 0.82rem;
+}
+
 .league-table--compact th,
 .league-table--compact td {
   padding: 10px 5px;
