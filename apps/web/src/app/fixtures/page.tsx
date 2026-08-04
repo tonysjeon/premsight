@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Card } from '@/components/card';
 import { MatchList } from '@/components/match-list';
-import { SeasonSelect } from '@/components/season-select';
 import { api, type Fixture } from '@/lib/api';
 import {
   fixturesInMatchday,
@@ -42,13 +41,10 @@ export default async function Fixtures({
 
   return (
     <main className="shell page">
-      <div className="page-title-row">
-        <div>
-          <p className="eyebrow">{season.name}</p>
-          <h1>Fixtures &amp; results</h1>
-          <p className="page-lede">Browse the next matches or jump to any matchday.</p>
-        </div>
-        <SeasonSelect basePath="/fixtures" seasons={seasons} value={season.id} />
+      <div>
+        <p className="eyebrow">{season.name}</p>
+        <h1>Fixtures &amp; results</h1>
+        <p className="page-lede">Browse the next matches or jump to any matchday.</p>
       </div>
       {upcoming.length ? (
         <Card flush title="Up next">

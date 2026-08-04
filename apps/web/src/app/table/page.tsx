@@ -8,8 +8,15 @@ import { buildTeamDirectory } from '@/lib/teams';
 export const metadata: Metadata = { title: 'League table' };
 export const dynamic = 'force-dynamic';
 
-export default async function TablePage() {
-  const season = await api.currentSeason();
+export default async function TablePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ season?: string | string[] }>;
+}) {
+  const { season: requestedSeason } = await searchParams;
+  const [currentSeason, seasons] = await Promise.all([api.currentSeason(), api.seasons()]);
+  const requestedSeasonId = Array.isArray(requestedSeason) ? requestedSeason[0] : requestedSeason;
+  const season = seasons.find((item) => item.id === requestedSeasonId) ?? currentSeason;
   const [items, fixtures, teams] = await Promise.all([
     api.standings(season.id),
     api.fixtures(`season_id=${season.id}`),

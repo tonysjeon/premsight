@@ -95,6 +95,10 @@ button:focus-visible {
   height: 60px;
 }
 
+.site-header .season-select {
+  margin-left: auto;
+}
+
 .brand {
   font-size: 1.05rem;
   font-weight: 800;
@@ -239,12 +243,6 @@ button:focus-visible {
 
 /* ---------- Home grid ---------- */
 
-.home-toolbar {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-}
-
 .season-select {
   display: flex;
   align-items: center;
@@ -276,15 +274,20 @@ button:focus-visible {
 
 .home-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.7fr) minmax(340px, 0.8fr);
+  grid-template-columns: minmax(0, 1.8fr) minmax(340px, 0.75fr);
   gap: 16px;
   align-items: start;
-  margin-top: 12px;
+  margin-top: 16px;
 }
 
 .home-rail {
   position: sticky;
   top: 76px;
+}
+
+.home-grid > .card,
+.home-rail > .card {
+  border: 0;
 }
 
 /* ---------- Matchday snapshot ---------- */
@@ -312,11 +315,13 @@ button:focus-visible {
 
 .round-match > span:first-child {
   text-align: right;
+  font-size: 0.7rem;
   font-weight: 550;
 }
 
 .round-match > span:last-child {
   text-align: left;
+  font-size: 0.7rem;
   font-weight: 550;
 }
 
@@ -650,6 +655,41 @@ button:focus-visible {
   letter-spacing: 0.035em;
 }
 
+.home-grid .league-table--overview thead th {
+  height: auto;
+  padding-top: 21px;
+  padding-bottom: 8px;
+  border-bottom: 0;
+  background: var(--surface);
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.home-grid > .card .table-scroll {
+  padding-inline: 10px;
+}
+
+.home-grid .league-table--overview thead th.col-next {
+  text-transform: none;
+}
+
+.home-grid .league-table--overview tbody tr {
+  border-bottom: 0;
+}
+
+.home-grid .league-table--overview .crest {
+  width: 24px;
+  height: 24px;
+}
+
+.home-grid .league-table--overview col.w-overview-pos {
+  width: 50px;
+}
+
+.home-grid .league-table--overview .team-cell span {
+  font-size: 0.86rem;
+}
+
 .league-table--overview tbody td:nth-child(n + 3) {
   font-size: 0.82rem;
   font-weight: 500;
@@ -662,7 +702,7 @@ button:focus-visible {
 }
 
 .league-table--overview tbody td.points {
-  color: var(--accent);
+  color: color-mix(in srgb, var(--text) 86%, var(--muted));
   font-weight: 650;
 }
 
@@ -692,6 +732,7 @@ button:focus-visible {
 }
 
 .col-pos {
+  position: relative;
   width: 42px;
   text-align: center !important;
   white-space: nowrap;
@@ -747,12 +788,15 @@ button:focus-visible {
 .col-next {
   width: 48px;
   text-align: center !important;
+  vertical-align: middle;
 }
 
 .next-opponent {
   display: inline-grid;
   place-items: center;
   border-radius: 7px;
+  line-height: 0;
+  vertical-align: middle;
 }
 
 .next-opponent:hover {
@@ -783,10 +827,60 @@ button:focus-visible {
 }
 
 .league-table--overview .col-pos .zone {
+  position: absolute;
+  top: 50%;
+  left: -10px;
+  width: 3px;
   height: 30px;
-  margin-left: -8px;
-  margin-right: 9px;
-  vertical-align: middle;
+  margin: 0;
+  transform: translateY(-50%);
+}
+
+.matchday-navigation {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 34px;
+  align-items: center;
+  gap: 10px;
+  padding: 12px var(--pad);
+}
+
+.matchday-navigation button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--surface-sunken);
+  color: var(--text);
+  font: inherit;
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+
+.matchday-navigation button:disabled {
+  color: var(--muted-dim);
+  cursor: default;
+  opacity: 0.45;
+}
+
+.matchday-navigation label {
+  min-width: 0;
+}
+
+.matchday-navigation select {
+  display: block;
+  width: 100%;
+  padding: 6px 28px 6px 8px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
 }
 
 .zone--ucl {
@@ -809,6 +903,13 @@ button:focus-visible {
   border-top: 1px solid var(--line);
   font-size: 0.76rem;
   color: var(--muted);
+}
+
+.home-grid > .card .legend {
+  padding-bottom: 21px;
+  padding-right: 20px;
+  padding-left: 20px;
+  border-top: 0;
 }
 
 .legend span {
@@ -1083,15 +1184,28 @@ button:focus-visible {
 
 @media (max-width: 620px) {
   .site-header .shell {
+    flex-wrap: wrap;
     gap: 12px;
+    height: auto;
+    padding: 10px 0;
+  }
+
+  .site-header .season-select span {
+    display: none;
+  }
+
+  .site-header .season-select select {
+    min-width: 112px;
+    padding-block: 7px;
+  }
+
+  .site-header .nav-tabs {
+    order: 3;
+    width: 100%;
   }
 
   .page-title-row {
     display: block;
-  }
-
-  .page-title-row .season-select {
-    margin: -8px 0 20px;
   }
 
   .hide-mobile {

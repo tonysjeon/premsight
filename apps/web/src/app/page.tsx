@@ -1,11 +1,11 @@
 import { Card } from '@/components/card';
+import { MatchdayNavigation } from '@/components/matchday-navigation';
 import { MatchdaySnapshot } from '@/components/matchday-snapshot';
-import { SeasonSelect } from '@/components/season-select';
 import { Table, TableLegend } from '@/components/table';
 import { api } from '@/lib/api';
 import {
   fixturesInMatchday,
-  matchdayDateWindow,
+  matchdays,
   nextFixtures,
   resolveMatchday,
 } from '@/lib/season';
@@ -34,9 +34,6 @@ export default async function Home({
     selectedMatchday === null ? [] : fixturesInMatchday(fixtures, selectedMatchday);
   return (
     <main className="shell">
-      <div className="home-toolbar">
-        <SeasonSelect seasons={seasons} value={season.id} />
-      </div>
       <div className="home-grid">
         <Card flush>
           <Table
@@ -50,12 +47,12 @@ export default async function Home({
         </Card>
 
         <aside className="home-rail">
-          <Card
-            action={{ href: `/fixtures?season=${season.id}`, label: 'All fixtures' }}
-            flush
-            note={matchdayDateWindow(selectedFixtures)}
-            title={selectedMatchday === null ? 'Matches' : `Matchday ${selectedMatchday}`}
-          >
+          <Card flush>
+            <MatchdayNavigation
+              matchdays={matchdays(fixtures)}
+              seasonId={season.id}
+              value={selectedMatchday}
+            />
             <MatchdaySnapshot items={selectedFixtures} teams={directory} />
           </Card>
         </aside>

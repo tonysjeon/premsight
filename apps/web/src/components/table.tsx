@@ -7,6 +7,11 @@ import { teamVisual, type TeamDirectory } from '@/lib/teams';
 
 type Zone = 'ucl' | 'uel' | 'drop' | null;
 
+const TABLE_TEAM_LABELS: Readonly<Record<string, string>> = {
+  BHA: 'Bright & Hove Albion',
+  NOT: 'Nottingham Forest',
+};
+
 function zoneFor(position: number, leagueSize: number): Zone {
   if (position <= 4) return 'ucl';
   if (position === 5) return 'uel';
@@ -129,6 +134,7 @@ export function Table({
         <tbody>
           {items.map((row) => {
             const visual = teamVisual(teams, row.team_id, row.team_name);
+            const tableLabel = TABLE_TEAM_LABELS[visual.abbr] ?? visual.label;
             const zone = zoneFor(row.position, size);
             const nextFixture = nextByTeam?.get(row.team_id);
             const opponent = nextFixture
@@ -150,7 +156,7 @@ export function Table({
                 <td className="col-team">
                   <Link className="team-cell" href={`/teams/${row.team_id}`}>
                     <TeamBadge visual={visual} />
-                    <span>{visual.label}</span>
+                    <span>{tableLabel}</span>
                   </Link>
                 </td>
                 <td>{row.played}</td>
