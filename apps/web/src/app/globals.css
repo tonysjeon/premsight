@@ -1257,7 +1257,8 @@ button:focus-visible {
   color: var(--muted);
 }
 
-.home-grid > .card .legend {
+.home-grid > .card .legend,
+.table-page-overview > .card .legend {
   padding-bottom: 23px;
   padding-right: 22px;
   padding-left: 22px;
