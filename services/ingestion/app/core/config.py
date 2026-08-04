@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     database_url: str = "postgresql://premsight:premsight@localhost:5432/premsight"
     football_data_api_token: str = ""
     football_data_base_url: str = "https://api.football-data.org/v4"
+    fpl_base_url: str = "https://fantasy.premierleague.com"
 
 
 @lru_cache

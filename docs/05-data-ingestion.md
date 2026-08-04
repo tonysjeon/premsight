@@ -92,6 +92,32 @@ Phase 3 standings are calculated from fixtures with `status = 'completed'`. Prem
 
 The ordering implemented for the historical-data milestone is points, goal difference, goals scored, then team name as a deterministic fallback. Competition-specific head-to-head or playoff rules must be added before supporting competitions whose official rules require them.
 
+## Draft player snapshots
+
+The draft pool is ingested separately from historical fixtures using the current Fantasy Premier League bootstrap feed. The adapter validates the external payload and normalizes teams and players before selection or persistence. This feed is undocumented, so production retains the last successful database snapshot instead of making product reads depend on provider availability.
+
+Each successful run stores exactly 18 players for every club participating in the current Premier League season. Entries are an undifferentiated draft pool; PremSight does not label players as starters or substitutes. Selection excludes unavailable provider records, then ranks players within each club using a deterministic tuple of availability, minutes, starts, total points, provider ownership, price, name, and provider ID. The first 18 are retained.
+
+After club selection, the same ranking tuple assigns a unique `global_rank` across the retained pool. The Draft simulator samples captain choices from ranks 1 through 25. This rank controls draft presentation only and does not classify a player as a starter, substitute, or reserve.
+
+FPL only supplies the broad `GK`, `DEF`, `MID`, and `FWD` classifications; PremSight preserves those values and does not infer unsupported detailed roles such as left-back or centre-back.
+
+The adapter also resolves each player's FPL `region` through `/api/regions/` and stores the provider's two-character nationality code with the snapshot. Unknown non-null region IDs fail validation instead of producing an incorrect flag. FPL sometimes publishes a null region for selectable youth players; those entries retain a null nationality and the UI renders a neutral flag.
+
+FPL's numeric `photo` identifier is validated and expanded to the official Premier League transparent `250x250` headshot URL before persistence. A missing photo remains null; malformed non-null identifiers fail ingestion.
+
+The import fails before persistence if a club cannot supply 18 valid players or a provider club cannot be mapped unambiguously to a current-season PremSight team. A complete run is written in one transaction. Product reads select the latest run for the requested season; if a refresh fails, the previous successful snapshot remains available.
+
+Club mapping normally uses the provider TLA. Provider-specific aliases are explicit at the ingestion boundary; for example, FPL's `NFO` maps to football-data.org's `NOT` for Nottingham Forest. Unknown differences still fail the import instead of being guessed from display names.
+
+Manual refresh:
+
+```bash
+uv run premsight-ingest player-snapshot
+```
+
+Automated scheduling is a deployment concern; daily refresh is the recommended initial cadence.
+
 ## Ownership
 
 | Concern                   | Owner                |

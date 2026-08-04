@@ -24,6 +24,16 @@ uv run premsight-ingest historical-season --competition PL --season 2025
 
 The command is safe to replay; provider references make team and fixture imports idempotent.
 
+## Player snapshot
+
+After the current season and its fixtures are synchronized, store the latest curated draft pool:
+
+```bash
+uv run premsight-ingest player-snapshot
+```
+
+The import stores 18 equally draftable players per club. It does not assign starter or bench roles.
+
 ## Tests
 
 ```bash
