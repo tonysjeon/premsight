@@ -302,15 +302,29 @@ button:focus-visible {
   color: var(--muted);
 }
 
+.round-list > div + div .round-day {
+  margin-top: 4px;
+}
+
 .round-match {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 22px auto 22px minmax(0, 1fr);
   align-items: center;
   gap: 8px;
   min-height: 54px;
   padding: 9px var(--pad);
-  border-bottom: 1px solid var(--line);
   font-size: 0.78rem;
+}
+
+.round-match + .round-match::before {
+  position: absolute;
+  top: 0;
+  right: 18px;
+  left: 18px;
+  height: 1px;
+  background: color-mix(in srgb, var(--line) 78%, black);
+  content: '';
 }
 
 .round-match > span:first-child {
@@ -854,9 +868,17 @@ button:focus-visible {
   border-radius: 50%;
   background: var(--surface-sunken);
   color: var(--text);
-  font: inherit;
-  font-size: 1.3rem;
   cursor: pointer;
+}
+
+.matchday-navigation button svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
 }
 
 .matchday-navigation button:disabled {
@@ -865,21 +887,40 @@ button:focus-visible {
   opacity: 0.45;
 }
 
-.matchday-navigation label {
-  min-width: 0;
+.matchday-picker {
+  position: relative;
+  display: inline-grid;
+  justify-self: center;
 }
 
-.matchday-navigation select {
-  display: block;
-  width: 100%;
-  padding: 6px 28px 6px 8px;
-  border: 0;
-  background: transparent;
+.matchday-picker-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   color: var(--text);
-  font: inherit;
   font-size: 0.9rem;
   font-weight: 700;
-  text-align: center;
+  white-space: nowrap;
+}
+
+.matchday-picker-value svg {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.5;
+}
+
+.matchday-picker select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  opacity: 0;
   cursor: pointer;
 }
 

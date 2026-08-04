@@ -24,10 +24,17 @@ export function MatchdayNavigation({
         onClick={() => goTo(matchdays[index - 1]!)}
         type="button"
       >
-        ‹
+        <svg aria-hidden="true" viewBox="0 0 16 16">
+          <path d="m10 3.5-4.5 4.5 4.5 4.5" />
+        </svg>
       </button>
-      <label>
-        <span className="sr-only">Matchday</span>
+      <label className="matchday-picker">
+        <span aria-hidden="true" className="matchday-picker-value">
+          {value === null ? 'Matches' : `Matchday ${value}`}
+          <svg viewBox="0 0 12 12">
+            <path d="m3 4.5 3 3 3-3" />
+          </svg>
+        </span>
         <select
           aria-label="Matchday"
           disabled={value === null}
@@ -48,7 +55,9 @@ export function MatchdayNavigation({
         onClick={() => goTo(matchdays[index + 1]!)}
         type="button"
       >
-        ›
+        <svg aria-hidden="true" viewBox="0 0 16 16">
+          <path d="m6 3.5 4.5 4.5-4.5 4.5" />
+        </svg>
       </button>
     </nav>
   );
