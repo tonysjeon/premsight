@@ -1,4 +1,4 @@
-import type { Fixture } from '@/lib/api';
+import type { Fixture, Standing } from '@/lib/api';
 
 /**
  * Pure season derivations shared by the product surfaces. All formatting is UTC so
@@ -29,6 +29,8 @@ const WINDOW_EDGE_LABEL = new Intl.DateTimeFormat('en-US', {
 
 export type ResultMark = 'W' | 'D' | 'L';
 export type DayGroup = { key: string; label: string; fixtures: Fixture[] };
+export type VenueFilter = 'all' | 'home' | 'away';
+export type FixturePeriod = { key: string; label: string; fixtures: Fixture[] };
 
 function byKickoff(a: Fixture, b: Fixture): number {
   return a.kickoff_at.localeCompare(b.kickoff_at);
@@ -54,6 +56,36 @@ export function groupByDay(fixtures: readonly Fixture[]): DayGroup[] {
       });
   }
   return [...groups.values()];
+}
+
+/** Schedule blocks sized to cover roughly two months of one team's league fixtures. */
+export function groupByTwoMonthPeriod(fixtures: readonly Fixture[], size = 8): FixturePeriod[] {
+  const sorted = [...fixtures].sort(byKickoff);
+  if (!sorted.length) return [];
+  const shortDate = new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'UTC',
+  });
+  const datedYear = new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
+
+  const periods: FixturePeriod[] = [];
+  for (let start = 0; start < sorted.length; start += size) {
+    const periodFixtures = sorted.slice(start, start + size);
+    const first = new Date(periodFixtures[0]!.kickoff_at);
+    const last = new Date(periodFixtures[periodFixtures.length - 1]!.kickoff_at);
+    const label =
+      first.getUTCFullYear() === last.getUTCFullYear()
+        ? `${shortDate.format(first)} – ${shortDate.format(last)}`
+        : `${datedYear.format(first)} – ${datedYear.format(last)}`;
+    periods.push({ key: String(periods.length), label, fixtures: periodFixtures });
+  }
+  return periods;
 }
 
 export function matchdays(fixtures: readonly Fixture[]): number[] {
@@ -113,6 +145,59 @@ export function nextFixtures(fixtures: readonly Fixture[]): ReadonlyMap<string, 
     if (!next.has(fixture.away_team_id)) next.set(fixture.away_team_id, fixture);
   }
   return next;
+}
+
+/** Recalculates and ranks standings from only home or away results. */
+export function standingsByVenue(
+  standings: readonly Standing[],
+  fixtures: readonly Fixture[],
+  venue: Exclude<VenueFilter, 'all'>,
+): Standing[] {
+  const totals = new Map<string, Standing>(
+    standings.map((standing) => [
+      standing.team_id,
+      {
+        ...standing,
+        position: 0,
+        played: 0,
+        won: 0,
+        drawn: 0,
+        lost: 0,
+        goals_for: 0,
+        goals_against: 0,
+        goal_difference: 0,
+        points: 0,
+      },
+    ]),
+  );
+
+  for (const fixture of fixtures.filter(isPlayed)) {
+    const isHome = venue === 'home';
+    const teamId = isHome ? fixture.home_team_id : fixture.away_team_id;
+    const row = totals.get(teamId);
+    if (!row) continue;
+
+    const goalsFor = isHome ? fixture.home_score! : fixture.away_score!;
+    const goalsAgainst = isHome ? fixture.away_score! : fixture.home_score!;
+    row.played += 1;
+    row.goals_for += goalsFor;
+    row.goals_against += goalsAgainst;
+    row.goal_difference = row.goals_for - row.goals_against;
+    if (goalsFor > goalsAgainst) row.won += 1;
+    else if (goalsFor === goalsAgainst) row.drawn += 1;
+    else row.lost += 1;
+    row.points = row.won * 3 + row.drawn;
+  }
+
+  return [...totals.values()]
+    .sort(
+      (a, b) =>
+        b.points - a.points ||
+        b.goal_difference - a.goal_difference ||
+        b.goals_for - a.goals_for ||
+        a.team_name.localeCompare(b.team_name),
+    )
+    .map((standing, index) => ({ ...standing, position: index + 1 }));
 }
 
 /** Compact UTC date window for the fixtures assigned to one matchday. */

@@ -28,6 +28,41 @@ const CLUB_COLORS: Readonly<Record<string, string>> = {
   WOL: '#fdb913',
 };
 
+const CREST_OVERRIDES: Readonly<Record<string, string>> = {
+  ARS: 'https://images.fotmob.com/image_resources/logo/teamlogo/9825.png',
+  AVL: 'https://images.fotmob.com/image_resources/logo/teamlogo/10252.png',
+  BHA: 'https://images.fotmob.com/image_resources/logo/teamlogo/10204.png',
+  BOU: 'https://images.fotmob.com/image_resources/logo/teamlogo/8678.png',
+  BRE: 'https://images.fotmob.com/image_resources/logo/teamlogo/9937.png',
+  BUR: 'https://images.fotmob.com/image_resources/logo/teamlogo/8191.png',
+  CHE: 'https://images.fotmob.com/image_resources/logo/teamlogo/8455.png',
+  COV: 'https://images.fotmob.com/image_resources/logo/teamlogo/8669.png',
+  CRY: 'https://images.fotmob.com/image_resources/logo/teamlogo/9826.png',
+  EVE: 'https://images.fotmob.com/image_resources/logo/teamlogo/8668.png',
+  FUL: 'https://images.fotmob.com/image_resources/logo/teamlogo/9879.png',
+  HUL: 'https://images.fotmob.com/image_resources/logo/teamlogo/8667.png',
+  IPS: 'https://images.fotmob.com/image_resources/logo/teamlogo/9902.png',
+  LEE: 'https://images.fotmob.com/image_resources/logo/teamlogo/8463.png',
+  LIV: 'https://images.fotmob.com/image_resources/logo/teamlogo/8650.png',
+  MCI: 'https://images.fotmob.com/image_resources/logo/teamlogo/8456.png',
+  MUN: 'https://images.fotmob.com/image_resources/logo/teamlogo/10260.png',
+  NEW: 'https://images.fotmob.com/image_resources/logo/teamlogo/10261.png',
+  NOT: 'https://images.fotmob.com/image_resources/logo/teamlogo/10203.png',
+  SUN: 'https://images.fotmob.com/image_resources/logo/teamlogo/8472.png',
+  TOT: 'https://images.fotmob.com/image_resources/logo/teamlogo/8586.png',
+  WHU: 'https://images.fotmob.com/image_resources/logo/teamlogo/8654.png',
+  WOL: 'https://images.fotmob.com/image_resources/logo/teamlogo/8602.png',
+};
+
+const MATCHDAY_TEAM_LABELS: Readonly<Record<string, string>> = {
+  BHA: 'Brighton',
+  COV: 'Coventry',
+  HUL: 'Hull',
+  IPS: 'Ipswich',
+  LEE: 'Leeds',
+  NOT: 'Nottm Forest',
+};
+
 const NAME_NOISE = /^(afc|fc)$|^&$/i;
 
 export type TeamDirectory = ReadonlyMap<string, Team>;
@@ -59,6 +94,10 @@ export type TeamVisual = {
   crestUrl?: string | null;
 };
 
+export function matchdayTeamLabel(visual: Pick<TeamVisual, 'abbr' | 'label'>): string {
+  return MATCHDAY_TEAM_LABELS[visual.abbr] ?? visual.label;
+}
+
 export function teamVisual(
   directory: TeamDirectory | undefined,
   teamId: string,
@@ -73,7 +112,7 @@ export function teamVisual(
     abbr,
     color,
     textColor: readableTextOn(color),
-    crestUrl: team?.crest_url,
+    crestUrl: CREST_OVERRIDES[abbr] ?? team?.crest_url,
   };
 }
 

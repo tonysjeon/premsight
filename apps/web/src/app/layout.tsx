@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import '@fontsource-variable/manrope';
+import { SiteHeader } from '@/components/site-header';
+import { api } from '@/lib/api';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -7,26 +9,17 @@ export const metadata: Metadata = {
   description: 'Premier League fixtures, results and standings in one clear view.',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [currentSeason, seasons] = await Promise.all([api.currentSeason(), api.seasons()]);
+
   return (
     <html lang="en">
       <body>
-        <header className="site-header">
-          <div className="shell">
-            <Link className="brand" href="/">
-              PREM<span>SIGHT</span>
-            </Link>
-            <nav aria-label="Primary" className="nav-tabs">
-              <Link href="/">Matches</Link>
-              <Link href="/fixtures">Fixtures</Link>
-              <Link href="/table">Table</Link>
-            </nav>
-          </div>
-        </header>
+        <SiteHeader currentSeasonId={currentSeason.id} seasons={seasons} />
         {children}
         <footer className="site-footer">
           <div className="shell">

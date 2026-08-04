@@ -27,15 +27,16 @@ Radii are 16px for cards and 11px for nested tiles. Matchday filters use compact
 
 ## Typography
 
-The UI uses a neutral system grotesk stack: installed Inter first, then SF Pro Text on Apple devices, Segoe UI Variable on Windows, and standard system fallbacks. No webfont is fetched at build or request time. Headlines are tight (`-0.03em`) and modest in size; the interface leans on weight and density rather than scale. Scores, points, and every table figure use `font-variant-numeric: tabular-nums` so columns align.
+The UI uses the locally bundled Manrope variable font, with the system sans stack as a loading fallback. Its geometric shapes and open counters give the interface a softer identity without sacrificing dense-table legibility. No webfont is fetched at request time. Headlines are tight (`-0.03em`) and modest in size; the interface leans on weight and density rather than scale. Scores, points, and every table figure use `font-variant-numeric: tabular-nums` so columns align.
 
 ## Components
 
 - **Card** — titled container with optional note and a single action link. `flush` mode removes padding so rows and tables meet the card edge.
-- **Team badge** — the provider crest when available, with a coloured monogram fallback. Club fallback colours remain presentation-only in `apps/web/src/lib/teams.ts`.
+- **Team badge** — the normalized FotMob crest when mapped, then the ingestion-provider crest, with a coloured monogram as the final fallback. The explicit crest map covers clubs in the available seasons so compact badges use a consistent, current set without per-club scaling. Club fallback colours and crest overrides remain presentation-only in `apps/web/src/lib/teams.ts`.
 - **Match row** — status on the left, both teams stacked in the middle with their goals, chevron on the right. The losing side is muted so results read at a glance.
 - **Matchday chips** — horizontally scrollable links that set the selected matchday. The active chip carries `aria-current`.
-- **League table** — position, badge, team, and figures, with a qualification zone bar, optional form guide, and a legend explaining the zone colours. The home overview gives the team identity most of the row, aligns fixed-width metrics on the right, omits the visible Team heading, and adds combined goals for/against plus the next opponent crest.
+- **Season picker** — compact custom dropdown in the shared header. Its trigger shows only the selected season, and its menu marks the active season while preserving keyboard focus and dismissal behavior.
+- **League table** — position, badge, team, and figures, with a qualification zone bar and a legend explaining the zone colours. The home overview and full-width Table page share the same visual treatment: the team identity receives most of the row, fixed-width metrics align on the right, the visible Team heading is omitted, and combined goals for/against appear alongside the next opponent crest.
 - **Form guide** — last five results as W/D/L marks, exposed to assistive technology as a text label.
 - **Stat tile** — a single figure with an uppercase label.
 

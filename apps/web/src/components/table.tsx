@@ -3,9 +3,24 @@ import { FormGuide } from '@/components/form-guide';
 import { TeamBadge } from '@/components/team-badge';
 import type { Fixture, Standing } from '@/lib/api';
 import type { ResultMark } from '@/lib/season';
-import { teamVisual, type TeamDirectory } from '@/lib/teams';
+import { matchdayTeamLabel, teamVisual, type TeamDirectory } from '@/lib/teams';
 
 type Zone = 'ucl' | 'uel' | 'drop' | null;
+
+const TABLE_TEAM_LABELS: Readonly<Record<string, string>> = {
+  BHA: 'Brighton & Hove Albion',
+  MCI: 'Manchester City',
+  MUN: 'Manchester United',
+  NEW: 'Newcastle United',
+  NOT: 'Nottingham Forest',
+  TOT: 'Tottenham Hotspur',
+};
+
+const NEXT_FIXTURE_DATE = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
 
 function zoneFor(position: number, leagueSize: number): Zone {
   if (position <= 4) return 'ucl';
@@ -111,7 +126,7 @@ export function Table({
             <th className={overview ? 'hide-narrow' : undefined} scope="col">
               <abbr title="Goal difference">GD</abbr>
             </th>
-            <th scope="col">
+            <th className={overview ? 'col-points' : undefined} scope="col">
               <abbr title="Points">Pts</abbr>
             </th>
             {overview ? (
@@ -129,6 +144,7 @@ export function Table({
         <tbody>
           {items.map((row) => {
             const visual = teamVisual(teams, row.team_id, row.team_name);
+            const tableLabel = TABLE_TEAM_LABELS[visual.abbr] ?? visual.label;
             const zone = zoneFor(row.position, size);
             const nextFixture = nextByTeam?.get(row.team_id);
             const opponent = nextFixture
@@ -136,11 +152,16 @@ export function Table({
                 ? teamVisual(teams, nextFixture.away_team_id, nextFixture.away_team_name)
                 : teamVisual(teams, nextFixture.home_team_id, nextFixture.home_team_name)
               : null;
-            const opponentId = nextFixture
-              ? nextFixture.home_team_id === row.team_id
-                ? nextFixture.away_team_id
-                : nextFixture.home_team_id
+            const nextHome = nextFixture
+              ? teamVisual(teams, nextFixture.home_team_id, nextFixture.home_team_name)
               : null;
+            const nextAway = nextFixture
+              ? teamVisual(teams, nextFixture.away_team_id, nextFixture.away_team_name)
+              : null;
+            const nextFixtureLabel =
+              nextFixture && nextHome && nextAway
+                ? `${NEXT_FIXTURE_DATE.format(new Date(nextFixture.kickoff_at))}: ${matchdayTeamLabel(nextHome)} vs. ${matchdayTeamLabel(nextAway)}`
+                : null;
             return (
               <tr key={row.team_id}>
                 <td className="col-pos">
@@ -150,7 +171,7 @@ export function Table({
                 <td className="col-team">
                   <Link className="team-cell" href={`/teams/${row.team_id}`}>
                     <TeamBadge visual={visual} />
-                    <span>{visual.label}</span>
+                    <span>{tableLabel}</span>
                   </Link>
                 </td>
                 <td>{row.played}</td>
@@ -179,12 +200,12 @@ export function Table({
                 {overview ? (
                   <>
                     <td className="col-next">
-                      {opponent && opponentId ? (
+                      {opponent && nextFixture && nextFixtureLabel ? (
                         <Link
-                          aria-label={`Next opponent: ${opponent.label}`}
+                          aria-label={`View ${nextFixtureLabel}`}
                           className="next-opponent"
-                          href={`/teams/${opponentId}`}
-                          title={opponent.label}
+                          data-tooltip={nextFixtureLabel}
+                          href={`/matches/${nextFixture.id}`}
                         >
                           <TeamBadge visual={opponent} />
                         </Link>
