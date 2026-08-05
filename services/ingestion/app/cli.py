@@ -7,6 +7,7 @@ from app.repositories.player_snapshots import PostgresPlayerSnapshotRepository
 from app.repositories.postgres import PostgresHistoricalRepository
 from app.services.historical_sync import HistoricalSyncService
 from app.services.player_snapshot import select_player_snapshot
+from app.services.position_enrichment import enrich_player_positions, load_position_overrides
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -15,7 +16,7 @@ def build_parser() -> argparse.ArgumentParser:
     historical = subparsers.add_parser("historical-season", help="Import one competition season")
     historical.add_argument("--competition", default="PL")
     historical.add_argument("--season", type=int, required=True, dest="season_start_year")
-    subparsers.add_parser("player-snapshot", help="Store the current 18-player club pools")
+    subparsers.add_parser("player-snapshot", help="Store the current 16-player club pools")
     return parser
 
 
@@ -24,7 +25,8 @@ def main() -> None:
     settings = get_settings()
     if args.command == "player-snapshot":
         with FplProvider(settings.fpl_base_url) as provider:
-            snapshot = select_player_snapshot(provider.player_catalog())
+            catalog = enrich_player_positions(provider.player_catalog(), load_position_overrides())
+            snapshot = select_player_snapshot(catalog)
         result = PostgresPlayerSnapshotRepository(settings.database_url).save(snapshot)
     else:
         repository = PostgresHistoricalRepository(settings.database_url)

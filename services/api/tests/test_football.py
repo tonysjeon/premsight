@@ -51,9 +51,16 @@ def client() -> TestClient:
         conn.execute(
             """INSERT INTO player_snapshot_entries(
                  snapshot_id,team_id,provider_player_id,first_name,last_name,
-                 display_name,position,nationality_code,photo_url,club_rank,global_rank)
-               VALUES(%s,%s,'1','David','Raya','Raya','GK','ES',
+                 display_name,position,positions,nationality_code,photo_url,club_rank,global_rank)
+               VALUES(%s,%s,'1','David','Raya','Raya','GK',ARRAY['GK'],'ES',
                       'https://resources.premierleague.com/raya.png',1,1)""",
+            (snapshot_id, home_id),
+        )
+        conn.execute(
+            """INSERT INTO player_snapshot_entries(
+                 snapshot_id,team_id,provider_player_id,first_name,last_name,
+                 display_name,position,positions,club_rank,global_rank)
+               VALUES(%s,%s,'2','Unknown','Defender','Unknown Defender','DEF',ARRAY['DEF'],2,2)""",
             (snapshot_id, home_id),
         )
     os.environ["DATABASE_URL"] = database_url
@@ -91,8 +98,10 @@ def test_core_read_endpoints(client: TestClient) -> None:
     ]
     snapshot = client.get("/v1/player-snapshots/latest").json()
     assert snapshot["count"] == 1
+    assert [player["display_name"] for player in snapshot["players"]] == ["Raya"]
     assert snapshot["players"][0]["display_name"] == "Raya"
     assert snapshot["players"][0]["global_rank"] == 1
+    assert snapshot["players"][0]["positions"] == ["GK"]
     assert snapshot["players"][0]["nationality_code"] == "ES"
     assert snapshot["players"][0]["photo_url"].endswith("/raya.png")
 

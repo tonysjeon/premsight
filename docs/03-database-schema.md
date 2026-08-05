@@ -221,7 +221,7 @@ An immutable, successfully completed import of the current draft-player pool. A 
 
 ### `player_snapshot_entries`
 
-The curated draft pool within a snapshot. Entries deliberately do not distinguish starters from bench players: every selected player has equal draft status. Ingestion publishes exactly 18 entries per participating club and assigns `club_rank` only to make selection deterministic and auditable.
+The curated draft pool within a snapshot. Entries deliberately do not distinguish starters from bench players: every selected player has equal draft status. Ingestion publishes exactly 16 entries per participating club—one goalkeeper and 15 outfield players—and assigns `club_rank` only to make selection deterministic and auditable.
 
 | Column               | Type          | Null | Notes                                            |
 | -------------------- | ------------- | ---- | ------------------------------------------------ |
@@ -232,10 +232,11 @@ The curated draft pool within a snapshot. Entries deliberately do not distinguis
 | `last_name`          | `TEXT`        | no   | Display data captured with the snapshot          |
 | `display_name`       | `TEXT`        | no   | Short UI name                                    |
 | `position`           | `TEXT`        | no   | `GK`, `DEF`, `MID`, or `FWD`                     |
+| `positions`          | `TEXT[]`      | no   | Compatible detailed roles; broad fallback allowed |
 | `nationality_code`   | `TEXT`        | yes  | FPL region code; null when the provider omits it |
 | `photo_url`          | `TEXT`        | yes  | Captured Premier League headshot URL             |
-| `club_rank`          | `SMALLINT`    | no   | Deterministic rank from 1 through 18             |
-| `global_rank`        | `SMALLINT`    | yes  | Global rank; null only on legacy snapshots       |
+| `club_rank`          | `SMALLINT`    | no   | Deterministic rank from 1 through 16             |
+| `global_rank`        | `SMALLINT`    | yes  | FPL-price rank; null only on legacy snapshots    |
 | `created_at`         | `TIMESTAMPTZ` | no   | Default `now()`                                  |
 
 **Constraints / indexes**
@@ -243,13 +244,14 @@ The curated draft pool within a snapshot. Entries deliberately do not distinguis
 - Primary key `(snapshot_id, provider_player_id)`
 - `UNIQUE (snapshot_id, team_id, club_rank)`
 - `CHECK (position IN ('GK', 'DEF', 'MID', 'FWD'))`
+- `CHECK (cardinality(positions) > 0)` and every value belongs to the documented detailed-position vocabulary
 - `CHECK (nationality_code IS NULL OR nationality_code ~ '^[A-Z0-9]{2}$')`
-- `CHECK (club_rank BETWEEN 1 AND 18)`
+- `CHECK (club_rank BETWEEN 1 AND 16)`
 - `CHECK (global_rank > 0)`
 - `UNIQUE (snapshot_id, global_rank)`
 - Index `(snapshot_id, team_id)`
 
-The database enforces rank bounds and uniqueness. The ingestion service validates the stronger cross-row invariant of exactly 18 players for every participating club before opening a transaction.
+The database enforces rank bounds and uniqueness. The ingestion service validates the stronger cross-row invariant of exactly 16 players, including exactly one goalkeeper, for every participating club before opening a transaction.
 
 ### `provider_references`
 
@@ -328,7 +330,7 @@ Automated tests must prove:
 2. **UUID generation:** database default via `pgcrypto.gen_random_uuid()` (UUID v4)
 3. **Provider mapping:** single polymorphic `provider_references` table
 4. **Match events:** mutable rows allowed; `provider_correction` is a first-class event type for vendor fixes
-5. **Draft players:** immutable, denormalized snapshots retain only 18 equally draftable players per club; they are not canonical player records and carry no starter/bench role
+5. **Draft players:** immutable, denormalized snapshots retain only 16 equally draftable players per club, with backup goalkeepers excluded; they are not canonical player records and carry no starter/bench role
 
 ## Remaining ADR candidates
 

@@ -96,17 +96,19 @@ The ordering implemented for the historical-data milestone is points, goal diffe
 
 The draft pool is ingested separately from historical fixtures using the current Fantasy Premier League bootstrap feed. The adapter validates the external payload and normalizes teams and players before selection or persistence. This feed is undocumented, so production retains the last successful database snapshot instead of making product reads depend on provider availability.
 
-Each successful run stores exactly 18 players for every club participating in the current Premier League season. Entries are an undifferentiated draft pool; PremSight does not label players as starters or substitutes. Selection excludes unavailable provider records, then ranks players within each club using a deterministic tuple of availability, minutes, starts, total points, provider ownership, price, name, and provider ID. The first 18 are retained.
+Each successful run stores exactly 16 players for every club participating in the current Premier League season. Entries are an undifferentiated draft pool; PremSight does not label players as starters or substitutes. Selection excludes unavailable provider records, ranks players within each club using a deterministic tuple of availability, minutes, starts, total points, provider ownership, price, name, and provider ID, and retains the highest-ranked goalkeeper plus the highest-ranked 15 outfield players. Backup goalkeepers are deliberately excluded.
 
-After club selection, the same ranking tuple assigns a unique `global_rank` across the retained pool. The Draft simulator samples captain choices from ranks 1 through 25. This rank controls draft presentation only and does not classify a player as a starter, substitute, or reserve.
+After club selection, FPL price descending assigns a unique `global_rank` across the retained pool, with the deterministic player-ranking tuple breaking equal-price ties. The Draft simulator samples captain choices from price ranks 1 through 15. This rank controls draft presentation only and does not classify a player as a starter, substitute, or reserve.
 
-FPL only supplies the broad `GK`, `DEF`, `MID`, and `FWD` classifications; PremSight preserves those values and does not infer unsupported detailed roles such as left-back or centre-back.
+FPL only supplies the broad `GK`, `DEF`, `MID`, and `FWD` classifications; PremSight preserves that provider value separately from detailed-role enrichment.
+
+A versioned static enrichment file adds primary and alternative EA FC 26 roles using the GPL-3.0 EAFC26 Player Database. Generation matches normalized FPL identity, club, and compatible broad role and publishes only high-confidence matches with a clear runner-up margin. The checked-in result is keyed by stable FPL player ID. Unmatched players keep their broad FPL role rather than receiving a guessed detailed position. Ingestion validates that at least one enriched role remains compatible with the FPL group while retaining cross-group alternatives such as `LW`/`LM`.
 
 The adapter also resolves each player's FPL `region` through `/api/regions/` and stores the provider's two-character nationality code with the snapshot. Unknown non-null region IDs fail validation instead of producing an incorrect flag. FPL sometimes publishes a null region for selectable youth players; those entries retain a null nationality and the UI renders a neutral flag.
 
 FPL's numeric `photo` identifier is validated and expanded to the official Premier League transparent `250x250` headshot URL before persistence. A missing photo remains null; malformed non-null identifiers fail ingestion.
 
-The import fails before persistence if a club cannot supply 18 valid players or a provider club cannot be mapped unambiguously to a current-season PremSight team. A complete run is written in one transaction. Product reads select the latest run for the requested season; if a refresh fails, the previous successful snapshot remains available.
+The import fails before persistence if a club cannot supply one valid goalkeeper and 15 valid outfield players, or if a provider club cannot be mapped unambiguously to a current-season PremSight team. A complete run is written in one transaction. Product reads select the latest run for the requested season; if a refresh fails, the previous successful snapshot remains available.
 
 Club mapping normally uses the provider TLA. Provider-specific aliases are explicit at the ingestion boundary; for example, FPL's `NFO` maps to football-data.org's `NOT` for Nottingham Forest. Unknown differences still fail the import instead of being guessed from display names.
 

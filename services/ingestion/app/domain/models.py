@@ -7,6 +7,26 @@ from pydantic import BaseModel, ConfigDict
 
 FixtureStatus = Literal["scheduled", "live", "postponed", "cancelled", "completed"]
 PlayerPosition = Literal["GK", "DEF", "MID", "FWD"]
+DetailedPlayerPosition = Literal[
+    "GK",
+    "DEF",
+    "MID",
+    "FWD",
+    "LB",
+    "LWB",
+    "CB",
+    "RB",
+    "RWB",
+    "CDM",
+    "CM",
+    "CAM",
+    "LM",
+    "RM",
+    "LW",
+    "RW",
+    "CF",
+    "ST",
+]
 
 
 class NormalizedModel(BaseModel):
@@ -70,6 +90,7 @@ class ProviderPlayer(NormalizedModel):
     last_name: str
     display_name: str
     position: PlayerPosition
+    positions: tuple[DetailedPlayerPosition, ...]
     nationality_code: str | None
     photo_url: str | None
     can_select: bool

@@ -21,7 +21,7 @@ CREATE TABLE player_snapshot_entries (
     last_name TEXT NOT NULL,
     display_name TEXT NOT NULL,
     position TEXT NOT NULL CHECK (position IN ('GK', 'DEF', 'MID', 'FWD')),
-    club_rank SMALLINT NOT NULL CHECK (club_rank BETWEEN 1 AND 18),
+    club_rank SMALLINT NOT NULL CHECK (club_rank BETWEEN 1 AND 16),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     PRIMARY KEY (snapshot_id, provider_player_id),
     UNIQUE (snapshot_id, team_id, club_rank)

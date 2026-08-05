@@ -46,8 +46,9 @@ class PostgresPlayerSnapshotRepository:
                     conn.execute(
                         """INSERT INTO player_snapshot_entries(
                              snapshot_id,team_id,provider_player_id,first_name,last_name,
-                             display_name,position,nationality_code,photo_url,club_rank,global_rank)
-                           VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+                             display_name,position,positions,nationality_code,photo_url,
+                             club_rank,global_rank)
+                           VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
                         (
                             snapshot_id,
                             team_id,
@@ -56,6 +57,7 @@ class PostgresPlayerSnapshotRepository:
                             player.last_name,
                             player.display_name,
                             player.position,
+                            list(player.positions),
                             player.nationality_code,
                             player.photo_url,
                             entry.club_rank,

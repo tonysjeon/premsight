@@ -129,11 +129,13 @@ class FootballRepository:
             return None
         snapshot["players"] = self._all(
             """SELECT e.provider_player_id id,e.first_name,e.last_name,e.display_name,
-                      e.position,e.nationality_code,e.photo_url,e.club_rank,e.global_rank,e.team_id,
+                      e.position,e.positions,e.nationality_code,e.photo_url,
+                      e.club_rank,e.global_rank,e.team_id,
                       t.name team_name,
                       t.crest_url team_crest_url
                FROM player_snapshot_entries e JOIN teams t ON t.id=e.team_id
                WHERE e.snapshot_id=%s
+                 AND (e.position='GK' OR e.positions[1] NOT IN ('GK','DEF','MID','FWD'))
                ORDER BY t.name,e.club_rank""",
             (snapshot["id"],),
         )

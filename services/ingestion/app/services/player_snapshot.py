@@ -1,6 +1,7 @@
 from app.domain.models import PlayerCatalog, PlayerSnapshot, ProviderPlayer, SelectedPlayer
 
-PLAYERS_PER_TEAM = 18
+PLAYERS_PER_TEAM = 16
+OUTFIELD_PLAYERS_PER_TEAM = PLAYERS_PER_TEAM - 1
 
 
 def player_rank_key(player: ProviderPlayer) -> tuple[int | float | str, ...]:
@@ -16,6 +17,10 @@ def player_rank_key(player: ProviderPlayer) -> tuple[int | float | str, ...]:
     )
 
 
+def price_rank_key(player: ProviderPlayer) -> tuple[int | float | str, ...]:
+    return (-player.price, *player_rank_key(player))
+
+
 def select_player_snapshot(catalog: PlayerCatalog) -> PlayerSnapshot:
     selected_players: dict[str, list[ProviderPlayer]] = {}
     for team in catalog.teams:
@@ -24,20 +29,28 @@ def select_player_snapshot(catalog: PlayerCatalog) -> PlayerSnapshot:
             for player in catalog.players
             if player.team_provider_id == team.provider_id and player.can_select
         ]
-        candidates.sort(key=player_rank_key)
-        if len(candidates) < PLAYERS_PER_TEAM:
+        goalkeepers = sorted(
+            (player for player in candidates if player.position == "GK"), key=player_rank_key
+        )
+        outfield_players = sorted(
+            (player for player in candidates if player.position != "GK"), key=player_rank_key
+        )
+        if not goalkeepers or len(outfield_players) < OUTFIELD_PLAYERS_PER_TEAM:
             raise ValueError(
-                f"FPL team {team.name} has {len(candidates)} selectable players; "
-                f"{PLAYERS_PER_TEAM} required"
+                f"FPL team {team.name} has {len(goalkeepers)} selectable goalkeepers and "
+                f"{len(outfield_players)} selectable outfield players; 1 goalkeeper and "
+                f"{OUTFIELD_PLAYERS_PER_TEAM} outfield players required"
             )
-        selected_players[team.provider_id] = candidates[:PLAYERS_PER_TEAM]
+        selected_players[team.provider_id] = sorted(
+            [goalkeepers[0], *outfield_players[:OUTFIELD_PLAYERS_PER_TEAM]], key=player_rank_key
+        )
 
     global_ranks = {
         player.provider_id: rank
         for rank, player in enumerate(
             sorted(
                 (player for players in selected_players.values() for player in players),
-                key=player_rank_key,
+                key=price_rank_key,
             ),
             start=1,
         )

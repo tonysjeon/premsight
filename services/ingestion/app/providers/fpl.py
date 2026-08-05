@@ -88,6 +88,7 @@ class FplProvider:
             last_name=_string(item, "second_name"),
             display_name=_string(item, "web_name"),
             position=cast(PlayerPosition, position),
+            positions=(cast(PlayerPosition, position),),
             nationality_code=nationality_code,
             photo_url=_photo_url(item),
             can_select=item.get("can_select") is not False,
