@@ -56,7 +56,9 @@ export function SiteHeader({
               Fixtures
             </Link>
           </nav>
-          {seasonId ? <SeasonSelect basePath={selectPath} seasons={seasons} value={seasonId} /> : null}
+          {seasonId ? (
+            <SeasonSelect basePath={selectPath} seasons={seasons} value={seasonId} />
+          ) : null}
         </div>
       )}
     </header>

@@ -22,14 +22,86 @@ type SquadSlot = {
 };
 
 const FORMATIONS: readonly Formation[] = [
-  { name: '4-3-3', counts: { GK: 1, DEF: 4, MID: 3, FWD: 3 }, roles: { GK: ['GK'], DEF: ['LB', 'CB', 'CB', 'RB'], MID: ['CM', 'CDM', 'CM'], FWD: ['LW', 'ST', 'RW'] } },
-  { name: '4-4-2', counts: { GK: 1, DEF: 4, MID: 4, FWD: 2 }, roles: { GK: ['GK'], DEF: ['LB', 'CB', 'CB', 'RB'], MID: ['LM', 'CM', 'CM', 'RM'], FWD: ['ST', 'ST'] } },
-  { name: '3-4-3', counts: { GK: 1, DEF: 3, MID: 4, FWD: 3 }, roles: { GK: ['GK'], DEF: ['CB', 'CB', 'CB'], MID: ['LM', 'CM', 'CM', 'RM'], FWD: ['LW', 'ST', 'RW'] } },
-  { name: '3-5-2', counts: { GK: 1, DEF: 3, MID: 5, FWD: 2 }, roles: { GK: ['GK'], DEF: ['CB', 'CB', 'CB'], MID: ['LM', 'CM', 'CAM', 'CM', 'RM'], FWD: ['ST', 'ST'] } },
-  { name: '4-5-1', counts: { GK: 1, DEF: 4, MID: 5, FWD: 1 }, roles: { GK: ['GK'], DEF: ['LB', 'CB', 'CB', 'RB'], MID: ['LM', 'CM', 'CAM', 'CM', 'RM'], FWD: ['ST'] } },
-  { name: '5-3-2', counts: { GK: 1, DEF: 5, MID: 3, FWD: 2 }, roles: { GK: ['GK'], DEF: ['LWB', 'CB', 'CB', 'CB', 'RWB'], MID: ['CM', 'CDM', 'CM'], FWD: ['ST', 'ST'] } },
-  { name: '5-2-3', counts: { GK: 1, DEF: 5, MID: 2, FWD: 3 }, roles: { GK: ['GK'], DEF: ['LWB', 'CB', 'CB', 'CB', 'RWB'], MID: ['CM', 'CM'], FWD: ['LW', 'ST', 'RW'] } },
-  { name: '5-4-1', counts: { GK: 1, DEF: 5, MID: 4, FWD: 1 }, roles: { GK: ['GK'], DEF: ['LWB', 'CB', 'CB', 'CB', 'RWB'], MID: ['LM', 'CM', 'CM', 'RM'], FWD: ['ST'] } },
+  {
+    name: '4-3-3',
+    counts: { GK: 1, DEF: 4, MID: 3, FWD: 3 },
+    roles: {
+      GK: ['GK'],
+      DEF: ['LB', 'CB', 'CB', 'RB'],
+      MID: ['CM', 'CDM', 'CM'],
+      FWD: ['LW', 'ST', 'RW'],
+    },
+  },
+  {
+    name: '4-4-2',
+    counts: { GK: 1, DEF: 4, MID: 4, FWD: 2 },
+    roles: {
+      GK: ['GK'],
+      DEF: ['LB', 'CB', 'CB', 'RB'],
+      MID: ['LM', 'CM', 'CM', 'RM'],
+      FWD: ['ST', 'ST'],
+    },
+  },
+  {
+    name: '3-4-3',
+    counts: { GK: 1, DEF: 3, MID: 4, FWD: 3 },
+    roles: {
+      GK: ['GK'],
+      DEF: ['CB', 'CB', 'CB'],
+      MID: ['LM', 'CM', 'CM', 'RM'],
+      FWD: ['LW', 'ST', 'RW'],
+    },
+  },
+  {
+    name: '3-5-2',
+    counts: { GK: 1, DEF: 3, MID: 5, FWD: 2 },
+    roles: {
+      GK: ['GK'],
+      DEF: ['CB', 'CB', 'CB'],
+      MID: ['LM', 'CM', 'CAM', 'CM', 'RM'],
+      FWD: ['ST', 'ST'],
+    },
+  },
+  {
+    name: '4-5-1',
+    counts: { GK: 1, DEF: 4, MID: 5, FWD: 1 },
+    roles: {
+      GK: ['GK'],
+      DEF: ['LB', 'CB', 'CB', 'RB'],
+      MID: ['LM', 'CM', 'CAM', 'CM', 'RM'],
+      FWD: ['ST'],
+    },
+  },
+  {
+    name: '5-3-2',
+    counts: { GK: 1, DEF: 5, MID: 3, FWD: 2 },
+    roles: {
+      GK: ['GK'],
+      DEF: ['LWB', 'CB', 'CB', 'CB', 'RWB'],
+      MID: ['CM', 'CDM', 'CM'],
+      FWD: ['ST', 'ST'],
+    },
+  },
+  {
+    name: '5-2-3',
+    counts: { GK: 1, DEF: 5, MID: 2, FWD: 3 },
+    roles: {
+      GK: ['GK'],
+      DEF: ['LWB', 'CB', 'CB', 'CB', 'RWB'],
+      MID: ['CM', 'CM'],
+      FWD: ['LW', 'ST', 'RW'],
+    },
+  },
+  {
+    name: '5-4-1',
+    counts: { GK: 1, DEF: 5, MID: 4, FWD: 1 },
+    roles: {
+      GK: ['GK'],
+      DEF: ['LWB', 'CB', 'CB', 'CB', 'RWB'],
+      MID: ['LM', 'CM', 'CM', 'RM'],
+      FWD: ['ST'],
+    },
+  },
 ];
 
 const PITCH_LINES: readonly DraftPosition[] = ['FWD', 'MID', 'DEF', 'GK'];
@@ -129,10 +201,7 @@ function PitchMarkings() {
         </pattern>
       </defs>
       <polygon className="draft-pitch-surface" points="15,0 85,0 100,100 0,100" />
-      <polygon
-        className="draft-pitch-outline"
-        points="15.6,0.7 84.4,0.7 98.8,99.3 1.2,99.3"
-      />
+      <polygon className="draft-pitch-outline" points="15.6,0.7 84.4,0.7 98.8,99.3 1.2,99.3" />
       <path d="M8.4 50 H91.6" />
       <ellipse cx="50" cy="50" rx="9" ry="6" />
       <circle cx="50" cy="50" r="0.7" />
@@ -179,10 +248,7 @@ function FormationDiagram({ formation, large = false }: { formation: Formation; 
 
 function EmptyPitch() {
   return (
-    <div
-      aria-hidden="true"
-      className="draft-pitch draft-pitch--formation draft-pitch--preview"
-    >
+    <div aria-hidden="true" className="draft-pitch draft-pitch--formation draft-pitch--preview">
       <PitchMarkings />
     </div>
   );
@@ -365,8 +431,8 @@ function canOccupy(slot: SquadSlot, player: DraftPlayer): boolean {
   const positions = playerPositions(player);
   return Boolean(
     slot.detailedPosition &&
-      (positions.includes(slot.detailedPosition) ||
-        (slot.position !== null && positions.includes(slot.position))),
+    (positions.includes(slot.detailedPosition) ||
+      (slot.position !== null && positions.includes(slot.position))),
   );
 }
 
@@ -444,27 +510,22 @@ export function DraftSimulator({
   const draftScore = useMemo(() => {
     if (slots.length === 0 || slots.some((slot) => !slot.player)) return null;
     return scoreDraft({
-      starters: slots
-        .flatMap((slot) =>
-          slot.group === 'starter' && slot.player ? [slot.player.eaRating] : [],
-        ),
-      bench: slots
-        .flatMap((slot) =>
-          slot.group === 'bench' && slot.player ? [slot.player.eaRating] : [],
-        ),
-      reserves: slots
-        .flatMap((slot) =>
-          slot.group === 'reserve' && slot.player ? [slot.player.eaRating] : [],
-        ),
+      starters: slots.flatMap((slot) =>
+        slot.group === 'starter' && slot.player ? [slot.player.eaRating] : [],
+      ),
+      bench: slots.flatMap((slot) =>
+        slot.group === 'bench' && slot.player ? [slot.player.eaRating] : [],
+      ),
+      reserves: slots.flatMap((slot) =>
+        slot.group === 'reserve' && slot.player ? [slot.player.eaRating] : [],
+      ),
     });
   }, [slots]);
   const activeSlot = slots.find((slot) => slot.id === activeSlotId) ?? null;
   const offers = useMemo(() => {
     if (!activeSlot || activeSlot.player) return [];
     const candidates = players.filter(
-      (player) =>
-        !selectedIds.has(player.id) &&
-        canDraftInto(activeSlot, player),
+      (player) => !selectedIds.has(player.id) && canDraftInto(activeSlot, player),
     );
     return seededSample(
       candidates,
@@ -495,9 +556,7 @@ export function DraftSimulator({
 
   const choosePlayer = (player: DraftPlayer) => {
     if (!activeSlotId) return;
-    const completesDraft = slots.every(
-      (slot) => slot.id === activeSlotId || slot.player !== null,
-    );
+    const completesDraft = slots.every((slot) => slot.id === activeSlotId || slot.player !== null);
     setSlots((current) =>
       current.map((slot) => (slot.id === activeSlotId ? { ...slot, player } : slot)),
     );
@@ -666,12 +725,7 @@ export function DraftSimulator({
             <h1>Choose your captain</h1>
             <div className="draft-choice-grid draft-choice-grid--captains">
               {captainOptions.map((player) => (
-                <PlayerChoice
-                  hideMark
-                  key={player.id}
-                  onChoose={chooseCaptain}
-                  player={player}
-                />
+                <PlayerChoice hideMark key={player.id} onChoose={chooseCaptain} player={player} />
               ))}
             </div>
           </section>

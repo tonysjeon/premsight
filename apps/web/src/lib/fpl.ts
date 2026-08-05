@@ -36,8 +36,24 @@ export type DraftPlayer = {
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
 const POSITIONS = new Set<DraftPosition>(['GK', 'DEF', 'MID', 'FWD']);
 const DETAILED_POSITIONS = new Set<DetailedDraftPosition>([
-  'GK', 'DEF', 'MID', 'FWD', 'LB', 'LWB', 'CB', 'RB', 'RWB',
-  'CDM', 'CM', 'CAM', 'LM', 'RM', 'LW', 'RW', 'CF', 'ST',
+  'GK',
+  'DEF',
+  'MID',
+  'FWD',
+  'LB',
+  'LWB',
+  'CB',
+  'RB',
+  'RWB',
+  'CDM',
+  'CM',
+  'CAM',
+  'LM',
+  'RM',
+  'LW',
+  'RW',
+  'CF',
+  'ST',
 ]);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -100,7 +116,9 @@ export async function currentDraftPlayers(): Promise<DraftPlayer[]> {
       !Array.isArray(positionsValue) ||
       positionsValue.length === 0 ||
       positionsValue.some(
-        (candidate) => typeof candidate !== 'string' || !DETAILED_POSITIONS.has(candidate as DetailedDraftPosition),
+        (candidate) =>
+          typeof candidate !== 'string' ||
+          !DETAILED_POSITIONS.has(candidate as DetailedDraftPosition),
       ) ||
       eaRating === null ||
       !ratingModelVersion ||
@@ -110,10 +128,7 @@ export async function currentDraftPlayers(): Promise<DraftPlayer[]> {
       continue;
     }
     if (nationalityCode && !/^[A-Z0-9]{2}$/.test(nationalityCode)) continue;
-    if (
-      position !== 'GK' &&
-      POSITIONS.has(positionsValue[0] as DraftPosition)
-    ) {
+    if (position !== 'GK' && POSITIONS.has(positionsValue[0] as DraftPosition)) {
       continue;
     }
     if (

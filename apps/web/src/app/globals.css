@@ -2300,12 +2300,8 @@ button.draft-slot {
   max-width: 86%;
 }
 
-.draft-formation-diagram--large
-  .draft-formation-line:nth-of-type(3)[data-count='3']
-  i:first-child,
-.draft-formation-diagram--large
-  .draft-formation-line:nth-of-type(3)[data-count='3']
-  i:last-child {
+.draft-formation-diagram--large .draft-formation-line:nth-of-type(3)[data-count='3'] i:first-child,
+.draft-formation-diagram--large .draft-formation-line:nth-of-type(3)[data-count='3'] i:last-child {
   transform: translateY(8px);
 }
 
@@ -2329,18 +2325,12 @@ button.draft-slot {
   max-width: 88%;
 }
 
-.draft-formation-diagram--large
-  .draft-formation-line:nth-of-type(3)[data-count='5']
-  i:first-child,
-.draft-formation-diagram--large
-  .draft-formation-line:nth-of-type(3)[data-count='5']
-  i:last-child {
+.draft-formation-diagram--large .draft-formation-line:nth-of-type(3)[data-count='5'] i:first-child,
+.draft-formation-diagram--large .draft-formation-line:nth-of-type(3)[data-count='5'] i:last-child {
   transform: translateY(-12px);
 }
 
-.draft-formation-diagram--large
-  .draft-formation-line:nth-of-type(3)[data-count='5']
-  i:nth-child(2),
+.draft-formation-diagram--large .draft-formation-line:nth-of-type(3)[data-count='5'] i:nth-child(2),
 .draft-formation-diagram--large
   .draft-formation-line:nth-of-type(3)[data-count='5']
   i:nth-child(4) {
@@ -2403,7 +2393,14 @@ button.draft-slot {
   inset: 0;
   background:
     linear-gradient(115deg, #ffffff12 0%, transparent 24% 68%, #8db39a0d 100%),
-    linear-gradient(90deg, transparent 0 8%, #bdd0c20a 8% 9%, transparent 9% 91%, #bdd0c20a 91% 92%, transparent 92%);
+    linear-gradient(
+      90deg,
+      transparent 0 8%,
+      #bdd0c20a 8% 9%,
+      transparent 9% 91%,
+      #bdd0c20a 91% 92%,
+      transparent 92%
+    );
   content: '';
   pointer-events: none;
 }
@@ -2878,7 +2875,14 @@ button.draft-slot {
   inset: 0;
   background:
     linear-gradient(115deg, #ffffff12 0%, transparent 24% 68%, #8db39a0d 100%),
-    linear-gradient(90deg, transparent 0 8%, #bdd0c20a 8% 9%, transparent 9% 91%, #bdd0c20a 91% 92%, transparent 92%);
+    linear-gradient(
+      90deg,
+      transparent 0 8%,
+      #bdd0c20a 8% 9%,
+      transparent 9% 91%,
+      #bdd0c20a 91% 92%,
+      transparent 92%
+    );
   content: '';
   pointer-events: none;
 }

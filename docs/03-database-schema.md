@@ -223,23 +223,23 @@ An immutable, successfully completed import of the current draft-player pool. A 
 
 The projected starting XI within a snapshot. Ingestion publishes exactly 11 entries per participating club by optimizing combined player ratings across supported valid formations.
 
-| Column               | Type          | Null | Notes                                            |
-| -------------------- | ------------- | ---- | ------------------------------------------------ |
-| `snapshot_id`        | `UUID`        | no   | FK → `player_snapshot_runs.id` ON DELETE CASCADE |
-| `team_id`            | `UUID`        | no   | FK → `teams.id`                                  |
-| `provider_player_id` | `TEXT`        | no   | Stable player ID within the snapshot provider    |
-| `first_name`         | `TEXT`        | no   | Display data captured with the snapshot          |
-| `last_name`          | `TEXT`        | no   | Display data captured with the snapshot          |
-| `display_name`       | `TEXT`        | no   | Short UI name                                    |
-| `position`           | `TEXT`        | no   | `GK`, `DEF`, `MID`, or `FWD`                     |
-| `positions`          | `TEXT[]`      | no   | Compatible detailed roles; broad fallback allowed |
-| `ea_rating`          | `SMALLINT`    | yes  | EA FC overall; null only on legacy snapshots      |
-| `rating_model_version` | `TEXT`      | yes  | EA FC rating model identifier                      |
-| `nationality_code`   | `TEXT`        | yes  | FPL region code; null when the provider omits it |
-| `photo_url`          | `TEXT`        | yes  | Captured Premier League headshot URL             |
-| `club_rank`          | `SMALLINT`    | no   | Deterministic rank; new snapshots use 1 through 11 |
-| `global_rank`        | `SMALLINT`    | yes  | EA FC rating rank; null only on legacy snapshots   |
-| `created_at`         | `TIMESTAMPTZ` | no   | Default `now()`                                  |
+| Column                 | Type          | Null | Notes                                              |
+| ---------------------- | ------------- | ---- | -------------------------------------------------- |
+| `snapshot_id`          | `UUID`        | no   | FK → `player_snapshot_runs.id` ON DELETE CASCADE   |
+| `team_id`              | `UUID`        | no   | FK → `teams.id`                                    |
+| `provider_player_id`   | `TEXT`        | no   | Stable player ID within the snapshot provider      |
+| `first_name`           | `TEXT`        | no   | Display data captured with the snapshot            |
+| `last_name`            | `TEXT`        | no   | Display data captured with the snapshot            |
+| `display_name`         | `TEXT`        | no   | Short UI name                                      |
+| `position`             | `TEXT`        | no   | `GK`, `DEF`, `MID`, or `FWD`                       |
+| `positions`            | `TEXT[]`      | no   | Compatible detailed roles; broad fallback allowed  |
+| `ea_rating`            | `SMALLINT`    | yes  | EA FC overall; null only on legacy snapshots       |
+| `rating_model_version` | `TEXT`        | yes  | EA FC rating model identifier                      |
+| `nationality_code`     | `TEXT`        | yes  | FPL region code; null when the provider omits it   |
+| `photo_url`            | `TEXT`        | yes  | Captured Premier League headshot URL               |
+| `club_rank`            | `SMALLINT`    | no   | Deterministic rank; new snapshots use 1 through 11 |
+| `global_rank`          | `SMALLINT`    | yes  | EA FC rating rank; null only on legacy snapshots   |
+| `created_at`           | `TIMESTAMPTZ` | no   | Default `now()`                                    |
 
 **Constraints / indexes**
 

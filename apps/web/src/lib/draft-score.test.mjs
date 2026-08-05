@@ -38,8 +38,14 @@ test('returns null until the scoring squad is complete', () => {
 });
 
 test('clamps projected points to the zero-to-100 range', () => {
-  assert.equal(scoreDraft({ starters: Array(11).fill(99), bench: Array(7).fill(99) })?.projectedPoints, 100);
-  assert.equal(scoreDraft({ starters: Array(11).fill(1), bench: Array(7).fill(1) })?.projectedPoints, 0);
+  assert.equal(
+    scoreDraft({ starters: Array(11).fill(99), bench: Array(7).fill(99) })?.projectedPoints,
+    100,
+  );
+  assert.equal(
+    scoreDraft({ starters: Array(11).fill(1), bench: Array(7).fill(1) })?.projectedPoints,
+    0,
+  );
 });
 
 test('classifies every league-result boundary', () => {
