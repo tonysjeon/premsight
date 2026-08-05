@@ -47,8 +47,8 @@ class PostgresPlayerSnapshotRepository:
                         """INSERT INTO player_snapshot_entries(
                              snapshot_id,team_id,provider_player_id,first_name,last_name,
                              display_name,position,positions,nationality_code,photo_url,
-                             club_rank,global_rank)
-                           VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+                             club_rank,global_rank,ea_rating,rating_model_version)
+                           VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
                         (
                             snapshot_id,
                             team_id,
@@ -62,6 +62,8 @@ class PostgresPlayerSnapshotRepository:
                             player.photo_url,
                             entry.club_rank,
                             entry.global_rank,
+                            player.ea_rating,
+                            player.rating_model_version,
                         ),
                     )
                     players_processed += 1

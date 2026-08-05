@@ -51,9 +51,10 @@ def client() -> TestClient:
         conn.execute(
             """INSERT INTO player_snapshot_entries(
                  snapshot_id,team_id,provider_player_id,first_name,last_name,
-                 display_name,position,positions,nationality_code,photo_url,club_rank,global_rank)
+                 display_name,position,positions,nationality_code,photo_url,club_rank,global_rank,
+                 ea_rating,rating_model_version)
                VALUES(%s,%s,'1','David','Raya','Raya','GK',ARRAY['GK'],'ES',
-                      'https://resources.premierleague.com/raya.png',1,1)""",
+                      'https://resources.premierleague.com/raya.png',1,1,85,'ea-fc-v1')""",
             (snapshot_id, home_id),
         )
         conn.execute(
@@ -102,6 +103,8 @@ def test_core_read_endpoints(client: TestClient) -> None:
     assert snapshot["players"][0]["display_name"] == "Raya"
     assert snapshot["players"][0]["global_rank"] == 1
     assert snapshot["players"][0]["positions"] == ["GK"]
+    assert snapshot["players"][0]["ea_rating"] == 85
+    assert snapshot["players"][0]["rating_model_version"] == "ea-fc-v1"
     assert snapshot["players"][0]["nationality_code"] == "ES"
     assert snapshot["players"][0]["photo_url"].endswith("/raya.png")
 

@@ -32,7 +32,7 @@ After the current season and its fixtures are synchronized, store the latest cur
 uv run premsight-ingest player-snapshot
 ```
 
-The import stores 16 equally draftable players per club: the highest-ranked goalkeeper and 15 highest-ranked outfield players. It does not assign starter or bench roles. Global rank is ordered by FPL price and powers the top-15 captain pool.
+The import stores one projected starting XI per club by maximizing EA FC overall ratings across supported valid formations. Global rank is ordered by EA FC rating and powers the top-15 captain pool.
 
 ## Tests
 

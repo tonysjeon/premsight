@@ -100,6 +100,8 @@ class ProviderPlayer(NormalizedModel):
     total_points: int
     ownership: float
     price: int
+    ea_rating: int | None = None
+    rating_model_version: str | None = None
 
 
 class ProviderPlayerTeam(NormalizedModel):

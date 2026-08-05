@@ -3,7 +3,7 @@ from datetime import UTC, datetime
 import pytest
 
 from app.domain.models import PlayerCatalog, ProviderPlayer
-from app.services.position_enrichment import enrich_player_positions
+from app.services.position_enrichment import PlayerEnrichment, enrich_player_positions
 
 
 def player(position: str = "MID") -> ProviderPlayer:
@@ -37,13 +37,18 @@ def catalog(value: ProviderPlayer) -> PlayerCatalog:
 
 
 def test_applies_primary_and_cross_group_alternative_positions() -> None:
-    enriched = enrich_player_positions(catalog(player()), {"1": ("LM", "LW")})
+    enriched = enrich_player_positions(
+        catalog(player()), {"1": PlayerEnrichment(("LM", "LW"), 82)}
+    )
     assert enriched.players[0].positions == ("LM", "LW")
+    assert enriched.players[0].ea_rating == 82
 
 
 def test_rejects_override_without_fpl_group_compatibility() -> None:
     with pytest.raises(ValueError, match="Detailed position group mismatch"):
-        enrich_player_positions(catalog(player()), {"1": ("CB", "RB")})
+        enrich_player_positions(
+            catalog(player()), {"1": PlayerEnrichment(("CB", "RB"), 80)}
+        )
 
 
 def test_keeps_broad_fpl_fallback_when_unmatched() -> None:

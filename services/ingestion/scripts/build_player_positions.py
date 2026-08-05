@@ -61,6 +61,15 @@ def match_score(player: dict[str, Any], candidate: dict[str, str], expected_team
         SequenceMatcher(None, full_name, candidate_name).ratio(),
         SequenceMatcher(None, web_name, candidate_name).ratio() - 0.05,
     )
+    player_tokens = name_tokens(
+        f"{player['first_name']} {player['second_name']} {player['web_name']}"
+    )
+    candidate_tokens = candidate["_name_tokens"]
+    if (
+        candidate["Team"] == expected_team
+        and len(player_tokens & candidate_tokens) >= 2
+    ):
+        score = max(score, 0.9)
     if full_name == candidate_name:
         score += 0.2
     elif web_name == candidate_name:
@@ -77,6 +86,11 @@ def main() -> None:
     parser.add_argument("--fpl-json", type=Path, required=True)
     parser.add_argument("--eafc-csv", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--manual-overrides",
+        type=Path,
+        default=Path(__file__).parents[1] / "app" / "data" / "manual_player_positions.json",
+    )
     args = parser.parse_args()
 
     fpl = json.loads(args.fpl_json.read_text(encoding="utf-8"))
@@ -86,8 +100,14 @@ def main() -> None:
     for candidate in ea_players:
         candidate["_normalized_name"] = normalized(candidate["Name"])
         candidate["_name_tokens"] = name_tokens(candidate["Name"])
+        candidate["_positions"] = [
+            candidate["Position"], *parsed_alternatives(candidate["Alternative positions"])
+        ]
+        candidate["_position_groups"] = {
+            EA_GROUP[position] for position in candidate["_positions"] if position in EA_GROUP
+        }
 
-    overrides: dict[str, list[str]] = {}
+    overrides: dict[str, dict[str, object]] = {}
     matched = 0
     for player in fpl["elements"]:
         broad_position = FPL_GROUP[player["element_type"]]
@@ -99,18 +119,14 @@ def main() -> None:
             candidate
             for candidate in ea_players
             if (
-                EA_GROUP.get(candidate["Position"]) == broad_position
-                or any(
-                    EA_GROUP.get(position) == broad_position
-                    for position in parsed_alternatives(candidate["Alternative positions"])
-                )
+                broad_position in candidate["_position_groups"]
             )
             and (
                 candidate["Team"] == expected_team
                 or bool(player_tokens & candidate["_name_tokens"])
             )
         ]
-        if len(compatible) < 2:
+        if not compatible:
             continue
         ranked = sorted(
             (
@@ -120,16 +136,30 @@ def main() -> None:
             key=lambda item: (-item[0], int(item[1]["ID"])),
         )
         best_score, best = ranked[0]
-        runner_up_score = ranked[1][0]
+        runner_up_score = ranked[1][0] if len(ranked) > 1 else 0
         if best_score < 0.82 or best_score - runner_up_score < 0.035:
             continue
-        positions = list(
-            dict.fromkeys([best["Position"], *parsed_alternatives(best["Alternative positions"])])
-        )
+        positions = list(dict.fromkeys(best["_positions"]))
         if not any(EA_GROUP.get(position) == broad_position for position in positions):
             continue
-        overrides[str(player["id"])] = positions
+        rating = int(best["OVR"])
+        if not 1 <= rating <= 99:
+            continue
+        overrides[str(player["id"])] = {"positions": positions, "ea_rating": rating}
         matched += 1
+
+    if args.manual_overrides.exists():
+        manual_payload = json.loads(args.manual_overrides.read_text(encoding="utf-8"))
+        for player_id, positions in manual_payload.get("players", {}).items():
+            if player_id not in overrides:
+                raise ValueError(f"Manual position override has no EA FC match: {player_id}")
+            if (
+                not isinstance(positions, list)
+                or not positions
+                or any(position not in EA_GROUP for position in positions)
+            ):
+                raise ValueError(f"Invalid manual positions for FPL player {player_id}")
+            overrides[player_id]["positions"] = list(dict.fromkeys(positions))
 
     payload = {
         "source": {

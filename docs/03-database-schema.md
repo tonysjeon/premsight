@@ -221,7 +221,7 @@ An immutable, successfully completed import of the current draft-player pool. A 
 
 ### `player_snapshot_entries`
 
-The curated draft pool within a snapshot. Entries deliberately do not distinguish starters from bench players: every selected player has equal draft status. Ingestion publishes exactly 16 entries per participating club—one goalkeeper and 15 outfield players—and assigns `club_rank` only to make selection deterministic and auditable.
+The projected starting XI within a snapshot. Ingestion publishes exactly 11 entries per participating club by optimizing combined player ratings across supported valid formations.
 
 | Column               | Type          | Null | Notes                                            |
 | -------------------- | ------------- | ---- | ------------------------------------------------ |
@@ -233,10 +233,12 @@ The curated draft pool within a snapshot. Entries deliberately do not distinguis
 | `display_name`       | `TEXT`        | no   | Short UI name                                    |
 | `position`           | `TEXT`        | no   | `GK`, `DEF`, `MID`, or `FWD`                     |
 | `positions`          | `TEXT[]`      | no   | Compatible detailed roles; broad fallback allowed |
+| `ea_rating`          | `SMALLINT`    | yes  | EA FC overall; null only on legacy snapshots      |
+| `rating_model_version` | `TEXT`      | yes  | EA FC rating model identifier                      |
 | `nationality_code`   | `TEXT`        | yes  | FPL region code; null when the provider omits it |
 | `photo_url`          | `TEXT`        | yes  | Captured Premier League headshot URL             |
-| `club_rank`          | `SMALLINT`    | no   | Deterministic rank from 1 through 16             |
-| `global_rank`        | `SMALLINT`    | yes  | FPL-price rank; null only on legacy snapshots    |
+| `club_rank`          | `SMALLINT`    | no   | Deterministic rank; new snapshots use 1 through 11 |
+| `global_rank`        | `SMALLINT`    | yes  | EA FC rating rank; null only on legacy snapshots   |
 | `created_at`         | `TIMESTAMPTZ` | no   | Default `now()`                                  |
 
 **Constraints / indexes**
@@ -246,12 +248,13 @@ The curated draft pool within a snapshot. Entries deliberately do not distinguis
 - `CHECK (position IN ('GK', 'DEF', 'MID', 'FWD'))`
 - `CHECK (cardinality(positions) > 0)` and every value belongs to the documented detailed-position vocabulary
 - `CHECK (nationality_code IS NULL OR nationality_code ~ '^[A-Z0-9]{2}$')`
-- `CHECK (club_rank BETWEEN 1 AND 16)`
+- `CHECK (club_rank BETWEEN 1 AND 16)` to preserve legacy snapshots; ingestion restricts new runs to 11
+- EA ratings are constrained to `1..99`; rating and model version are either jointly present or jointly null for legacy rows
 - `CHECK (global_rank > 0)`
 - `UNIQUE (snapshot_id, global_rank)`
 - Index `(snapshot_id, team_id)`
 
-The database enforces rank bounds and uniqueness. The ingestion service validates the stronger cross-row invariant of exactly 16 players, including exactly one goalkeeper, for every participating club before opening a transaction.
+The database enforces rank bounds and uniqueness. The ingestion service validates the stronger cross-row invariant of exactly 11 players forming one complete supported formation for every participating club before opening a transaction.
 
 ### `provider_references`
 

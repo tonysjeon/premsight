@@ -24,6 +24,8 @@ export type DraftPlayer = {
   globalRank: number;
   position: DraftPosition;
   positions: DetailedDraftPosition[];
+  eaRating: number;
+  ratingModelVersion: string;
   nationalityCode: string | null;
   photoUrl: string | null;
   teamId: string;
@@ -80,6 +82,8 @@ export async function currentDraftPlayers(): Promise<DraftPlayer[]> {
     const teamCrestUrl = stringField(value, 'team_crest_url');
     const positionValue = stringField(value, 'position');
     const positionsValue = value.positions;
+    const eaRating = numberField(value, 'ea_rating');
+    const ratingModelVersion = stringField(value, 'rating_model_version');
     const nationalityCode = stringField(value, 'nationality_code');
     const photoUrl = stringField(value, 'photo_url');
     const position = positionValue as DraftPosition | null;
@@ -97,7 +101,11 @@ export async function currentDraftPlayers(): Promise<DraftPlayer[]> {
       positionsValue.length === 0 ||
       positionsValue.some(
         (candidate) => typeof candidate !== 'string' || !DETAILED_POSITIONS.has(candidate as DetailedDraftPosition),
-      )
+      ) ||
+      eaRating === null ||
+      !ratingModelVersion ||
+      eaRating < 1 ||
+      eaRating > 99
     ) {
       continue;
     }
@@ -124,6 +132,8 @@ export async function currentDraftPlayers(): Promise<DraftPlayer[]> {
       globalRank,
       position,
       positions: positionsValue as DetailedDraftPosition[],
+      eaRating,
+      ratingModelVersion,
       nationalityCode,
       photoUrl,
       teamId,

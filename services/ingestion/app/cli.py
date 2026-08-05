@@ -16,7 +16,7 @@ def build_parser() -> argparse.ArgumentParser:
     historical = subparsers.add_parser("historical-season", help="Import one competition season")
     historical.add_argument("--competition", default="PL")
     historical.add_argument("--season", type=int, required=True, dest="season_start_year")
-    subparsers.add_parser("player-snapshot", help="Store the current 16-player club pools")
+    subparsers.add_parser("player-snapshot", help="Store each club's projected starting XI")
     return parser
 
 
