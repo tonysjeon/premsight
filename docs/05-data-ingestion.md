@@ -92,6 +92,36 @@ Phase 3 standings are calculated from fixtures with `status = 'completed'`. Prem
 
 The ordering implemented for the historical-data milestone is points, goal difference, goals scored, then team name as a deterministic fallback. Competition-specific head-to-head or playoff rules must be added before supporting competitions whose official rules require them.
 
+## Draft player snapshots
+
+The draft pool is ingested separately from historical fixtures using the current Fantasy Premier League bootstrap feed. The adapter validates the external payload and normalizes teams and players before selection or persistence. This feed is undocumented, so production retains the last successful database snapshot instead of making product reads depend on provider availability.
+
+Each successful run stores exactly 11 projected starters for every club participating in the current Premier League season. Selection evaluates every supported formation, assigns distinct players to compatible detailed roles, and publishes the valid XI with the highest total EA FC rating. This is a deterministic projected first-choice lineup, not a claim about the lineup for a particular fixture.
+
+EA FC overall ratings are retained during detailed-position enrichment and used directly as PremSight player ratings. The model is versioned as `ea-fc-v1`; FPL performance does not modify player ratings.
+
+After XI selection, EA FC rating descending assigns a unique `global_rank` across the retained pool, with FPL price and the deterministic player-ranking tuple breaking ties. The Draft simulator samples captain choices from ranks 1 through 15. This rank controls draft presentation only and does not classify a player as a starter, substitute, or reserve.
+
+FPL only supplies the broad `GK`, `DEF`, `MID`, and `FWD` classifications; PremSight preserves that provider value separately from detailed-role enrichment.
+
+A versioned static enrichment file adds EA FC 26 overall ratings plus primary and alternative roles using the GPL-3.0 EAFC26 Player Database. Generation matches normalized FPL identity, club, and compatible broad role and publishes only high-confidence matches with a clear runner-up margin. The checked-in result is keyed by stable FPL player ID. Unmatched players keep their broad FPL role and no EA rating rather than receiving guessed data; they cannot enter the projected XI. Ingestion validates that at least one enriched role remains compatible with the FPL group while retaining cross-group alternatives such as `LW`/`LM`.
+
+The adapter also resolves each player's FPL `region` through `/api/regions/` and stores the provider's two-character nationality code with the snapshot. Unknown non-null region IDs fail validation instead of producing an incorrect flag. FPL sometimes publishes a null region for selectable youth players; those entries retain a null nationality and the UI renders a neutral flag.
+
+FPL's numeric `photo` identifier is validated and expanded to the official Premier League transparent `250x250` headshot URL before persistence. A missing photo remains null; malformed non-null identifiers fail ingestion.
+
+The import fails before persistence if a club cannot produce a complete valid XI with EA FC ratings, or if a provider club cannot be mapped unambiguously to a current-season PremSight team. A complete run is written in one transaction. Product reads select the latest run for the requested season; if a refresh fails, the previous successful snapshot remains available.
+
+Club mapping normally uses the provider TLA. Provider-specific aliases are explicit at the ingestion boundary; for example, FPL's `NFO` maps to football-data.org's `NOT` for Nottingham Forest. Unknown differences still fail the import instead of being guessed from display names.
+
+Manual refresh:
+
+```bash
+uv run premsight-ingest player-snapshot
+```
+
+Automated scheduling is a deployment concern; daily refresh is the recommended initial cadence.
+
 ## Ownership
 
 | Concern                   | Owner                |

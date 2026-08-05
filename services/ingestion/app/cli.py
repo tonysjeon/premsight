@@ -2,32 +2,41 @@ import argparse
 
 from app.core.config import get_settings
 from app.providers.football_data import FootballDataProvider
+from app.providers.fpl import FplProvider
+from app.repositories.player_snapshots import PostgresPlayerSnapshotRepository
 from app.repositories.postgres import PostgresHistoricalRepository
 from app.services.historical_sync import HistoricalSyncService
+from app.services.player_snapshot import select_player_snapshot
+from app.services.position_enrichment import enrich_player_positions, load_position_overrides
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="premsight-ingest")
     subparsers = parser.add_subparsers(dest="command", required=True)
-    historical = subparsers.add_parser(
-        "historical-season", help="Import one competition season"
-    )
+    historical = subparsers.add_parser("historical-season", help="Import one competition season")
     historical.add_argument("--competition", default="PL")
     historical.add_argument("--season", type=int, required=True, dest="season_start_year")
+    subparsers.add_parser("player-snapshot", help="Store each club's projected starting XI")
     return parser
 
 
 def main() -> None:
     args = build_parser().parse_args()
     settings = get_settings()
-    repository = PostgresHistoricalRepository(settings.database_url)
-    with FootballDataProvider(
-        api_token=settings.football_data_api_token,
-        base_url=settings.football_data_base_url,
-    ) as provider:
-        result = HistoricalSyncService(provider, repository).sync_season(
-            args.competition, args.season_start_year
-        )
+    if args.command == "player-snapshot":
+        with FplProvider(settings.fpl_base_url) as provider:
+            catalog = enrich_player_positions(provider.player_catalog(), load_position_overrides())
+            snapshot = select_player_snapshot(catalog)
+        result = PostgresPlayerSnapshotRepository(settings.database_url).save(snapshot)
+    else:
+        repository = PostgresHistoricalRepository(settings.database_url)
+        with FootballDataProvider(
+            api_token=settings.football_data_api_token,
+            base_url=settings.football_data_base_url,
+        ) as provider:
+            result = HistoricalSyncService(provider, repository).sync_season(
+                args.competition, args.season_start_year
+            )
     print(result.model_dump_json())
 
 

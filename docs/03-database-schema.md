@@ -19,9 +19,9 @@ All timestamps are stored as `TIMESTAMPTZ` and treated as UTC.
 - Enforce integrity with foreign keys, unique constraints, and check constraints
 - Ship ordered, reversible migrations plus seed data and automated tests
 
-## Non-goals (this phase)
+## Non-goals (core football phase)
 
-- Players, lineups, users, favorites, predictions, team ratings, standings snapshots
+- Canonical player careers, lineups, users, favorites, predictions, team ratings, standings snapshots
 - Live ingestion jobs or football-provider SDK integrations
 - Poisson / prediction tables
 - Choosing a production ORM for the API (SQLAlchemy remains deferred; migrations use plain SQL + `premsight-db`)
@@ -39,6 +39,9 @@ teams        1──* match_events (optional team side)
 
 provider_references  (polymorphic map: provider + entity_type + provider_entity_id
                       ↔ internal entity_id)
+
+player_snapshot_runs 1──* player_snapshot_entries
+teams                1──* player_snapshot_entries
 ```
 
 ## Tables
@@ -199,6 +202,60 @@ Stored as `TEXT` + `CHECK` for the same migration-friendliness reason as fixture
 
 Player identity is intentionally a free-text name until a later `players` table exists. Corrections are modeled as first-class events rather than destructive updates to prior rows; consumers should treat `provider_correction` as a signal to reinterpret earlier events.
 
+### `player_snapshot_runs`
+
+An immutable, successfully completed import of the current draft-player pool. A run belongs to one season and records when the external source was captured. Failed imports are not published as runs, so product reads can safely select the most recent row.
+
+| Column        | Type          | Null | Notes                                  |
+| ------------- | ------------- | ---- | -------------------------------------- |
+| `id`          | `UUID`        | no   | PK                                     |
+| `season_id`   | `UUID`        | no   | FK → `seasons.id`                      |
+| `provider`    | `TEXT`        | no   | Provider key; initially `fpl`          |
+| `captured_at` | `TIMESTAMPTZ` | no   | Time the provider payload was captured |
+| `created_at`  | `TIMESTAMPTZ` | no   | Default `now()`                        |
+
+**Constraints / indexes**
+
+- `UNIQUE (season_id, provider, captured_at)`
+- Index `(season_id, captured_at DESC)`
+
+### `player_snapshot_entries`
+
+The projected starting XI within a snapshot. Ingestion publishes exactly 11 entries per participating club by optimizing combined player ratings across supported valid formations.
+
+| Column                 | Type          | Null | Notes                                              |
+| ---------------------- | ------------- | ---- | -------------------------------------------------- |
+| `snapshot_id`          | `UUID`        | no   | FK → `player_snapshot_runs.id` ON DELETE CASCADE   |
+| `team_id`              | `UUID`        | no   | FK → `teams.id`                                    |
+| `provider_player_id`   | `TEXT`        | no   | Stable player ID within the snapshot provider      |
+| `first_name`           | `TEXT`        | no   | Display data captured with the snapshot            |
+| `last_name`            | `TEXT`        | no   | Display data captured with the snapshot            |
+| `display_name`         | `TEXT`        | no   | Short UI name                                      |
+| `position`             | `TEXT`        | no   | `GK`, `DEF`, `MID`, or `FWD`                       |
+| `positions`            | `TEXT[]`      | no   | Compatible detailed roles; broad fallback allowed  |
+| `ea_rating`            | `SMALLINT`    | yes  | EA FC overall; null only on legacy snapshots       |
+| `rating_model_version` | `TEXT`        | yes  | EA FC rating model identifier                      |
+| `nationality_code`     | `TEXT`        | yes  | FPL region code; null when the provider omits it   |
+| `photo_url`            | `TEXT`        | yes  | Captured Premier League headshot URL               |
+| `club_rank`            | `SMALLINT`    | no   | Deterministic rank; new snapshots use 1 through 11 |
+| `global_rank`          | `SMALLINT`    | yes  | EA FC rating rank; null only on legacy snapshots   |
+| `created_at`           | `TIMESTAMPTZ` | no   | Default `now()`                                    |
+
+**Constraints / indexes**
+
+- Primary key `(snapshot_id, provider_player_id)`
+- `UNIQUE (snapshot_id, team_id, club_rank)`
+- `CHECK (position IN ('GK', 'DEF', 'MID', 'FWD'))`
+- `CHECK (cardinality(positions) > 0)` and every value belongs to the documented detailed-position vocabulary
+- `CHECK (nationality_code IS NULL OR nationality_code ~ '^[A-Z0-9]{2}$')`
+- `CHECK (club_rank BETWEEN 1 AND 16)` to preserve legacy snapshots; ingestion restricts new runs to 11
+- EA ratings are constrained to `1..99`; rating and model version are either jointly present or jointly null for legacy rows
+- `CHECK (global_rank > 0)`
+- `UNIQUE (snapshot_id, global_rank)`
+- Index `(snapshot_id, team_id)`
+
+The database enforces rank bounds and uniqueness. The ingestion service validates the stronger cross-row invariant of exactly 11 players forming one complete supported formation for every participating club before opening a transaction.
+
 ### `provider_references`
 
 Maps one PremSight entity to an external provider’s ID. Enables multi-provider ingestion without coupling internal PKs to any vendor.
@@ -226,15 +283,15 @@ Maps one PremSight entity to an external provider’s ID. Enables multi-provider
 
 Explicitly out of scope until later phases:
 
-| Entity     | Reason                                    |
-| ---------- | ----------------------------------------- |
-| Player     | Not required for fixture/event MVP        |
-| Lineup     | Depends on Player                         |
-| User       | Auth phase                                |
-| Favorite   | Personalization phase                     |
-| Prediction | Prediction engine phase                   |
-| TeamRating | Prediction engine phase                   |
-| Standing   | Historical/standings phase after fixtures |
+| Entity     | Reason                                                                                           |
+| ---------- | ------------------------------------------------------------------------------------------------ |
+| Player     | Canonical identity/career model remains deferred; draft snapshots are intentionally denormalized |
+| Lineup     | Depends on Player                                                                                |
+| User       | Auth phase                                                                                       |
+| Favorite   | Personalization phase                                                                            |
+| Prediction | Prediction engine phase                                                                          |
+| TeamRating | Prediction engine phase                                                                          |
+| Standing   | Historical/standings phase after fixtures                                                        |
 
 ## Seed data
 
@@ -270,12 +327,13 @@ Automated tests must prove:
 - A completed fixture must have both scores
 - Documented check/unique constraints hold
 
-## Decisions (this milestone)
+## Decisions
 
 1. **Migration runner:** plain SQL + Python `premsight-db` CLI (not Alembic)
 2. **UUID generation:** database default via `pgcrypto.gen_random_uuid()` (UUID v4)
 3. **Provider mapping:** single polymorphic `provider_references` table
 4. **Match events:** mutable rows allowed; `provider_correction` is a first-class event type for vendor fixes
+5. **Draft players:** immutable, denormalized snapshots retain only 16 equally draftable players per club, with backup goalkeepers excluded; they are not canonical player records and carry no starter/bench role
 
 ## Remaining ADR candidates
 

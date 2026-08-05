@@ -6,6 +6,27 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict
 
 FixtureStatus = Literal["scheduled", "live", "postponed", "cancelled", "completed"]
+PlayerPosition = Literal["GK", "DEF", "MID", "FWD"]
+DetailedPlayerPosition = Literal[
+    "GK",
+    "DEF",
+    "MID",
+    "FWD",
+    "LB",
+    "LWB",
+    "CB",
+    "RB",
+    "RWB",
+    "CDM",
+    "CM",
+    "CAM",
+    "LM",
+    "RM",
+    "LW",
+    "RW",
+    "CF",
+    "ST",
+]
 
 
 class NormalizedModel(BaseModel):
@@ -60,3 +81,57 @@ class SyncResult(NormalizedModel):
     season_id: str
     teams_processed: int
     fixtures_processed: int
+
+
+class ProviderPlayer(NormalizedModel):
+    provider_id: str
+    team_provider_id: str
+    first_name: str
+    last_name: str
+    display_name: str
+    position: PlayerPosition
+    positions: tuple[DetailedPlayerPosition, ...]
+    nationality_code: str | None
+    photo_url: str | None
+    can_select: bool
+    availability: int
+    minutes: int
+    starts: int
+    total_points: int
+    ownership: float
+    price: int
+    ea_rating: int | None = None
+    rating_model_version: str | None = None
+
+
+class ProviderPlayerTeam(NormalizedModel):
+    provider_id: str
+    name: str
+    tla: str
+
+
+class PlayerCatalog(NormalizedModel):
+    provider: str
+    captured_at: datetime
+    teams: tuple[ProviderPlayerTeam, ...]
+    players: tuple[ProviderPlayer, ...]
+
+
+class SelectedPlayer(NormalizedModel):
+    player: ProviderPlayer
+    club_rank: int
+    global_rank: int
+
+
+class PlayerSnapshot(NormalizedModel):
+    provider: str
+    captured_at: datetime
+    teams: tuple[ProviderPlayerTeam, ...]
+    players_by_team: dict[str, tuple[SelectedPlayer, ...]]
+
+
+class PlayerSnapshotResult(NormalizedModel):
+    snapshot_id: str
+    season_id: str
+    teams_processed: int
+    players_processed: int

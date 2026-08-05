@@ -24,19 +24,42 @@ def test_runtime_package_contains_sql_assets() -> None:
         "0003_fixture_integrity.up.sql",
         "0004_team_crests.down.sql",
         "0004_team_crests.up.sql",
+        "0005_player_snapshots.down.sql",
+        "0005_player_snapshots.up.sql",
+        "0006_player_global_rank.down.sql",
+        "0006_player_global_rank.up.sql",
+        "0007_player_nationality.down.sql",
+        "0007_player_nationality.up.sql",
+        "0008_player_photo.down.sql",
+        "0008_player_photo.up.sql",
+        "0009_player_detailed_positions.down.sql",
+        "0009_player_detailed_positions.up.sql",
+        "0010_player_ratings.down.sql",
+        "0010_player_ratings.up.sql",
     ]
-    assert [path.name for path in SEEDS_DIR.glob("*.sql")] == [
-        "001_premier_league.sql"
-    ]
+    assert [path.name for path in SEEDS_DIR.glob("*.sql")] == ["001_premier_league.sql"]
 
 
 def test_migrations_apply_on_empty_database(database_url: str) -> None:
     migrate_down_all(database_url)
     applied = migrate_up(database_url)
-    assert applied == ["0001", "0002", "0003", "0004"]
+    assert applied == [
+        "0001", "0002", "0003", "0004", "0005", "0006", "0007", "0008", "0009", "0010"
+    ]
 
     with psycopg.connect(database_url) as conn:
-        assert applied_versions(conn) == ["0001", "0002", "0003", "0004"]
+        assert applied_versions(conn) == [
+            "0001",
+            "0002",
+            "0003",
+            "0004",
+            "0005",
+            "0006",
+            "0007",
+            "0008",
+            "0009",
+            "0010",
+        ]
         tables = {
             row[0]
             for row in conn.execute(
@@ -54,6 +77,8 @@ def test_migrations_apply_on_empty_database(database_url: str) -> None:
                         "fixtures",
                         "match_events",
                         "provider_references",
+                        "player_snapshot_runs",
+                        "player_snapshot_entries",
                         "schema_meta",
                         "schema_migrations",
                     ],
@@ -67,6 +92,8 @@ def test_migrations_apply_on_empty_database(database_url: str) -> None:
         "fixtures",
         "match_events",
         "provider_references",
+        "player_snapshot_runs",
+        "player_snapshot_entries",
         "schema_meta",
         "schema_migrations",
     }
@@ -76,12 +103,78 @@ def test_migrations_roll_back_safely(database_url: str) -> None:
     migrate_down_all(database_url)
     migrate_up(database_url)
 
+    assert migrate_down(database_url, steps=1) == ["0010"]
+    with psycopg.connect(database_url) as conn:
+        columns = {
+            row[0]
+            for row in conn.execute(
+                """SELECT column_name FROM information_schema.columns
+                   WHERE table_schema='public' AND table_name='player_snapshot_entries'"""
+            ).fetchall()
+        }
+        assert "rating" not in columns
+        assert "positions" in columns
+
+    assert migrate_down(database_url, steps=1) == ["0009"]
+    with psycopg.connect(database_url) as conn:
+        columns = {
+            row[0]
+            for row in conn.execute(
+                """SELECT column_name FROM information_schema.columns
+                   WHERE table_schema='public' AND table_name='player_snapshot_entries'"""
+            ).fetchall()
+        }
+        assert "positions" not in columns
+        assert "photo_url" in columns
+
+    assert migrate_down(database_url, steps=1) == ["0008"]
+    with psycopg.connect(database_url) as conn:
+        columns = {
+            row[0]
+            for row in conn.execute(
+                """SELECT column_name FROM information_schema.columns
+                   WHERE table_schema='public' AND table_name='player_snapshot_entries'"""
+            ).fetchall()
+        }
+        assert "photo_url" not in columns
+        assert "nationality_code" in columns
+
+    assert migrate_down(database_url, steps=1) == ["0007"]
+    with psycopg.connect(database_url) as conn:
+        columns = {
+            row[0]
+            for row in conn.execute(
+                """SELECT column_name FROM information_schema.columns
+                   WHERE table_schema='public' AND table_name='player_snapshot_entries'"""
+            ).fetchall()
+        }
+        assert "nationality_code" not in columns
+        assert "global_rank" in columns
+
+    assert migrate_down(database_url, steps=1) == ["0006"]
+    with psycopg.connect(database_url) as conn:
+        columns = {
+            row[0]
+            for row in conn.execute(
+                """SELECT column_name FROM information_schema.columns
+                   WHERE table_schema='public' AND table_name='player_snapshot_entries'"""
+            ).fetchall()
+        }
+        assert "global_rank" not in columns
+
+    assert migrate_down(database_url, steps=1) == ["0005"]
+    with psycopg.connect(database_url) as conn:
+        assert conn.execute("SELECT to_regclass('public.player_snapshot_entries')").fetchone() == (
+            None,
+        )
+        assert conn.execute("SELECT to_regclass('public.player_snapshot_runs')").fetchone() == (
+            None,
+        )
+
     assert migrate_down(database_url, steps=1) == ["0004"]
     with psycopg.connect(database_url) as conn:
         assert applied_versions(conn) == ["0001", "0002", "0003"]
-        assert conn.execute("SELECT to_regclass('public.fixtures')").fetchone() == (
-            "fixtures",
-        )
+        assert conn.execute("SELECT to_regclass('public.fixtures')").fetchone() == ("fixtures",)
 
     assert migrate_down(database_url, steps=1) == ["0003"]
     with psycopg.connect(database_url) as conn:
