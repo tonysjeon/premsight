@@ -938,7 +938,7 @@ button:focus-visible {
 .view-filters .chip {
   min-width: 72px;
   padding: 6px 14px;
-  border-color: transparent;
+  border-color: #f4d883;
   background: #343534;
   color: #f4f4f4;
   font-size: 0.85rem;
@@ -947,7 +947,7 @@ button:focus-visible {
 }
 
 .view-filters .chip:hover {
-  border-color: transparent;
+  border-color: #ffe7a3;
   background: #404140;
   color: #fff;
 }
@@ -1477,6 +1477,10 @@ button:focus-visible {
   box-shadow: 0 1px 2px #0000003d;
 }
 
+.draft-board {
+  position: relative;
+}
+
 .draft-board-head {
   display: flex;
   align-items: center;
@@ -1633,27 +1637,26 @@ button:focus-visible {
 
 .draft-pitch--formation .draft-line:nth-of-type(3)[data-count='5'] .draft-slot:first-child,
 .draft-pitch--formation .draft-line:nth-of-type(3)[data-count='5'] .draft-slot:last-child {
-  transform: translateY(-14px);
+  transform: translateY(-34px);
 }
 
 .draft-pitch--formation .draft-line:nth-of-type(3)[data-count='5'] .draft-slot:nth-child(2),
 .draft-pitch--formation .draft-line:nth-of-type(3)[data-count='5'] .draft-slot:nth-child(4) {
-  transform: translateY(8px);
+  transform: translateY(28px);
 }
 
 .draft-pitch--formation .draft-slot {
   align-content: end;
-  width: 156px;
-  min-height: 180px;
+  width: 140px;
+  min-height: 160px;
   aspect-ratio: auto;
-  padding: 28px 12px 9px;
+  padding: 22px 10px 9px;
   overflow: hidden;
   border: 1px solid #9db5a43d;
-  border-radius: 20px 20px 8px 8px;
+  border-radius: 16px 16px 8px 8px;
   background:
     radial-gradient(circle at 52% 10%, #64806b52 0%, transparent 43%),
     linear-gradient(155deg, #34483b 0%, #222b25 48%, #171b18 100%);
-  clip-path: polygon(10% 0, 90% 0, 98% 5%, 100% 16%, 100% 92%, 94% 100%, 6% 100%, 0 92%, 0 16%, 2% 5%);
   filter: drop-shadow(0 8px 12px #00000042);
 }
 
@@ -1662,7 +1665,7 @@ button:focus-visible {
   border-color: #c9cecb66;
   background:
     repeating-linear-gradient(135deg, transparent 0 7px, #ffffff0a 7px 9px),
-    linear-gradient(165deg, #59615d 0%, #414744 56%, #303431 100%);
+    linear-gradient(165deg, #3e4341 0%, #2b2f2d 56%, #1d201f 100%);
   color: #e1e5e2;
 }
 
@@ -1673,19 +1676,21 @@ button:focus-visible {
 .draft-pitch--formation .draft-slot--filled > strong {
   position: relative;
   z-index: 2;
-  font-size: 0.92rem;
+  padding-top: 3px;
+  font-size: 0.88rem;
 }
 
 .draft-pitch--formation .draft-slot-card-meta {
   position: absolute;
   z-index: 2;
-  top: 14px;
-  left: 17px;
+  top: 12px;
+  left: 50%;
   display: flex;
-  width: 28px;
+  width: 72px;
   flex-direction: column;
   align-items: center;
-  gap: 7px;
+  gap: 4px;
+  transform: translateX(-50%);
 }
 
 .draft-pitch--formation .draft-slot-card-meta small {
@@ -1694,7 +1699,7 @@ button:focus-visible {
   width: 100%;
   overflow: visible;
   color: #edf2ef;
-  font-size: 0.82rem;
+  font-size: 0.69rem;
   font-weight: 800;
   line-height: 1.2;
   margin-inline: 0;
@@ -1704,21 +1709,13 @@ button:focus-visible {
 }
 
 .draft-pitch--formation .draft-slot-card-meta .draft-country-flag {
-  width: 28px;
-  height: 18px;
+  width: 22px;
+  height: 15px;
 }
 
 .draft-pitch--formation .draft-slot-card-meta .draft-team-crest {
-  width: 28px;
-  height: 28px;
-}
-
-.draft-pitch--formation .draft-slot-headshot {
-  top: 46px;
-  left: calc(50% + 15px);
-  width: 150px;
-  height: 85px;
-  transform: translateX(-50%) scale(1.18);
+  width: 36px;
+  height: 36px;
 }
 
 .draft-line {
@@ -1966,7 +1963,11 @@ button.draft-slot {
 
 .draft-captain-stage {
   position: relative;
-  min-height: 610px;
+  min-height: 840px;
+}
+
+.draft-captain-stage .draft-pitch--formation {
+  min-height: 840px;
 }
 
 .draft-captain-overlay {
@@ -2006,7 +2007,7 @@ button.draft-slot {
 }
 
 .draft-pitch--preview {
-  min-height: 760px;
+  min-height: 840px;
 }
 
 .draft-formation-overlay {
@@ -2023,9 +2024,9 @@ button.draft-slot {
 
 .draft-formation-modal {
   display: grid;
-  grid-template-columns: 340px minmax(0, 1fr);
-  width: min(1080px, 100%);
-  min-height: 545px;
+  grid-template-columns: 310px minmax(0, 1fr);
+  width: min(870px, 100%);
+  min-height: 500px;
   padding: 0;
   overflow: hidden;
   box-shadow: 0 20px 60px #00000066;
@@ -2034,24 +2035,28 @@ button.draft-slot {
 .page .draft-formation-modal h1 {
   margin: 0 0 8px;
   max-width: 100%;
+  padding-bottom: 3px;
   padding-left: 6px;
   overflow: hidden;
-  font-size: 1.3rem;
+  color: #fff;
+  font-size: 0.82rem;
   font-weight: 700;
-  letter-spacing: -0.025em;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+  text-transform: uppercase;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .draft-formation-list-panel {
-  padding: 20px 14px;
+  padding: 14px 12px;
   border-right: 1px solid var(--line);
   background: var(--surface-sunken);
 }
 
 .draft-formation-grid {
   display: grid;
-  gap: 5px;
+  gap: 0;
 }
 
 .draft-choice-grid {
@@ -2061,7 +2066,7 @@ button.draft-slot {
 }
 
 .draft-choice-grid--captains {
-  width: min(850px, 100%);
+  width: min(770px, 100%);
   margin-inline: auto;
   gap: 18px;
 }
@@ -2083,12 +2088,16 @@ button.draft-slot {
   align-items: center;
   gap: 12px;
   padding: 7px 10px;
-  border-color: transparent;
+  border: 0;
   border-radius: 9px;
   text-align: left;
 }
 
-.draft-formation-grid button:hover,
+.draft-formation-grid button:hover {
+  background: #3b3d3c;
+  color: #fff;
+}
+
 .draft-choice:hover {
   border-color: var(--line-strong);
   background: var(--surface-hover);
@@ -2099,7 +2108,6 @@ button.draft-slot {
 }
 
 .draft-formation-grid button[aria-pressed='true'] {
-  border-color: #ffffff;
   background: #f4f4f4;
   color: #202120;
 }
@@ -2164,7 +2172,7 @@ button.draft-slot {
   grid-template-rows: auto 1fr auto;
   justify-items: center;
   gap: 12px;
-  padding: 26px 34px 24px;
+  padding: 18px 24px;
 }
 
 .draft-formation-preview-panel > div {
@@ -2173,7 +2181,7 @@ button.draft-slot {
 
 .draft-formation-preview-panel h2 {
   margin: 3px 0 5px;
-  font-size: 1.75rem;
+  font-size: 1.4rem;
 }
 
 .draft-formation-preview-panel p:not(.eyebrow) {
@@ -2368,26 +2376,14 @@ button.draft-slot {
 .draft-choice--captain {
   position: relative;
   align-content: end;
-  min-height: 180px;
-  padding: 28px 12px 9px;
+  min-height: 160px;
+  padding: 22px 10px 9px;
   overflow: hidden;
   border-color: #9db5a43d;
-  border-radius: 20px 20px 8px 8px;
+  border-radius: 16px 16px 8px 8px;
   background:
     radial-gradient(circle at 52% 10%, #64806b52 0%, transparent 43%),
     linear-gradient(155deg, #34483b 0%, #222b25 48%, #171b18 100%);
-  clip-path: polygon(
-    10% 0,
-    90% 0,
-    98% 5%,
-    100% 16%,
-    100% 92%,
-    94% 100%,
-    6% 100%,
-    0 92%,
-    0 16%,
-    2% 5%
-  );
   filter: drop-shadow(0 8px 12px #00000042);
   transition: filter 150ms ease;
 }
@@ -2426,35 +2422,23 @@ button.draft-slot {
 .draft-choice.draft-choice--captain strong {
   position: relative;
   z-index: 2;
-  font-size: 0.92rem;
-}
-
-.draft-captain-headshot {
-  position: absolute;
-  z-index: 1;
-  top: 46px;
-  left: calc(50% + 15px);
-  width: 150px;
-  height: 85px;
-  clip-path: inset(0 22%);
-  object-fit: cover;
-  object-position: center top;
-  transform: translateX(-50%) scale(1.18);
-  transform-origin: 50% 20%;
+  padding-top: 3px;
+  font-size: 0.88rem;
 }
 
 .draft-choice--captain > .draft-captain-card-meta {
   position: absolute;
-  top: 14px;
-  left: 17px;
+  top: 12px;
+  left: 50%;
   display: flex;
-  width: 28px;
+  width: 72px;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 7px;
+  gap: 4px;
   color: #edf2ef;
   z-index: 2;
+  transform: translateX(-50%);
 }
 
 .draft-choice--captain .draft-captain-card-meta small {
@@ -2463,7 +2447,7 @@ button.draft-slot {
   display: block;
   width: 100%;
   color: inherit;
-  font-size: 0.82rem;
+  font-size: 0.69rem;
   font-weight: 800;
   margin-bottom: -2px;
   margin-inline: 0;
@@ -2473,8 +2457,8 @@ button.draft-slot {
 
 .draft-country-flag {
   display: block;
-  width: 28px;
-  height: 18px;
+  width: 22px;
+  height: 15px;
   border: 0;
   border-radius: 0;
   background: #69736d;
@@ -2482,9 +2466,23 @@ button.draft-slot {
   box-shadow: none;
 }
 
+.draft-country-flag.draft-country-flag--square {
+  width: 16px;
+  object-fit: contain;
+}
+
 .draft-captain-card-meta .draft-team-crest {
-  width: 28px;
-  height: 28px;
+  width: 36px;
+  height: 36px;
+}
+
+.draft-captain-card-meta .draft-player-rating {
+  align-self: stretch;
+  color: #f7f1fb;
+  font-size: 1.78rem;
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
 }
 
 .draft-captain-card-meta small:is([data-position='CDM'], [data-position='RWB']) {
@@ -2542,19 +2540,207 @@ button.draft-slot {
   background: var(--surface);
 }
 
+.draft-result-overlay {
+  position: fixed;
+  z-index: 50;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: #050a07b8;
+  backdrop-filter: blur(4px);
+}
+
+.draft-result {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 24px;
+  width: min(480px, 100%);
+  padding: 42px 36px 32px;
+  border: 1px solid #e4ca7866;
+  border-radius: var(--radius);
+  background:
+    radial-gradient(circle at 88% 8%, #d8b95929 0%, transparent 34%),
+    linear-gradient(145deg, #26312b 0%, #171c19 100%);
+  box-shadow: 0 24px 70px #00000073;
+}
+
+.draft-result-heading {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.draft-result-heading span {
+  color: #c8ceca;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.draft-result-heading strong {
+  color: #f1d87f;
+  font-size: clamp(1.6rem, 4vw, 2.45rem);
+  line-height: 1;
+}
+
+.draft-result-points {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  min-width: 112px;
+}
+
+.draft-result-points b {
+  color: #fff;
+  font-size: 2.8rem;
+  line-height: 0.95;
+}
+
+.draft-result-points span {
+  color: #c8ceca;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.draft-result-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #c8ceca;
+  font: inherit;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.draft-result-close:hover {
+  background: #ffffff12;
+  color: #fff;
+}
+
+.draft-result-restart {
+  width: 100%;
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 9px;
+  background: #f1d87f;
+  color: #211d12;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.draft-result-restart:hover {
+  background: #f8e49c;
+}
+
+.draft-result-summary {
+  position: absolute;
+  z-index: 4;
+  right: 18px;
+  bottom: 18px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px 20px;
+  min-width: 280px;
+  padding: 18px 20px 14px;
+  border: 1px solid #e4ca7880;
+  border-radius: 14px;
+  background:
+    linear-gradient(115deg, #ffffff0d 0%, transparent 30%),
+    radial-gradient(circle at 92% 4%, #dfc5682b 0%, transparent 40%),
+    linear-gradient(145deg, #26312bf2 0%, #151a17f2 100%);
+  color: #fff;
+  font: inherit;
+  text-align: left;
+  box-shadow: 0 14px 34px #00000070;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  overflow: hidden;
+}
+
+.draft-result-summary::before {
+  position: absolute;
+  top: 0;
+  right: 18px;
+  left: 18px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #f1d87f, transparent);
+  content: '';
+}
+
+.draft-result-summary-heading {
+  display: grid;
+  align-content: center;
+  gap: 4px;
+}
+
+.draft-result-summary-heading small {
+  color: #aeb7b1;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.draft-result-summary-heading strong {
+  color: #f1d87f;
+  font-size: 1.22rem;
+  line-height: 1.05;
+}
+
+.draft-result-summary-points {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: end;
+  gap: 4px;
+  padding-left: 18px;
+  border-left: 1px solid #ffffff1f;
+}
+
+.draft-result-summary-points b {
+  font-size: 2.2rem;
+  line-height: 0.9;
+}
+
+.draft-result-summary-points small {
+  padding-bottom: 2px;
+  color: #aeb7b1;
+  font-size: 0.58rem;
+  font-weight: 800;
+}
+
+.draft-result-summary:hover {
+  border-color: #f1d87f;
+  background: #202720f2;
+}
+
 .draft-squad-group {
   min-width: 0;
 }
 
 .draft-squad-slots {
   display: grid;
-  grid-template-columns: repeat(7, 156px);
+  grid-template-columns: repeat(7, 140px);
   justify-content: center;
   gap: 10px;
 }
 
 .draft-squad-slots[data-group='reserve'] {
-  grid-template-columns: repeat(5, 156px);
+  grid-template-columns: repeat(5, 140px);
 }
 
 .draft-squad-slot {
@@ -2565,12 +2751,12 @@ button.draft-slot {
   justify-content: center;
   gap: 6px;
   min-width: 0;
-  min-height: 180px;
+  min-height: 160px;
   aspect-ratio: auto;
-  padding: 28px 12px 9px;
+  padding: 22px 10px 9px;
   overflow: hidden;
   border: 1px solid #9db5a43d;
-  border-radius: 20px 20px 8px 8px;
+  border-radius: 16px 16px 8px 8px;
   background:
     radial-gradient(circle at 50% 12%, #64806b3d 0%, transparent 45%),
     linear-gradient(155deg, #34483b 0%, #222b25 50%, #171b18 100%);
@@ -2578,16 +2764,15 @@ button.draft-slot {
   font: inherit;
   text-align: center;
   cursor: pointer;
-  clip-path: polygon(10% 0, 90% 0, 98% 5%, 100% 16%, 100% 92%, 94% 100%, 6% 100%, 0 92%, 0 16%, 2% 5%);
   filter: drop-shadow(0 8px 12px #00000042);
   transition: filter 150ms ease;
 }
 
 .draft-squad-slot--filled {
   justify-content: flex-end;
-  padding: 28px 12px 9px;
+  padding: 22px 10px 9px;
   border-color: #9db5a43d;
-  border-radius: 20px 20px 8px 8px;
+  border-radius: 16px 16px 8px 8px;
   background:
     radial-gradient(circle at 52% 10%, #64806b52 0%, transparent 43%),
     linear-gradient(155deg, #34483b 0%, #222b25 48%, #171b18 100%);
@@ -2597,20 +2782,22 @@ button.draft-slot {
 .draft-squad-slot--filled > strong {
   position: relative;
   z-index: 2;
-  font-size: 0.92rem;
+  padding-top: 3px;
+  font-size: 0.88rem;
 }
 
 .draft-squad-slot > .draft-captain-card-meta {
   position: absolute;
-  top: 14px;
-  left: 17px;
+  top: 12px;
+  left: 50%;
   z-index: 2;
   display: flex;
-  width: 28px;
+  width: 72px;
   flex-direction: column;
   align-items: center;
-  gap: 7px;
+  gap: 4px;
   color: #edf2ef;
+  transform: translateX(-50%);
 }
 
 .draft-squad-slot .draft-captain-card-meta small {
@@ -2620,7 +2807,7 @@ button.draft-slot {
   width: 100%;
   overflow: visible;
   color: inherit;
-  font-size: 0.82rem;
+  font-size: 0.69rem;
   font-weight: 800;
   line-height: 1.2;
   margin-bottom: -2px;
@@ -2631,39 +2818,56 @@ button.draft-slot {
 }
 
 .draft-squad-slot .draft-country-flag {
-  width: 28px;
-  height: 18px;
+  width: 22px;
+  height: 15px;
 }
 
 .draft-squad-slot .draft-team-crest {
-  width: 28px;
-  height: 28px;
+  width: 36px;
+  height: 36px;
 }
 
-.draft-squad-slot .draft-slot-headshot {
-  top: 46px;
-  left: calc(50% + 15px);
-  width: 150px;
-  height: 85px;
-  transform: translateX(-50%) scale(1.18);
-}
-
-.draft-choice--captain.draft-card--top-player,
-.draft-pitch--formation .draft-slot--filled.draft-card--top-player,
-.draft-squad-slot--filled.draft-card--top-player {
-  border-color: #b99bd05c;
+.draft-choice--captain.draft-card--gold,
+.draft-pitch--formation .draft-slot--filled.draft-card--gold,
+.draft-squad-slot--filled.draft-card--gold {
+  border-color: #fff;
   background:
-    radial-gradient(circle at 52% 10%, #9b78b75c 0%, transparent 43%),
-    linear-gradient(155deg, #503b63 0%, #352940 48%, #201827 100%);
+    linear-gradient(142deg, transparent 0 5%, #c76818 5% 12%, #f8e4a8 12% 15%, transparent 15%),
+    linear-gradient(155deg, #dfbf68 0%, #f3d88c 52%, #e5c36e 100%);
 }
 
-.draft-choice--captain.draft-card--top-player:hover,
-.draft-pitch--formation .draft-slot--filled.draft-card--top-player:hover,
-.draft-squad-slot--filled.draft-card--top-player:hover {
-  border-color: #d0b4e670;
+.draft-choice--captain.draft-card--gold:hover,
+.draft-pitch--formation .draft-slot--filled.draft-card--gold:hover,
+.draft-squad-slot--filled.draft-card--gold:hover {
+  border-color: transparent;
   background:
-    radial-gradient(circle at 52% 10%, #ad88c96b 0%, transparent 43%),
-    linear-gradient(155deg, #5b4570 0%, #3c2e49 48%, #251c2d 100%);
+    linear-gradient(142deg, transparent 0 5%, #d77420 5% 12%, #fff0bd 12% 15%, transparent 15%),
+    linear-gradient(155deg, #e8ca77 0%, #f9e3a0 52%, #edcf7d 100%);
+}
+
+.draft-choice--captain.draft-card--silver,
+.draft-pitch--formation .draft-slot--filled.draft-card--silver,
+.draft-squad-slot--filled.draft-card--silver {
+  border-color: transparent;
+  background:
+    linear-gradient(142deg, transparent 0 5%, #aeb1b3 5% 12%, #fff 12% 15%, transparent 15%),
+    linear-gradient(155deg, #f5f5f5 0%, #dedede 52%, #bfc0c2 100%);
+}
+
+.draft-choice--captain.draft-card--silver:hover,
+.draft-pitch--formation .draft-slot--filled.draft-card--silver:hover,
+.draft-squad-slot--filled.draft-card--silver:hover {
+  border-color: transparent;
+  background:
+    linear-gradient(142deg, transparent 0 5%, #b9bcbe 5% 12%, #fff 12% 15%, transparent 15%),
+    linear-gradient(155deg, #fff 0%, #e8e8e8 52%, #cacbcd 100%);
+}
+
+:is(.draft-card--gold, .draft-card--silver) > strong,
+:is(.draft-card--gold, .draft-card--silver) .draft-captain-card-meta,
+:is(.draft-card--gold, .draft-card--silver) .draft-player-rating,
+:is(.draft-card--gold, .draft-card--silver) .draft-captain-card-meta small {
+  color: #332f25;
 }
 
 .draft-pitch--formation .draft-slot--filled::before,
@@ -2702,28 +2906,15 @@ button.draft-slot {
   border-color: #c9cecb66;
   background:
     repeating-linear-gradient(135deg, transparent 0 7px, #ffffff0a 7px 9px),
-    linear-gradient(165deg, #59615d 0%, #414744 56%, #303431 100%);
+    linear-gradient(165deg, #3e4341 0%, #2b2f2d 56%, #1d201f 100%);
   color: #e1e5e2;
   filter: drop-shadow(0 5px 8px #0000002e);
-}
-
-.draft-squad-slot:not(.draft-squad-slot--filled)::before {
-  position: absolute;
-  top: 20%;
-  left: 50%;
-  width: 62%;
-  aspect-ratio: 1;
-  border: 1px solid #eef1ef12;
-  border-radius: 50%;
-  background: radial-gradient(circle, #ffffff0d 0 40%, transparent 41%);
-  content: '';
-  transform: translateX(-50%);
 }
 
 .draft-squad-slot:not(.draft-squad-slot--filled):hover {
   background:
     repeating-linear-gradient(135deg, transparent 0 7px, #ffffff0e 7px 9px),
-    linear-gradient(165deg, #626b66 0%, #494f4c 56%, #343936 100%);
+    linear-gradient(165deg, #484e4b 0%, #333836 56%, #232725 100%);
 }
 
 .draft-squad-slot:not(.draft-squad-slot--filled) strong {
@@ -2758,6 +2949,35 @@ button.draft-slot {
   font-size: 0.62rem;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.draft-card-brand {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  z-index: 1;
+  color: #f1f4f2;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+}
+
+.draft-card-brand span {
+  color: var(--accent);
+}
+
+.draft-pitch--formation .draft-slot:not(.draft-slot--filled) > strong,
+.draft-squad-slot:not(.draft-squad-slot--filled) > strong {
+  position: absolute;
+  right: 8px;
+  bottom: 22px;
+  left: 8px;
+  z-index: 1;
+  font-size: 1.06rem;
+  font-weight: 800;
 }
 
 .draft-squad-slot > b {
@@ -3156,7 +3376,7 @@ button.draft-slot {
   }
 
   .draft-formation-modal {
-    grid-template-columns: 280px minmax(0, 1fr);
+    grid-template-columns: 310px minmax(0, 1fr);
   }
 
   .draft-formation-preview-panel {
@@ -3239,6 +3459,34 @@ button.draft-slot {
     padding: 14px 10px;
   }
 
+  .draft-result {
+    gap: 20px;
+    padding: 38px 22px 24px;
+  }
+
+  .draft-result-points {
+    min-width: 84px;
+  }
+
+  .draft-result-points b {
+    font-size: 2.2rem;
+  }
+
+  .draft-result-summary {
+    right: 8px;
+    bottom: 8px;
+    min-width: min(260px, calc(100% - 16px));
+    padding: 14px 16px 12px;
+  }
+
+  .draft-result-summary-heading strong {
+    font-size: 1.05rem;
+  }
+
+  .draft-result-summary-points b {
+    font-size: 1.85rem;
+  }
+
   .draft-squad-slots,
   .draft-squad-slots[data-group='reserve'] {
     grid-template-columns: repeat(7, min(22vw, 82px));
@@ -3269,7 +3517,62 @@ button.draft-slot {
 
   .draft-pitch--formation .draft-slot {
     width: min(22vw, 82px);
-    min-height: 0;
+    min-height: 112px;
+    padding: 14px 5px 6px;
+  }
+
+  .draft-pitch--formation .draft-slot-card-meta,
+  .draft-squad-slot > .draft-captain-card-meta {
+    top: 7px;
+    width: 44px;
+    gap: 2px;
+  }
+
+  .draft-pitch--formation .draft-slot-card-meta small,
+  .draft-squad-slot .draft-captain-card-meta small {
+    font-size: 0.56rem;
+  }
+
+  .draft-pitch--formation .draft-slot-card-meta .draft-player-rating,
+  .draft-squad-slot .draft-captain-card-meta .draft-player-rating {
+    font-size: 1.15rem;
+  }
+
+  .draft-pitch--formation .draft-slot-card-meta .draft-team-crest,
+  .draft-squad-slot .draft-team-crest {
+    width: 23px;
+    height: 23px;
+  }
+
+  .draft-pitch--formation .draft-slot-card-meta .draft-country-flag,
+  .draft-squad-slot .draft-country-flag {
+    width: 18px;
+    height: 12px;
+  }
+
+  .draft-pitch--formation .draft-slot-card-meta .draft-country-flag--square,
+  .draft-squad-slot .draft-country-flag--square {
+    width: 12px;
+  }
+
+  .draft-pitch--formation .draft-slot--filled > strong,
+  .draft-squad-slot--filled > strong {
+    font-size: 0.66rem;
+  }
+
+  .draft-squad-slot {
+    min-height: 112px;
+    padding: 14px 5px 6px;
+  }
+
+  .draft-card-brand {
+    font-size: 0.56rem;
+  }
+
+  .draft-pitch--formation .draft-slot:not(.draft-slot--filled) > strong,
+  .draft-squad-slot:not(.draft-squad-slot--filled) > strong {
+    bottom: 14px;
+    font-size: 0.78rem;
   }
 
   .draft-slot .draft-player-mark {

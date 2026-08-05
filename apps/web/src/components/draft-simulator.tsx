@@ -1,7 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { useMemo, useState, type DragEvent as ReactDragEvent } from 'react';
+import { useEffect, useMemo, useState, type DragEvent as ReactDragEvent } from 'react';
+import { scoreDraft } from '@/lib/draft-score';
 import type { DetailedDraftPosition, DraftPlayer, DraftPosition } from '@/lib/fpl';
 
 type Formation = {
@@ -32,7 +33,6 @@ const FORMATIONS: readonly Formation[] = [
 ];
 
 const PITCH_LINES: readonly DraftPosition[] = ['FWD', 'MID', 'DEF', 'GK'];
-const DEFAULT_PLAYER_PHOTO = '/player-placeholder.svg';
 
 function hashSeed(value: string): number {
   let hash = 2166136261;
@@ -106,6 +106,19 @@ function TeamCrest({ player }: { player: DraftPlayer }) {
   ) : null;
 }
 
+function PremSightCardMark() {
+  return (
+    <span aria-hidden="true" className="draft-card-brand">
+      PREM<span>SIGHT</span>
+    </span>
+  );
+}
+
+function ratingCardClass(rating: number): string {
+  if (rating >= 75) return 'draft-card--gold';
+  return 'draft-card--silver';
+}
+
 function PitchMarkings() {
   return (
     <svg className="draft-pitch-markings" preserveAspectRatio="none" viewBox="0 0 100 100">
@@ -165,7 +178,14 @@ function FormationDiagram({ formation, large = false }: { formation: Formation; 
 }
 
 function EmptyPitch() {
-  return <div aria-hidden="true" className="draft-pitch draft-pitch--preview" />;
+  return (
+    <div
+      aria-hidden="true"
+      className="draft-pitch draft-pitch--formation draft-pitch--preview"
+    >
+      <PitchMarkings />
+    </div>
+  );
 }
 
 function nationalityFlagUrl(code: string | null): string | null {
@@ -186,15 +206,18 @@ function PlayerCardArtwork({
   position?: DetailedDraftPosition;
 }) {
   const flagUrl = nationalityFlagUrl(player.nationalityCode);
+  const hasSquareFlag = player.nationalityCode?.toUpperCase() === 'CH';
   const displayPosition = position ?? playerPositions(player)[0];
   return (
     <>
       <span className={`draft-captain-card-meta ${compact ? 'draft-slot-card-meta' : ''}`}>
+        <b className="draft-player-rating">{player.eaRating}</b>
         <small data-position={displayPosition}>{displayPosition}</small>
+        <TeamCrest player={player} />
         {flagUrl ? (
           <Image
             alt={`${player.nationalityCode} flag`}
-            className="draft-country-flag"
+            className={`draft-country-flag ${hasSquareFlag ? 'draft-country-flag--square' : ''}`}
             draggable={false}
             height={18}
             src={flagUrl}
@@ -204,22 +227,7 @@ function PlayerCardArtwork({
         ) : (
           <span aria-label="Unknown nationality" className="draft-country-flag" role="img" />
         )}
-        <TeamCrest player={player} />
       </span>
-      <Image
-        alt={`${player.displayName} headshot`}
-        className={`draft-captain-headshot ${compact ? 'draft-slot-headshot' : ''}`}
-        draggable={false}
-        height={250}
-        onError={(event) => {
-          if (event.currentTarget.dataset.fallbackApplied) return;
-          event.currentTarget.dataset.fallbackApplied = 'true';
-          event.currentTarget.src = DEFAULT_PLAYER_PHOTO;
-        }}
-        src={player.photoUrl ?? DEFAULT_PLAYER_PHOTO}
-        unoptimized
-        width={250}
-      />
     </>
   );
 }
@@ -235,7 +243,7 @@ function PlayerChoice({
 }) {
   return (
     <button
-      className={`draft-choice ${hideMark ? 'draft-choice--captain' : ''} ${player.globalRank <= 30 ? 'draft-card--top-player' : ''}`}
+      className={`draft-choice ${hideMark ? 'draft-choice--captain' : ''} ${ratingCardClass(player.eaRating)}`}
       onClick={() => onChoose(player)}
       type="button"
     >
@@ -292,7 +300,7 @@ function StarterPitch({
           >
             {lineSlots.map((slot) => (
               <button
-                className={`draft-slot ${slot.player ? 'draft-slot--filled' : ''} ${slot.player && slot.player.globalRank <= 30 ? 'draft-card--top-player' : ''} ${swapSourceId === slot.id ? 'draft-slot--swap' : ''} ${dragSourceId === slot.id ? 'draft-slot--dragging' : ''} ${dragTargetId === slot.id ? 'draft-slot--drop-target' : ''}`}
+                className={`draft-slot ${slot.player ? `draft-slot--filled ${ratingCardClass(slot.player.eaRating)}` : ''} ${swapSourceId === slot.id ? 'draft-slot--swap' : ''} ${dragSourceId === slot.id ? 'draft-slot--dragging' : ''} ${dragTargetId === slot.id ? 'draft-slot--drop-target' : ''}`}
                 draggable={Boolean(slot.player)}
                 key={slot.id}
                 onDragEnd={onDragEnd}
@@ -315,6 +323,7 @@ function StarterPitch({
                 ) : (
                   <>
                     <span className="draft-slot-plus">+</span>
+                    <PremSightCardMark />
                     <strong>{slot.detailedPosition}</strong>
                   </>
                 )}
@@ -361,19 +370,10 @@ function canOccupy(slot: SquadSlot, player: DraftPlayer): boolean {
   );
 }
 
-function shareCompatiblePosition(first: DraftPlayer, second: DraftPlayer): boolean {
-  const secondPositions = playerPositions(second);
-  return playerPositions(first).some((position) => secondPositions.includes(position));
-}
-
 function canSwap(source: SquadSlot, target: SquadSlot): boolean {
   if (!source.player || !target.player || source.id === target.id) return false;
   if (!canOccupy(target, source.player) || !canOccupy(source, target.player)) return false;
-  return (
-    source.group === 'starter' ||
-    target.group === 'starter' ||
-    shareCompatiblePosition(source.player, target.player)
-  );
+  return true;
 }
 
 export function DraftSimulator({
@@ -383,9 +383,11 @@ export function DraftSimulator({
   players: readonly DraftPlayer[];
   draftSeed: string;
 }) {
+  const [draftRound, setDraftRound] = useState(0);
+  const sessionSeed = `${draftSeed}:${draftRound}`;
   const formationOptions = useMemo(
-    () => seededSample(FORMATIONS, 5, `${draftSeed}:formations`),
-    [draftSeed],
+    () => seededSample(FORMATIONS, 5, `${sessionSeed}:formations`),
+    [sessionSeed],
   );
   const [previewFormation, setPreviewFormation] = useState<Formation>(formationOptions[0]);
   const [stage, setStage] = useState<'formation' | 'captain' | 'squad'>('formation');
@@ -398,21 +400,64 @@ export function DraftSimulator({
   const [swapMessage, setSwapMessage] = useState('');
   const [dragSourceId, setDragSourceId] = useState<string | null>(null);
   const [dragTargetId, setDragTargetId] = useState<string | null>(null);
+  const [isResultOpen, setIsResultOpen] = useState(false);
+
+  useEffect(() => {
+    if (!dragSourceId) return;
+
+    const edgeSize = 72;
+    const scrollStep = 18;
+    const handleEdgeScroll = (event: DragEvent) => {
+      const horizontalScroller = document
+        .elementsFromPoint(event.clientX, event.clientY)
+        .map((element) => element.closest<HTMLElement>('.draft-squad-slots'))
+        .find((element): element is HTMLElement => element !== null);
+
+      if (horizontalScroller) {
+        const bounds = horizontalScroller.getBoundingClientRect();
+        if (event.clientX < bounds.left + edgeSize) horizontalScroller.scrollLeft -= scrollStep;
+        if (event.clientX > bounds.right - edgeSize) horizontalScroller.scrollLeft += scrollStep;
+      }
+
+      if (event.clientY < edgeSize) window.scrollBy(0, -scrollStep);
+      if (event.clientY > window.innerHeight - edgeSize) window.scrollBy(0, scrollStep);
+    };
+
+    window.addEventListener('dragover', handleEdgeScroll);
+    return () => window.removeEventListener('dragover', handleEdgeScroll);
+  }, [dragSourceId]);
 
   const captainOptions = useMemo(
     () =>
       seededSample(
         players.filter((player) => player.globalRank <= 15),
         5,
-        `${draftSeed}:captains`,
+        `${sessionSeed}:captains`,
       ),
-    [draftSeed, players],
+    [players, sessionSeed],
   );
 
   const selectedIds = useMemo(
     () => new Set(slots.flatMap((slot) => (slot.player ? [slot.player.id] : []))),
     [slots],
   );
+  const draftScore = useMemo(() => {
+    if (slots.length === 0 || slots.some((slot) => !slot.player)) return null;
+    return scoreDraft({
+      starters: slots
+        .flatMap((slot) =>
+          slot.group === 'starter' && slot.player ? [slot.player.eaRating] : [],
+        ),
+      bench: slots
+        .flatMap((slot) =>
+          slot.group === 'bench' && slot.player ? [slot.player.eaRating] : [],
+        ),
+      reserves: slots
+        .flatMap((slot) =>
+          slot.group === 'reserve' && slot.player ? [slot.player.eaRating] : [],
+        ),
+    });
+  }, [slots]);
   const activeSlot = slots.find((slot) => slot.id === activeSlotId) ?? null;
   const offers = useMemo(() => {
     if (!activeSlot || activeSlot.player) return [];
@@ -424,9 +469,9 @@ export function DraftSimulator({
     return seededSample(
       candidates,
       5,
-      `${draftSeed}:${activeSlot.id}:${offerDraw}:${[...selectedIds].sort().join(',')}`,
+      `${sessionSeed}:${activeSlot.id}:${offerDraw}:${[...selectedIds].sort().join(',')}`,
     );
-  }, [activeSlot, draftSeed, offerDraw, players, selectedIds]);
+  }, [activeSlot, offerDraw, players, selectedIds, sessionSeed]);
 
   const chooseFormation = (selected: Formation) => {
     setSlots(makeSlots(selected));
@@ -450,10 +495,14 @@ export function DraftSimulator({
 
   const choosePlayer = (player: DraftPlayer) => {
     if (!activeSlotId) return;
+    const completesDraft = slots.every(
+      (slot) => slot.id === activeSlotId || slot.player !== null,
+    );
     setSlots((current) =>
       current.map((slot) => (slot.id === activeSlotId ? { ...slot, player } : slot)),
     );
     setActiveSlotId(null);
+    if (completesDraft) setIsResultOpen(true);
   };
 
   const swapOccupiedSlots = (sourceId: string, targetSlot: SquadSlot) => {
@@ -537,6 +586,24 @@ export function DraftSimulator({
     setSwapSourceId(null);
   };
 
+  const startNewDraft = () => {
+    const nextRound = draftRound + 1;
+    const nextFormations = seededSample(FORMATIONS, 5, `${draftSeed}:${nextRound}:formations`);
+    setDraftRound(nextRound);
+    setPreviewFormation(nextFormations[0]);
+    setStage('formation');
+    setSlots([]);
+    setCaptainId(null);
+    setActiveSlotId(null);
+    setOfferDraw(0);
+    setIsViewingSquad(false);
+    setSwapSourceId(null);
+    setSwapMessage('');
+    setDragSourceId(null);
+    setDragTargetId(null);
+    setIsResultOpen(false);
+  };
+
   if (stage === 'formation') {
     return (
       <div className="draft-formation-stage">
@@ -546,7 +613,7 @@ export function DraftSimulator({
         <div className="draft-formation-overlay">
           <section aria-labelledby="formation-heading" className="card draft-formation-modal">
             <div className="draft-formation-list-panel">
-              <h1 id="formation-heading">Choose your formation</h1>
+              <h1 id="formation-heading">CHOOSE A FORMATION</h1>
               <div className="draft-formation-grid">
                 {formationOptions.map((option) => (
                   <button
@@ -616,7 +683,7 @@ export function DraftSimulator({
 
   return (
     <div className="draft-squad-layout">
-      <section className="draft-board" inert={activeSlot ? true : undefined}>
+      <section className="draft-board" inert={activeSlot || isResultOpen ? true : undefined}>
         <StarterPitch
           captainId={captainId}
           dragSourceId={dragSourceId}
@@ -629,9 +696,26 @@ export function DraftSimulator({
           slots={slots}
           swapSourceId={swapSourceId}
         />
+        {draftScore && !isResultOpen ? (
+          <button
+            aria-label={`Open result: ${draftScore.outcome}, ${draftScore.projectedPoints} points`}
+            className="draft-result-summary"
+            onClick={() => setIsResultOpen(true)}
+            type="button"
+          >
+            <span className="draft-result-summary-heading">
+              <small>Projected finish</small>
+              <strong>{draftScore.outcome}</strong>
+            </span>
+            <span className="draft-result-summary-points">
+              <b>{draftScore.projectedPoints}</b>
+              <small>PTS</small>
+            </span>
+          </button>
+        ) : null}
       </section>
 
-      <aside className="draft-squad-side" inert={activeSlot ? true : undefined}>
+      <aside className="draft-squad-side" inert={activeSlot || isResultOpen ? true : undefined}>
         {(['bench', 'reserve'] as const).map((group) => (
           <section
             aria-label={group === 'bench' ? 'Substitutes' : 'Reserves'}
@@ -643,7 +727,7 @@ export function DraftSimulator({
                 .filter((slot) => slot.group === group)
                 .map((slot) => (
                   <button
-                    className={`draft-squad-slot ${slot.player ? 'draft-squad-slot--filled' : ''} ${slot.player && slot.player.globalRank <= 30 ? 'draft-card--top-player' : ''} ${swapSourceId === slot.id ? 'draft-slot--swap' : ''} ${dragSourceId === slot.id ? 'draft-slot--dragging' : ''} ${dragTargetId === slot.id ? 'draft-slot--drop-target' : ''}`}
+                    className={`draft-squad-slot ${slot.player ? `draft-squad-slot--filled ${ratingCardClass(slot.player.eaRating)}` : ''} ${swapSourceId === slot.id ? 'draft-slot--swap' : ''} ${dragSourceId === slot.id ? 'draft-slot--dragging' : ''} ${dragTargetId === slot.id ? 'draft-slot--drop-target' : ''}`}
                     draggable={Boolean(slot.player)}
                     key={slot.id}
                     onDragEnd={finishDrag}
@@ -659,7 +743,10 @@ export function DraftSimulator({
                         <strong>{slot.player.displayName}</strong>
                       </>
                     ) : (
-                      <strong>{group === 'bench' ? 'SUB' : 'RES'}</strong>
+                      <>
+                        <PremSightCardMark />
+                        <strong>{group === 'bench' ? 'SUB' : 'RES'}</strong>
+                      </>
                     )}
                   </button>
                 ))}
@@ -705,6 +792,41 @@ export function DraftSimulator({
               type="button"
             >
               View squad (click &amp; hold)
+            </button>
+          </section>
+        </div>
+      ) : null}
+      {draftScore && isResultOpen ? (
+        <div
+          className="draft-result-overlay"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) setIsResultOpen(false);
+          }}
+        >
+          <section
+            aria-labelledby="draft-result-title"
+            aria-modal="true"
+            className="draft-result"
+            role="dialog"
+          >
+            <button
+              aria-label="Close projected finish"
+              className="draft-result-close"
+              onClick={() => setIsResultOpen(false)}
+              type="button"
+            >
+              ×
+            </button>
+            <div className="draft-result-heading">
+              <span>Projected finish</span>
+              <strong id="draft-result-title">{draftScore.outcome}</strong>
+            </div>
+            <div className="draft-result-points">
+              <b>{draftScore.projectedPoints}</b>
+              <span>league points</span>
+            </div>
+            <button className="draft-result-restart" onClick={startNewDraft} type="button">
+              Start New Draft
             </button>
           </section>
         </div>
