@@ -56,7 +56,9 @@ export type Prediction = {
 };
 async function get<T>(path: string): Promise<T> {
   const response = await fetch(`${BASE}${path}`, { cache: 'no-store' });
-  if (!response.ok) throw new Error(`API request failed: ${response.status}`);
+  if (!response.ok) {
+    throw new Error(`API request failed: GET ${BASE}${path} returned ${response.status}`);
+  }
   return response.json() as Promise<T>;
 }
 export const api = {

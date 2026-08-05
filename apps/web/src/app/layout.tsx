@@ -14,12 +14,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [currentSeason, seasons] = await Promise.all([api.currentSeason(), api.seasons()]);
+  const seasonNavigation = await Promise.all([api.currentSeason(), api.seasons()])
+    .then(([currentSeason, seasons]) => ({ currentSeasonId: currentSeason.id, seasons }))
+    .catch(() => ({ currentSeasonId: null, seasons: [] }));
 
   return (
     <html lang="en">
       <body>
-        <SiteHeader currentSeasonId={currentSeason.id} seasons={seasons} />
+        <SiteHeader {...seasonNavigation} />
         {children}
         <footer className="site-footer">
           <div className="shell">
