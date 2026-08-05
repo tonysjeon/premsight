@@ -90,8 +90,7 @@ button:focus-visible {
 }
 
 .site-brand-bar {
-  border-bottom: 1px solid var(--line);
-  background: color-mix(in srgb, var(--ink) 94%, transparent);
+  background: var(--surface);
 }
 
 .site-brand-bar .shell {
@@ -110,7 +109,7 @@ button:focus-visible {
   align-items: center;
   gap: 14px;
   height: 56px;
-  margin-top: 10px;
+  margin-top: 16px;
   padding: 0 14px;
   border-radius: var(--radius);
   background: var(--surface);
@@ -136,6 +135,8 @@ button:focus-visible {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  margin-left: auto;
+  margin-right: 18px;
   min-width: 76px;
   padding: 8px 15px;
   border-radius: 10px;
@@ -938,7 +939,7 @@ button:focus-visible {
 .view-filters .chip {
   min-width: 72px;
   padding: 6px 14px;
-  border-color: #f4d883;
+  border-color: transparent;
   background: #343534;
   color: #f4f4f4;
   font-size: 0.85rem;
@@ -947,7 +948,7 @@ button:focus-visible {
 }
 
 .view-filters .chip:hover {
-  border-color: #ffe7a3;
+  border-color: transparent;
   background: #404140;
   color: #fff;
 }
