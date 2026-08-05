@@ -1,12 +1,13 @@
 'use client';
 
 import Image from 'next/image';
-import { useMemo, useState } from 'react';
-import type { DraftPlayer, DraftPosition } from '@/lib/fpl';
+import { useMemo, useState, type DragEvent as ReactDragEvent } from 'react';
+import type { DetailedDraftPosition, DraftPlayer, DraftPosition } from '@/lib/fpl';
 
 type Formation = {
   name: string;
   counts: Readonly<Record<DraftPosition, number>>;
+  roles: Readonly<Record<DraftPosition, readonly DetailedDraftPosition[]>>;
 };
 
 type SlotGroup = 'starter' | 'bench' | 'reserve';
@@ -15,21 +16,23 @@ type SquadSlot = {
   id: string;
   group: SlotGroup;
   position: DraftPosition | null;
+  detailedPosition: DetailedDraftPosition | null;
   player: DraftPlayer | null;
 };
 
 const FORMATIONS: readonly Formation[] = [
-  { name: '4-3-3', counts: { GK: 1, DEF: 4, MID: 3, FWD: 3 } },
-  { name: '4-4-2', counts: { GK: 1, DEF: 4, MID: 4, FWD: 2 } },
-  { name: '3-4-3', counts: { GK: 1, DEF: 3, MID: 4, FWD: 3 } },
-  { name: '3-5-2', counts: { GK: 1, DEF: 3, MID: 5, FWD: 2 } },
-  { name: '4-5-1', counts: { GK: 1, DEF: 4, MID: 5, FWD: 1 } },
-  { name: '5-3-2', counts: { GK: 1, DEF: 5, MID: 3, FWD: 2 } },
-  { name: '5-2-3', counts: { GK: 1, DEF: 5, MID: 2, FWD: 3 } },
-  { name: '5-4-1', counts: { GK: 1, DEF: 5, MID: 4, FWD: 1 } },
+  { name: '4-3-3', counts: { GK: 1, DEF: 4, MID: 3, FWD: 3 }, roles: { GK: ['GK'], DEF: ['LB', 'CB', 'CB', 'RB'], MID: ['CM', 'CDM', 'CM'], FWD: ['LW', 'ST', 'RW'] } },
+  { name: '4-4-2', counts: { GK: 1, DEF: 4, MID: 4, FWD: 2 }, roles: { GK: ['GK'], DEF: ['LB', 'CB', 'CB', 'RB'], MID: ['LM', 'CM', 'CM', 'RM'], FWD: ['ST', 'ST'] } },
+  { name: '3-4-3', counts: { GK: 1, DEF: 3, MID: 4, FWD: 3 }, roles: { GK: ['GK'], DEF: ['CB', 'CB', 'CB'], MID: ['LM', 'CM', 'CM', 'RM'], FWD: ['LW', 'ST', 'RW'] } },
+  { name: '3-5-2', counts: { GK: 1, DEF: 3, MID: 5, FWD: 2 }, roles: { GK: ['GK'], DEF: ['CB', 'CB', 'CB'], MID: ['LM', 'CM', 'CAM', 'CM', 'RM'], FWD: ['ST', 'ST'] } },
+  { name: '4-5-1', counts: { GK: 1, DEF: 4, MID: 5, FWD: 1 }, roles: { GK: ['GK'], DEF: ['LB', 'CB', 'CB', 'RB'], MID: ['LM', 'CM', 'CAM', 'CM', 'RM'], FWD: ['ST'] } },
+  { name: '5-3-2', counts: { GK: 1, DEF: 5, MID: 3, FWD: 2 }, roles: { GK: ['GK'], DEF: ['LWB', 'CB', 'CB', 'CB', 'RWB'], MID: ['CM', 'CDM', 'CM'], FWD: ['ST', 'ST'] } },
+  { name: '5-2-3', counts: { GK: 1, DEF: 5, MID: 2, FWD: 3 }, roles: { GK: ['GK'], DEF: ['LWB', 'CB', 'CB', 'CB', 'RWB'], MID: ['CM', 'CM'], FWD: ['LW', 'ST', 'RW'] } },
+  { name: '5-4-1', counts: { GK: 1, DEF: 5, MID: 4, FWD: 1 }, roles: { GK: ['GK'], DEF: ['LWB', 'CB', 'CB', 'CB', 'RWB'], MID: ['LM', 'CM', 'CM', 'RM'], FWD: ['ST'] } },
 ];
 
 const PITCH_LINES: readonly DraftPosition[] = ['FWD', 'MID', 'DEF', 'GK'];
+const DEFAULT_PLAYER_PHOTO = '/player-placeholder.svg';
 
 function hashSeed(value: string): number {
   let hash = 2166136261;
@@ -59,10 +62,11 @@ function seededSample<T>(items: readonly T[], count: number, seed: string): T[] 
 
 function makeSlots(formation: Formation): SquadSlot[] {
   const starters = PITCH_LINES.flatMap((position) =>
-    Array.from({ length: formation.counts[position] }, (_, index) => ({
+    formation.roles[position].map((detailedPosition, index) => ({
       id: `starter-${position.toLowerCase()}-${index + 1}`,
       group: 'starter' as const,
       position,
+      detailedPosition,
       player: null,
     })),
   );
@@ -70,12 +74,14 @@ function makeSlots(formation: Formation): SquadSlot[] {
     id: `bench-${index + 1}`,
     group: 'bench' as const,
     position: null,
+    detailedPosition: null,
     player: null,
   }));
   const reserves = Array.from({ length: 5 }, (_, index) => ({
     id: `reserve-${index + 1}`,
     group: 'reserve' as const,
     position: null,
+    detailedPosition: null,
     player: null,
   }));
   return [...starters, ...bench, ...reserves];
@@ -91,6 +97,7 @@ function TeamCrest({ player }: { player: DraftPlayer }) {
     <Image
       alt={`${player.teamName} crest`}
       className="draft-team-crest"
+      draggable={false}
       height={18}
       src={player.teamCrestUrl}
       unoptimized
@@ -169,6 +176,54 @@ function nationalityFlagUrl(code: string | null): string | null {
     : null;
 }
 
+function PlayerCardArtwork({
+  compact = false,
+  player,
+  position,
+}: {
+  compact?: boolean;
+  player: DraftPlayer;
+  position?: DetailedDraftPosition;
+}) {
+  const flagUrl = nationalityFlagUrl(player.nationalityCode);
+  const displayPosition = position ?? playerPositions(player)[0];
+  return (
+    <>
+      <span className={`draft-captain-card-meta ${compact ? 'draft-slot-card-meta' : ''}`}>
+        <small data-position={displayPosition}>{displayPosition}</small>
+        {flagUrl ? (
+          <Image
+            alt={`${player.nationalityCode} flag`}
+            className="draft-country-flag"
+            draggable={false}
+            height={18}
+            src={flagUrl}
+            unoptimized
+            width={28}
+          />
+        ) : (
+          <span aria-label="Unknown nationality" className="draft-country-flag" role="img" />
+        )}
+        <TeamCrest player={player} />
+      </span>
+      <Image
+        alt={`${player.displayName} headshot`}
+        className={`draft-captain-headshot ${compact ? 'draft-slot-headshot' : ''}`}
+        draggable={false}
+        height={250}
+        onError={(event) => {
+          if (event.currentTarget.dataset.fallbackApplied) return;
+          event.currentTarget.dataset.fallbackApplied = 'true';
+          event.currentTarget.src = DEFAULT_PLAYER_PHOTO;
+        }}
+        src={player.photoUrl ?? DEFAULT_PLAYER_PHOTO}
+        unoptimized
+        width={250}
+      />
+    </>
+  );
+}
+
 function PlayerChoice({
   hideMark = false,
   player,
@@ -180,43 +235,11 @@ function PlayerChoice({
 }) {
   return (
     <button
-      className={`draft-choice ${hideMark ? 'draft-choice--captain' : ''}`}
+      className={`draft-choice ${hideMark ? 'draft-choice--captain' : ''} ${player.globalRank <= 30 ? 'draft-card--top-player' : ''}`}
       onClick={() => onChoose(player)}
       type="button"
     >
-      {hideMark ? (
-        <span className="draft-captain-card-meta">
-          <small>{player.position}</small>
-          {nationalityFlagUrl(player.nationalityCode) ? (
-            <Image
-              alt={`${player.nationalityCode} flag`}
-              className="draft-country-flag"
-              height={18}
-              src={nationalityFlagUrl(player.nationalityCode) ?? ''}
-              unoptimized
-              width={28}
-            />
-          ) : (
-            <span aria-label="Unknown nationality" className="draft-country-flag" role="img" />
-          )}
-          <TeamCrest player={player} />
-        </span>
-      ) : (
-        <PlayerMark player={player} />
-      )}
-      {hideMark && player.photoUrl ? (
-        <Image
-          alt={`${player.displayName} headshot`}
-          className="draft-captain-headshot"
-          height={250}
-          onError={(event) => {
-            event.currentTarget.style.display = 'none';
-          }}
-          src={player.photoUrl}
-          unoptimized
-          width={250}
-        />
-      ) : null}
+      {hideMark ? <PlayerCardArtwork player={player} /> : <PlayerMark player={player} />}
       <strong>{player.displayName}</strong>
       {hideMark ? null : (
         <>
@@ -233,11 +256,23 @@ function PlayerChoice({
 
 function StarterPitch({
   captainId,
+  dragSourceId,
+  dragTargetId,
+  onDragEnd,
+  onDragOver,
+  onDragStart,
+  onDrop,
   onSlot,
   slots,
   swapSourceId,
 }: {
   captainId: string | null;
+  dragSourceId: string | null;
+  dragTargetId: string | null;
+  onDragEnd: () => void;
+  onDragOver: (event: ReactDragEvent<HTMLButtonElement>, slot: SquadSlot) => void;
+  onDragStart: (event: ReactDragEvent<HTMLButtonElement>, slot: SquadSlot) => void;
+  onDrop: (event: ReactDragEvent<HTMLButtonElement>, slot: SquadSlot) => void;
   onSlot: (slot: SquadSlot) => void;
   slots: readonly SquadSlot[];
   swapSourceId: string | null;
@@ -257,25 +292,30 @@ function StarterPitch({
           >
             {lineSlots.map((slot) => (
               <button
-                className={`draft-slot ${slot.player ? 'draft-slot--filled' : ''} ${swapSourceId === slot.id ? 'draft-slot--swap' : ''}`}
+                className={`draft-slot ${slot.player ? 'draft-slot--filled' : ''} ${slot.player && slot.player.globalRank <= 30 ? 'draft-card--top-player' : ''} ${swapSourceId === slot.id ? 'draft-slot--swap' : ''} ${dragSourceId === slot.id ? 'draft-slot--dragging' : ''} ${dragTargetId === slot.id ? 'draft-slot--drop-target' : ''}`}
+                draggable={Boolean(slot.player)}
                 key={slot.id}
+                onDragEnd={onDragEnd}
+                onDragOver={(event) => onDragOver(event, slot)}
+                onDragStart={(event) => onDragStart(event, slot)}
+                onDrop={(event) => onDrop(event, slot)}
                 onClick={() => onSlot(slot)}
                 type="button"
               >
                 {slot.player ? (
                   <>
-                    <PlayerMark player={slot.player} />
+                    <PlayerCardArtwork
+                      compact
+                      player={slot.player}
+                      position={slot.detailedPosition ?? slot.player.position}
+                    />
                     {captainId === slot.player.id ? <b className="draft-captain">C</b> : null}
                     <strong>{slot.player.displayName}</strong>
-                    <span className="draft-slot-team">
-                      <TeamCrest player={slot.player} />
-                      {slot.player.teamName}
-                    </span>
                   </>
                 ) : (
                   <>
                     <span className="draft-slot-plus">+</span>
-                    <strong>{slot.position}</strong>
+                    <strong>{slot.detailedPosition}</strong>
                   </>
                 )}
               </button>
@@ -287,8 +327,53 @@ function StarterPitch({
   );
 }
 
+function playerPositions(player: DraftPlayer): readonly DetailedDraftPosition[] {
+  return Array.isArray(player.positions) && player.positions.length > 0
+    ? player.positions
+    : [player.position];
+}
+
+const INTERCHANGEABLE_DRAFT_POSITIONS: readonly (readonly DetailedDraftPosition[])[] = [
+  ['LB', 'LWB'],
+  ['LM', 'LW'],
+  ['RB', 'RWB'],
+  ['RM', 'RW'],
+];
+
+function canDraftInto(slot: SquadSlot, player: DraftPlayer): boolean {
+  if (slot.group !== 'starter') return true;
+  if (!slot.detailedPosition) return false;
+  const primaryPosition = playerPositions(player)[0];
+  if (primaryPosition === slot.detailedPosition || primaryPosition === slot.position) return true;
+  return INTERCHANGEABLE_DRAFT_POSITIONS.some(
+    (positions) =>
+      positions.includes(primaryPosition) && positions.includes(slot.detailedPosition!),
+  );
+}
+
 function canOccupy(slot: SquadSlot, player: DraftPlayer): boolean {
-  return slot.group !== 'starter' || slot.position === player.position;
+  if (slot.group !== 'starter') return true;
+  const positions = playerPositions(player);
+  return Boolean(
+    slot.detailedPosition &&
+      (positions.includes(slot.detailedPosition) ||
+        (slot.position !== null && positions.includes(slot.position))),
+  );
+}
+
+function shareCompatiblePosition(first: DraftPlayer, second: DraftPlayer): boolean {
+  const secondPositions = playerPositions(second);
+  return playerPositions(first).some((position) => secondPositions.includes(position));
+}
+
+function canSwap(source: SquadSlot, target: SquadSlot): boolean {
+  if (!source.player || !target.player || source.id === target.id) return false;
+  if (!canOccupy(target, source.player) || !canOccupy(source, target.player)) return false;
+  return (
+    source.group === 'starter' ||
+    target.group === 'starter' ||
+    shareCompatiblePosition(source.player, target.player)
+  );
 }
 
 export function DraftSimulator({
@@ -302,23 +387,27 @@ export function DraftSimulator({
     () => seededSample(FORMATIONS, 5, `${draftSeed}:formations`),
     [draftSeed],
   );
+  const [previewFormation, setPreviewFormation] = useState<Formation>(formationOptions[0]);
+  const [stage, setStage] = useState<'formation' | 'captain' | 'squad'>('formation');
+  const [slots, setSlots] = useState<SquadSlot[]>([]);
+  const [captainId, setCaptainId] = useState<string | null>(null);
+  const [activeSlotId, setActiveSlotId] = useState<string | null>(null);
+  const [offerDraw, setOfferDraw] = useState(0);
+  const [isViewingSquad, setIsViewingSquad] = useState(false);
+  const [swapSourceId, setSwapSourceId] = useState<string | null>(null);
+  const [swapMessage, setSwapMessage] = useState('');
+  const [dragSourceId, setDragSourceId] = useState<string | null>(null);
+  const [dragTargetId, setDragTargetId] = useState<string | null>(null);
+
   const captainOptions = useMemo(
     () =>
       seededSample(
-        players.filter((player) => player.globalRank <= 25),
+        players.filter((player) => player.globalRank <= 15),
         5,
         `${draftSeed}:captains`,
       ),
     [draftSeed, players],
   );
-  const [previewFormation, setPreviewFormation] = useState<Formation>(formationOptions[0]);
-  const [stage, setStage] = useState<'formation' | 'captain' | 'squad'>('formation');
-  const [formation, setFormation] = useState<Formation | null>(null);
-  const [slots, setSlots] = useState<SquadSlot[]>([]);
-  const [captainId, setCaptainId] = useState<string | null>(null);
-  const [activeSlotId, setActiveSlotId] = useState<string | null>(null);
-  const [swapSourceId, setSwapSourceId] = useState<string | null>(null);
-  const [swapMessage, setSwapMessage] = useState('');
 
   const selectedIds = useMemo(
     () => new Set(slots.flatMap((slot) => (slot.player ? [slot.player.id] : []))),
@@ -330,26 +419,28 @@ export function DraftSimulator({
     const candidates = players.filter(
       (player) =>
         !selectedIds.has(player.id) &&
-        (activeSlot.group !== 'starter' || player.position === activeSlot.position),
+        canDraftInto(activeSlot, player),
     );
     return seededSample(
       candidates,
       5,
-      `${draftSeed}:${activeSlot.id}:${[...selectedIds].sort().join(',')}`,
+      `${draftSeed}:${activeSlot.id}:${offerDraw}:${[...selectedIds].sort().join(',')}`,
     );
-  }, [activeSlot, draftSeed, players, selectedIds]);
+  }, [activeSlot, draftSeed, offerDraw, players, selectedIds]);
 
   const chooseFormation = (selected: Formation) => {
-    setFormation(selected);
     setSlots(makeSlots(selected));
     setStage('captain');
   };
 
   const chooseCaptain = (player: DraftPlayer) => {
     setSlots((current) => {
-      const slotIndex = current.findIndex(
-        (slot) => slot.group === 'starter' && slot.position === player.position,
+      let slotIndex = current.findIndex(
+        (slot) => slot.group === 'starter' && canOccupy(slot, player),
       );
+      if (slotIndex === -1) {
+        slotIndex = current.findIndex((slot) => slot.group === 'bench');
+      }
       return current.map((slot, index) => (index === slotIndex ? { ...slot, player } : slot));
     });
     setCaptainId(player.id);
@@ -365,10 +456,71 @@ export function DraftSimulator({
     setActiveSlotId(null);
   };
 
+  const swapOccupiedSlots = (sourceId: string, targetSlot: SquadSlot) => {
+    const source = slots.find((item) => item.id === sourceId);
+    if (!source || !canSwap(source, targetSlot)) {
+      setSwapMessage('Those players cannot swap because their positions are incompatible.');
+      return false;
+    }
+    setSlots((current) =>
+      current.map((item) => {
+        if (item.id === source.id) return { ...item, player: targetSlot.player };
+        if (item.id === targetSlot.id) return { ...item, player: source.player };
+        return item;
+      }),
+    );
+    setSwapMessage('');
+    return true;
+  };
+
+  const handleDragStart = (event: ReactDragEvent<HTMLButtonElement>, slot: SquadSlot) => {
+    if (!slot.player || activeSlot) {
+      event.preventDefault();
+      return;
+    }
+    event.dataTransfer.effectAllowed = 'move';
+    event.dataTransfer.setData('text/plain', slot.id);
+    event.dataTransfer.setDragImage(
+      event.currentTarget,
+      event.currentTarget.offsetWidth / 2,
+      event.currentTarget.offsetHeight / 2,
+    );
+    setSwapSourceId(null);
+    setDragSourceId(slot.id);
+    setDragTargetId(null);
+  };
+
+  const handleDragOver = (event: ReactDragEvent<HTMLButtonElement>, slot: SquadSlot) => {
+    const source = slots.find((item) => item.id === dragSourceId);
+    if (!source || !canSwap(source, slot)) {
+      return;
+    }
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+    setDragTargetId(slot.id);
+  };
+
+  const finishDrag = () => {
+    setDragSourceId(null);
+    setDragTargetId(null);
+  };
+
+  const handleDrop = (event: ReactDragEvent<HTMLButtonElement>, slot: SquadSlot) => {
+    event.preventDefault();
+    const sourceId = dragSourceId ?? event.dataTransfer.getData('text/plain');
+    if (sourceId) swapOccupiedSlots(sourceId, slot);
+    finishDrag();
+  };
+
   const handleSlot = (slot: SquadSlot) => {
     setSwapMessage('');
     if (!slot.player) {
+      if (swapSourceId) {
+        setSwapMessage('Choose another occupied card to swap players.');
+        return;
+      }
       setSwapSourceId(null);
+      setOfferDraw((current) => current + 1);
       setActiveSlotId(slot.id);
       return;
     }
@@ -381,19 +533,7 @@ export function DraftSimulator({
       setSwapSourceId(null);
       return;
     }
-    const source = slots.find((item) => item.id === swapSourceId);
-    if (!source?.player || !canOccupy(slot, source.player) || !canOccupy(source, slot.player)) {
-      setSwapMessage('Those players cannot swap because their positions are incompatible.');
-      setSwapSourceId(null);
-      return;
-    }
-    setSlots((current) =>
-      current.map((item) => {
-        if (item.id === source.id) return { ...item, player: slot.player };
-        if (item.id === slot.id) return { ...item, player: source.player };
-        return item;
-      }),
-    );
+    swapOccupiedSlots(swapSourceId, slot);
     setSwapSourceId(null);
   };
 
@@ -443,6 +583,12 @@ export function DraftSimulator({
         <section className="draft-board">
           <StarterPitch
             captainId={null}
+            dragSourceId={dragSourceId}
+            dragTargetId={dragTargetId}
+            onDragEnd={finishDrag}
+            onDragOver={handleDragOver}
+            onDragStart={handleDragStart}
+            onDrop={handleDrop}
             onSlot={() => setSwapMessage('Choose your captain before filling the formation.')}
             slots={slots}
             swapSourceId={null}
@@ -468,60 +614,52 @@ export function DraftSimulator({
     );
   }
 
-  const selectedCount = selectedIds.size;
   return (
     <div className="draft-squad-layout">
-      <section className="draft-board">
-        <header className="draft-board-head">
-          <div>
-            <p className="eyebrow">Step 3 of 3 · {formation?.name}</p>
-            <h1>Build your squad</h1>
-          </div>
-          <div className="draft-progress">
-            <strong>{selectedCount}/23</strong>
-          </div>
-        </header>
+      <section className="draft-board" inert={activeSlot ? true : undefined}>
         <StarterPitch
           captainId={captainId}
+          dragSourceId={dragSourceId}
+          dragTargetId={dragTargetId}
+          onDragEnd={finishDrag}
+          onDragOver={handleDragOver}
+          onDragStart={handleDragStart}
+          onDrop={handleDrop}
           onSlot={handleSlot}
           slots={slots}
           swapSourceId={swapSourceId}
         />
       </section>
 
-      <aside className="draft-squad-side">
+      <aside className="draft-squad-side" inert={activeSlot ? true : undefined}>
         {(['bench', 'reserve'] as const).map((group) => (
-          <section className="card draft-squad-group" key={group}>
-            <h2>{group === 'bench' ? 'Substitutes' : 'Reserves'}</h2>
-            <div className="draft-squad-slots">
+          <section
+            aria-label={group === 'bench' ? 'Substitutes' : 'Reserves'}
+            className="draft-squad-group"
+            key={group}
+          >
+            <div className="draft-squad-slots" data-group={group}>
               {slots
                 .filter((slot) => slot.group === group)
-                .map((slot, index) => (
+                .map((slot) => (
                   <button
-                    className={`draft-squad-slot ${slot.player ? 'draft-squad-slot--filled' : ''} ${swapSourceId === slot.id ? 'draft-slot--swap' : ''}`}
+                    className={`draft-squad-slot ${slot.player ? 'draft-squad-slot--filled' : ''} ${slot.player && slot.player.globalRank <= 30 ? 'draft-card--top-player' : ''} ${swapSourceId === slot.id ? 'draft-slot--swap' : ''} ${dragSourceId === slot.id ? 'draft-slot--dragging' : ''} ${dragTargetId === slot.id ? 'draft-slot--drop-target' : ''}`}
+                    draggable={Boolean(slot.player)}
                     key={slot.id}
+                    onDragEnd={finishDrag}
+                    onDragOver={(event) => handleDragOver(event, slot)}
+                    onDragStart={(event) => handleDragStart(event, slot)}
+                    onDrop={(event) => handleDrop(event, slot)}
                     onClick={() => handleSlot(slot)}
                     type="button"
                   >
                     {slot.player ? (
                       <>
-                        <PlayerMark player={slot.player} />
-                        <span>
-                          <strong>{slot.player.displayName}</strong>
-                          <small>
-                            <TeamCrest player={slot.player} />
-                            {slot.player.teamName}
-                          </small>
-                        </span>
-                        <b>{slot.player.position}</b>
+                        <PlayerCardArtwork compact player={slot.player} />
+                        <strong>{slot.player.displayName}</strong>
                       </>
                     ) : (
-                      <>
-                        <span className="draft-slot-plus">+</span>
-                        <strong>
-                          {group === 'bench' ? `SUB ${index + 1}` : `RES ${index + 1}`}
-                        </strong>
-                      </>
+                      <strong>{group === 'bench' ? 'SUB' : 'RES'}</strong>
                     )}
                   </button>
                 ))}
@@ -531,28 +669,45 @@ export function DraftSimulator({
       </aside>
 
       {activeSlot ? (
-        <section aria-label="Player choices" className="card draft-offers">
-          <header>
-            <div>
-              <p className="eyebrow">Choose one</p>
-              <h2>
-                {activeSlot.group === 'starter'
-                  ? activeSlot.position
-                  : activeSlot.group === 'bench'
-                    ? 'Substitute'
-                    : 'Reserve'}
-              </h2>
+        <div
+          className={`draft-captain-overlay draft-offer-overlay ${isViewingSquad ? 'draft-offer-overlay--viewing' : ''}`}
+        >
+          <section
+            aria-label="Player choices"
+            aria-modal="true"
+            className="card draft-step draft-captain-step draft-offers"
+            role="dialog"
+          >
+            <header>
+              <h1>Choose a player</h1>
+            </header>
+            <div className="draft-choice-grid draft-choice-grid--captains">
+              {offers.map((player) => (
+                <PlayerChoice hideMark key={player.id} onChoose={choosePlayer} player={player} />
+              ))}
             </div>
-            <button onClick={() => setActiveSlotId(null)} type="button">
-              Close
+            <button
+              className="draft-view-squad"
+              onBlur={() => setIsViewingSquad(false)}
+              onContextMenu={(event) => event.preventDefault()}
+              onKeyDown={(event) => {
+                if (event.key === ' ' || event.key === 'Enter') setIsViewingSquad(true);
+              }}
+              onKeyUp={(event) => {
+                if (event.key === ' ' || event.key === 'Enter') setIsViewingSquad(false);
+              }}
+              onLostPointerCapture={() => setIsViewingSquad(false)}
+              onPointerDown={(event) => {
+                event.currentTarget.setPointerCapture(event.pointerId);
+                setIsViewingSquad(true);
+              }}
+              onPointerUp={() => setIsViewingSquad(false)}
+              type="button"
+            >
+              View squad (click &amp; hold)
             </button>
-          </header>
-          <div className="draft-choice-grid">
-            {offers.map((player) => (
-              <PlayerChoice key={player.id} onChoose={choosePlayer} player={player} />
-            ))}
-          </div>
-        </section>
+          </section>
+        </div>
       ) : null}
       {swapMessage ? <p className="draft-swap-message">{swapMessage}</p> : null}
     </div>
