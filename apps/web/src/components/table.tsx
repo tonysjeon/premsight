@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import Link from 'next/link';
 import { FormGuide } from '@/components/form-guide';
 import { TeamBadge } from '@/components/team-badge';
@@ -39,8 +40,10 @@ type TableProps = {
   compact?: boolean;
   /** Keeps core result columns while omitting goals for/against on overview layouts. */
   overview?: boolean;
-  /** Earliest unplayed fixture keyed by team ID, used by the overview's Next column. */
+  /** Earliest unplayed fixture keyed by team ID. When omitted, the Next column is hidden. */
   nextByTeam?: ReadonlyMap<string, Fixture>;
+  /** Emphasises participating clubs on the match-hub table tab. */
+  highlightTeamIds?: ReadonlySet<string>;
 };
 
 export function Table({
@@ -51,16 +54,24 @@ export function Table({
   compact = false,
   overview = false,
   nextByTeam,
+  highlightTeamIds,
 }: TableProps) {
   const size = leagueSize ?? items.length;
+  const showNext = overview && nextByTeam !== undefined;
+  const formSlots = form
+    ? items.reduce((widest, row) => Math.max(widest, form.get(row.team_id)?.length ?? 0), 0)
+    : 0;
   const tableClass = compact
     ? 'league-table league-table--compact'
     : overview
-      ? 'league-table league-table--overview'
+      ? `league-table league-table--overview${showNext ? '' : ' league-table--no-next'}`
       : 'league-table';
   return (
     <div className="table-scroll">
-      <table className={tableClass}>
+      <table
+        className={tableClass}
+        style={form ? ({ '--form-slots': formSlots } as CSSProperties) : undefined}
+      >
         {compact ? (
           <colgroup>
             <col className="w-pos" />
@@ -81,7 +92,8 @@ export function Table({
             <col className="w-overview-metric" />
             <col className="w-overview-metric" />
             <col className="w-overview-metric" />
-            <col className="w-overview-metric" />
+            {form ? <col className="w-overview-form" /> : null}
+            {showNext ? <col className="w-overview-next" /> : null}
           </colgroup>
         ) : null}
         <thead>
@@ -129,14 +141,14 @@ export function Table({
             <th className={overview ? 'col-points' : undefined} scope="col">
               <abbr title="Points">Pts</abbr>
             </th>
-            {overview ? (
-              <th className="col-next" scope="col">
-                Next
-              </th>
-            ) : null}
             {form ? (
               <th className="col-form" scope="col">
-                Form
+                <span className="form-heading">Form</span>
+              </th>
+            ) : null}
+            {showNext ? (
+              <th className="col-next" scope="col">
+                Next
               </th>
             ) : null}
           </tr>
@@ -163,7 +175,10 @@ export function Table({
                 ? `${NEXT_FIXTURE_DATE.format(new Date(nextFixture.kickoff_at))}: ${matchdayTeamLabel(nextHome)} vs. ${matchdayTeamLabel(nextAway)}`
                 : null;
             return (
-              <tr key={row.team_id}>
+              <tr
+                className={highlightTeamIds?.has(row.team_id) ? 'is-match-team' : undefined}
+                key={row.team_id}
+              >
                 <td className="col-pos">
                   <span className={zone ? `zone zone--${zone}` : 'zone'} />
                   {row.position}
@@ -197,27 +212,25 @@ export function Table({
                   {row.goal_difference > 0 ? `+${row.goal_difference}` : row.goal_difference}
                 </td>
                 <td className="points">{row.points}</td>
-                {overview ? (
-                  <>
-                    <td className="col-next">
-                      {opponent && nextFixture && nextFixtureLabel ? (
-                        <Link
-                          aria-label={`View ${nextFixtureLabel}`}
-                          className="next-opponent"
-                          data-tooltip={nextFixtureLabel}
-                          href={`/matches/${nextFixture.id}`}
-                        >
-                          <TeamBadge visual={opponent} />
-                        </Link>
-                      ) : (
-                        <span className="next-none">–</span>
-                      )}
-                    </td>
-                  </>
-                ) : null}
                 {form ? (
                   <td className="col-form">
                     <FormGuide marks={form.get(row.team_id) ?? []} />
+                  </td>
+                ) : null}
+                {showNext ? (
+                  <td className="col-next">
+                    {opponent && nextFixture && nextFixtureLabel ? (
+                      <Link
+                        aria-label={`View ${nextFixtureLabel}`}
+                        className="next-opponent"
+                        data-tooltip={nextFixtureLabel}
+                        href={`/matches/${nextFixture.id}`}
+                      >
+                        <TeamBadge visual={opponent} />
+                      </Link>
+                    ) : (
+                      <span className="next-none">–</span>
+                    )}
                   </td>
                 ) : null}
               </tr>

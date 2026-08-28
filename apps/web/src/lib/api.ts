@@ -10,6 +10,7 @@ export type Season = {
 export type FixtureStatus = 'scheduled' | 'live' | 'postponed' | 'cancelled' | 'completed';
 export type Fixture = {
   id: string;
+  season_id: string;
   home_team_id: string;
   home_team_name: string;
   away_team_id: string;

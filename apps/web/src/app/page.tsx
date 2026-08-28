@@ -3,7 +3,13 @@ import { MatchdayNavigation } from '@/components/matchday-navigation';
 import { MatchdaySnapshot } from '@/components/matchday-snapshot';
 import { Table, TableLegend } from '@/components/table';
 import { api } from '@/lib/api';
-import { fixturesInMatchday, matchdays, nextFixtures, resolveMatchday } from '@/lib/season';
+import {
+  fixturesInMatchday,
+  formTable,
+  matchdays,
+  nextFixtures,
+  resolveMatchday,
+} from '@/lib/season';
 import { buildTeamDirectory } from '@/lib/teams';
 
 export const dynamic = 'force-dynamic';
@@ -32,9 +38,10 @@ export default async function Home({
       <div className="home-grid">
         <Card flush>
           <Table
+            form={formTable(fixtures, 5)}
             items={standings}
             leagueSize={standings.length}
-            nextByTeam={nextFixtures(fixtures)}
+            nextByTeam={season.is_current ? nextFixtures(fixtures) : undefined}
             overview
             teams={directory}
           />
@@ -44,11 +51,17 @@ export default async function Home({
         <aside className="home-rail">
           <Card flush>
             <MatchdayNavigation
+              isCurrentSeason={season.is_current}
               matchdays={matchdays(fixtures)}
               seasonId={season.id}
+              seasonName={season.name}
               value={selectedMatchday}
             />
-            <MatchdaySnapshot items={selectedFixtures} teams={directory} />
+            <MatchdaySnapshot
+              includeYear={!season.is_current}
+              items={selectedFixtures}
+              teams={directory}
+            />
           </Card>
         </aside>
       </div>

@@ -23,6 +23,7 @@ export function SiteHeader({
   const selectPath = SEASON_ROUTES.includes(pathname) ? pathname : '/';
   const href = (path: string) =>
     seasonId ? `${path}?season=${encodeURIComponent(seasonId)}` : path;
+  const hideSeasonNav = pathname === '/draft' || pathname.startsWith('/matches/');
 
   return (
     <header className="site-header">
@@ -40,7 +41,7 @@ export function SiteHeader({
           </Link>
         </div>
       </div>
-      {pathname === '/draft' ? null : (
+      {hideSeasonNav ? null : (
         <div className="shell home-page site-header-card">
           <nav aria-label="Primary" className="nav-tabs">
             <Link aria-current={pathname === '/' ? 'page' : undefined} href={href('/')}>

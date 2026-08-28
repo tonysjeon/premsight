@@ -89,7 +89,7 @@ export default async function Fixtures({
             className="chip"
             href={matchdayHref}
           >
-            By Matchday
+            By Round
           </Link>
           <Link
             aria-current={view === 'team' ? 'true' : undefined}
@@ -116,12 +116,15 @@ export default async function Fixtures({
         ) : (
           <MatchdayNavigation
             basePath="/fixtures"
+            isCurrentSeason={season.is_current}
             matchdays={allMatchdays}
             seasonId={season.id}
+            seasonName={season.name}
             value={selectedMatchday}
           />
         )}
         <MatchdaySnapshot
+          includeYear={!season.is_current}
           items={selectedFixtures}
           periodLabel={view === 'team' ? selectedPeriod?.label : undefined}
           teams={directory}

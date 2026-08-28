@@ -1,19 +1,34 @@
 import type { TeamVisual } from '@/lib/teams';
 import Image from 'next/image';
 
+type BadgeSize = 'sm' | 'lg' | 'hero';
+
+const BADGE_PX: Record<BadgeSize, number> = { sm: 22, lg: 42, hero: 64 };
+
 /** Decorative club mark; the adjacent team name carries the meaning. */
-export function TeamBadge({ visual, large = false }: { visual: TeamVisual; large?: boolean }) {
+export function TeamBadge({
+  visual,
+  large = false,
+  size,
+}: {
+  visual: TeamVisual;
+  large?: boolean;
+  size?: BadgeSize;
+}) {
+  const resolved = size ?? (large ? 'lg' : 'sm');
+  const pixels = BADGE_PX[resolved];
+  const crestClass =
+    resolved === 'hero' ? 'crest crest--hero' : resolved === 'lg' ? 'crest crest--lg' : 'crest';
   if (visual.crestUrl) {
-    const size = large ? 42 : 22;
     return (
-      <span className={large ? 'crest crest--lg crest--image' : 'crest crest--image'}>
-        <Image alt="" height={size} src={visual.crestUrl} unoptimized width={size} />
+      <span className={`${crestClass} crest--image`}>
+        <Image alt="" height={pixels} src={visual.crestUrl} unoptimized width={pixels} />
       </span>
     );
   }
   return (
     <span
-      className={large ? 'crest crest--lg' : 'crest'}
+      className={crestClass}
       style={{ background: visual.color, color: visual.textColor }}
       aria-hidden="true"
     >

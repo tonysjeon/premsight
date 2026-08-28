@@ -3,7 +3,12 @@ import Link from 'next/link';
 import { Card } from '@/components/card';
 import { Table, TableLegend } from '@/components/table';
 import { api } from '@/lib/api';
-import { nextFixtures, standingsByVenue, type VenueFilter } from '@/lib/season';
+import {
+  formTable,
+  nextFixtures,
+  standingsByVenue,
+  type VenueFilter,
+} from '@/lib/season';
 import { buildTeamDirectory } from '@/lib/teams';
 
 export const metadata: Metadata = { title: 'League table' };
@@ -50,9 +55,10 @@ export default async function TablePage({
           {displayedItems.length ? (
             <>
               <Table
+                form={formTable(fixtures, 5)}
                 items={displayedItems}
                 leagueSize={displayedItems.length}
-                nextByTeam={nextFixtures(fixtures)}
+                nextByTeam={season.is_current ? nextFixtures(fixtures) : undefined}
                 overview
                 teams={buildTeamDirectory(teams)}
               />
