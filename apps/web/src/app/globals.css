@@ -100,7 +100,7 @@ button:focus-visible {
 .site-brand-bar .shell {
   display: flex;
   align-items: center;
-  height: 60px;
+  height: 72px;
 }
 
 .site-brand-row {
@@ -110,22 +110,103 @@ button:focus-visible {
 
 .site-header-card {
   display: flex;
-  align-items: center;
-  gap: 14px;
-  height: 56px;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 22px;
+  min-height: 156px;
   margin-top: 16px;
-  padding: 0 14px;
+  padding: 28px 40px 0;
   border-radius: var(--radius);
   background: var(--surface);
-  box-shadow: 0 2px 10px #0003;
+}
+
+.site-header-league {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.site-header-league-identity {
+  display: grid;
+  grid-template-columns: min-content auto;
+  align-items: stretch;
+  column-gap: 12px;
+  min-width: 0;
+}
+
+.site-header-league-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.site-header-league-identity .site-header-league-mark {
+  display: block;
+  box-sizing: border-box;
+  align-self: stretch;
+  width: auto;
+  height: auto;
+  aspect-ratio: 1;
+  min-width: 0;
+  min-height: 0;
+  margin-block: 4px;
+  overflow: hidden;
+  color: var(--text);
+}
+
+.site-header-league-name {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.site-header-league-country {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.site-header-season {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+  min-width: 0;
+}
+
+.site-header-season-label {
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .site-header .season-select {
-  margin-left: auto;
+  flex: 0 0 auto;
+  font-size: 0.88rem;
+}
+
+.site-header .season-select summary {
+  position: relative;
+  min-width: 0;
+  padding: 8px 36px 8px 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+}
+
+.site-header .season-select summary:hover {
+  border-color: var(--muted);
+  background: transparent;
 }
 
 .brand {
-  font-size: 1.05rem;
+  margin-left: 28px;
+  font-size: 1.22rem;
   font-weight: 700;
   letter-spacing: -0.03em;
   white-space: nowrap;
@@ -140,12 +221,12 @@ button:focus-visible {
   align-items: center;
   justify-content: center;
   margin-left: auto;
-  margin-right: 18px;
-  min-width: 76px;
-  padding: 8px 15px;
+  margin-right: 28px;
+  min-width: 84px;
+  padding: 9px 16px;
   border-radius: 10px;
-  color: var(--muted);
-  font-size: 0.88rem;
+  color: #fff;
+  font-size: 1.05rem;
   font-weight: 700;
 }
 
@@ -155,9 +236,9 @@ button:focus-visible {
 }
 
 .nav-tabs {
-  align-self: stretch;
   display: flex;
-  gap: 4px;
+  justify-content: flex-start;
+  gap: 36px;
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -167,34 +248,21 @@ button:focus-visible {
 }
 
 .nav-tabs a {
-  position: relative;
   display: flex;
   align-items: center;
-  padding: 7px 13px;
-  border-radius: 10px;
+  padding: 8px 2px 14px;
+  color: var(--muted);
   font-size: 0.9rem;
   font-weight: 700;
-  color: var(--muted);
   white-space: nowrap;
 }
 
 .nav-tabs a[aria-current='page'] {
-  color: #fff;
-}
-
-.nav-tabs a[aria-current='page']::after {
-  position: absolute;
-  right: 13px;
-  bottom: -2.5px;
-  left: 13px;
-  height: 5px;
-  border-radius: 999px;
-  background: #fff;
-  content: '';
+  color: var(--text);
+  box-shadow: inset 0 -3px 0 var(--accent);
 }
 
 .nav-tabs a:hover {
-  background: var(--surface);
   color: var(--text);
 }
 
@@ -308,6 +376,7 @@ button:focus-visible {
 
 .season-select {
   position: relative;
+  font-size: 0.85rem;
 }
 
 .season-select summary {
@@ -321,7 +390,6 @@ button:focus-visible {
   border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--text);
-  font-size: 0.85rem;
   font-weight: 700;
   list-style: none;
   cursor: pointer;
@@ -361,9 +429,10 @@ button:focus-visible {
   position: absolute;
   z-index: 5;
   top: calc(100% + 8px);
-  right: 0;
+  left: -24px;
+  right: auto;
   display: grid;
-  min-width: 100%;
+  min-width: calc(100% + 24px);
   width: max-content;
   max-height: 240px;
   padding: 6px;
@@ -374,13 +443,21 @@ button:focus-visible {
   box-shadow: 0 12px 28px #0008;
   scrollbar-color: var(--line-strong) transparent;
   scrollbar-width: thin;
+  scroll-behavior: auto;
+}
+
+.season-select[open]:not(.is-aligned) .season-menu {
+  visibility: hidden;
 }
 
 .season-menu a {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  align-items: center;
+  column-gap: 8px;
   padding: 7px 10px;
   border-radius: 7px;
   color: var(--muted);
-  font-size: 0.85rem;
   font-weight: 700;
   white-space: nowrap;
 }
@@ -406,11 +483,6 @@ button:focus-visible {
 
 .home-page {
   width: min(1220px, calc(100% - 28px));
-}
-
-.home-rail {
-  position: sticky;
-  top: 76px;
 }
 
 .home-grid > .card,
@@ -1382,6 +1454,7 @@ button:focus-visible {
 .matchday-picker {
   position: relative;
   justify-self: center;
+  font-size: 0.86rem;
 }
 
 .matchday-picker summary {
@@ -1391,7 +1464,6 @@ button:focus-visible {
   min-height: 30px;
   list-style: none;
   color: var(--text);
-  font-size: 0.86rem;
   font-weight: 700;
   white-space: nowrap;
   cursor: pointer;
@@ -1407,6 +1479,16 @@ button:focus-visible {
 
 .matchday-picker summary:hover {
   color: var(--muted);
+}
+
+.matchday-heading {
+  justify-self: center;
+  margin: 0;
+  color: var(--text);
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
 }
 
 .selection-option {
@@ -1439,7 +1521,7 @@ button:focus-visible {
   position: absolute;
   z-index: 5;
   top: calc(100% + 10px);
-  left: -16px;
+  left: -40px;
   display: grid;
   width: max-content;
   min-width: 124px;
@@ -1452,6 +1534,11 @@ button:focus-visible {
   box-shadow: 0 12px 28px #0008;
   scrollbar-color: var(--line-strong) transparent;
   scrollbar-width: thin;
+  scroll-behavior: auto;
+}
+
+.matchday-picker[open]:not(.is-aligned) .matchday-menu {
+  visibility: hidden;
 }
 
 .matchday-menu::-webkit-scrollbar {
@@ -1468,10 +1555,13 @@ button:focus-visible {
 }
 
 .matchday-menu a {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  align-items: center;
+  column-gap: 8px;
   padding: 7px 10px;
   border-radius: 7px;
   color: var(--muted);
-  font-size: 0.9rem;
   font-weight: 700;
   text-align: left;
 }
@@ -1484,6 +1574,23 @@ button:focus-visible {
 .matchday-menu a[aria-current='page'] {
   background: var(--surface-hover);
   color: var(--text);
+}
+
+.selection-check {
+  display: grid;
+  width: 16px;
+  height: 16px;
+  place-items: center;
+}
+
+.selection-check svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: var(--text);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
 }
 
 .zone--ucl {
@@ -1609,10 +1716,13 @@ button:focus-visible {
   height: 15px;
 }
 
+.fixtures-page .matchday-picker {
+  font-size: 0.95rem;
+}
+
 .fixtures-page .matchday-picker summary {
   min-height: 34px;
   gap: 6px;
-  font-size: 0.95rem;
 }
 
 .fixtures-page .matchday-picker summary svg {
@@ -1623,6 +1733,10 @@ button:focus-visible {
 .fixtures-page .selection-option .crest {
   width: 20px;
   height: 20px;
+}
+
+.fixtures-page .round-match:hover {
+  background: var(--surface-hover);
 }
 
 /* ---------- Draft XI ---------- */
@@ -3591,6 +3705,83 @@ button.draft-slot {
   box-shadow: inset 0 -3px 0 var(--accent);
 }
 
+.team-identity {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 22px 0 18px;
+}
+
+.team-identity h1 {
+  margin: 0;
+  font-size: clamp(1.28rem, 2.6vw, 1.62rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.team-identity p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.team-identity .crest--hero {
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.team-fixtures {
+  padding: 0 0 12px;
+  overflow: hidden;
+}
+
+.team-page .match-hero {
+  padding-inline: 32px;
+}
+
+.team-page .match-toolbar {
+  margin-inline: -32px;
+  padding-inline: 32px;
+}
+
+.team-page .match-tabs {
+  margin-inline: -32px;
+  padding-inline: 32px;
+}
+
+.team-page .matchday-navigation {
+  min-height: 64px;
+  padding: 14px 20px;
+  gap: 12px;
+  grid-template-columns: 38px minmax(0, 1fr) 38px;
+}
+
+.team-page .matchday-navigation button {
+  width: 34px;
+  height: 34px;
+  background: var(--chip);
+  color: var(--chip-ink);
+}
+
+.team-page .matchday-navigation button svg {
+  width: 15px;
+  height: 15px;
+}
+
+.team-page .matchday-picker summary {
+  min-height: 34px;
+  gap: 6px;
+  font-size: 0.95rem;
+}
+
+.team-page .matchday-heading {
+  font-size: 0.95rem;
+}
+
 .match-panel {
   margin-top: 14px;
   padding: 18px 18px 20px;
@@ -3668,14 +3859,25 @@ button.draft-slot {
 
 .team-form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px 22px;
+  grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1fr);
+  align-items: stretch;
+  column-gap: 11px;
+}
+
+.team-form-rule {
+  background: var(--line);
+  pointer-events: none;
 }
 
 .team-form-list {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.team-form-list > li {
+  display: flex;
+  justify-content: center;
 }
 
 .team-form-empty {
@@ -3691,7 +3893,9 @@ button.draft-slot {
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   gap: 8px;
-  padding: 9px 8px 13px;
+  width: 82%;
+  max-width: 100%;
+  padding: 9px 12px 13px;
   border-radius: 10px;
 }
 
@@ -3776,7 +3980,7 @@ button.draft-slot {
 
 @media (max-width: 620px) {
   .team-form-grid {
-    gap: 4px 10px;
+    column-gap: 5px;
   }
 
   .team-form-row {
@@ -4045,10 +4249,6 @@ button.draft-slot {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .home-rail {
-    position: static;
-  }
-
   .draft-layout {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -4077,20 +4277,39 @@ button.draft-slot {
 
 @media (max-width: 620px) {
   .site-header-card {
-    flex-wrap: wrap;
-    gap: 12px;
-    height: auto;
-    padding: 10px 12px;
+    min-height: 156px;
+    padding: 22px 20px 0;
+  }
+
+  .site-header-league-identity {
+    column-gap: 9px;
+  }
+
+  .site-header-league-identity .site-header-league-mark {
+    margin-block: 3px;
+  }
+
+  .site-header-league-name {
+    font-size: 1.08rem;
+  }
+
+  .site-header-league-country {
+    margin-top: 3px;
+    font-size: 0.7rem;
+  }
+
+  .site-header-season-label {
+    display: none;
   }
 
   .site-header .season-select summary {
-    min-width: 104px;
-    padding-block: 7px;
+    min-width: 0;
+    padding: 7px 32px 7px 14px;
   }
 
   .site-header .nav-tabs {
-    order: 3;
     width: 100%;
+    gap: 24px;
   }
 
   .draft-board-head {

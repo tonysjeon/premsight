@@ -23,7 +23,10 @@ export function SiteHeader({
   const selectPath = SEASON_ROUTES.includes(pathname) ? pathname : '/';
   const href = (path: string) =>
     seasonId ? `${path}?season=${encodeURIComponent(seasonId)}` : path;
-  const hideSeasonNav = pathname === '/draft' || pathname.startsWith('/matches/');
+  const hideSeasonNav =
+    pathname === '/draft' || pathname.startsWith('/matches/') || pathname.startsWith('/teams/');
+  const leagueName =
+    seasons.find((item) => item.id === seasonId)?.competition_name ?? 'Premier League';
 
   return (
     <header className="site-header">
@@ -43,6 +46,23 @@ export function SiteHeader({
       </div>
       {hideSeasonNav ? null : (
         <div className="shell home-page site-header-card">
+          <div className="site-header-league">
+            <div className="site-header-league-identity">
+              <span aria-hidden="true" className="match-round-mark site-header-league-mark" />
+              <div className="site-header-league-copy">
+                <p className="site-header-league-name">{leagueName}</p>
+                <p className="site-header-league-country">England</p>
+              </div>
+            </div>
+            {seasonId ? (
+              <div className="site-header-season">
+                <span aria-hidden="true" className="site-header-season-label">
+                  Season
+                </span>
+                <SeasonSelect basePath={selectPath} seasons={seasons} value={seasonId} />
+              </div>
+            ) : null}
+          </div>
           <nav aria-label="Primary" className="nav-tabs">
             <Link aria-current={pathname === '/' ? 'page' : undefined} href={href('/')}>
               Overview
@@ -57,9 +77,6 @@ export function SiteHeader({
               Fixtures
             </Link>
           </nav>
-          {seasonId ? (
-            <SeasonSelect basePath={selectPath} seasons={seasons} value={seasonId} />
-          ) : null}
         </div>
       )}
     </header>

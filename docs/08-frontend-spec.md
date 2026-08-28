@@ -7,13 +7,13 @@ The web application provides six product surfaces:
 - `/` — table-first season overview with the selected matchday alongside it
 - `/fixtures` — upcoming fixtures and matchday browser for a selected season
 - `/matches/{id}` — match hub: identity, kickoff/status/score, model prediction, season table, and head-to-head
-- `/teams/{id}` — team details with recent and upcoming fixtures
+- `/teams/{id}` — team hub: identity, current-season fixtures, league table, and a roster placeholder
 - `/table` — full current-season league table
 - `/draft` — interactive Draft XI simulator backed by PremSight's latest stored player snapshot
 
 ## Home page composition
 
-The home page defaults to the season marked current by the API. A shared header selector lists available Premier League seasons; changing seasons clears any selected matchday. The full league table is the primary content column. The selected matchday sits in a narrower right column for quick context, following the information hierarchy of established football score applications. Previous and next controls step through matchdays, while the matchday title opens a compact selector for direct navigation. The compact header does not repeat the date window or link to the full fixtures view. Historical seasons omit the table's Next opponent column.
+The home page defaults to the season marked current by the API. A shared header selector lists available Premier League seasons beside a `Season` label; changing seasons clears any selected matchday. The full league table is the primary content column. The selected matchday sits in a narrower right column for quick context, following the information hierarchy of established football score applications. Previous and next controls step through matchdays, while the matchday title opens a compact selector for direct navigation. That selector and the fixtures team picker mark the active option with a check and open already scrolled to it. The compact header labels the round as `Round n` without a season year and does not repeat the date window or link to the full fixtures view. Weekday headers in that rail include the calendar year only when it differs from the visitor's current year. Historical seasons omit the table's Next opponent column.
 
 The Fixtures page presents the same compact matchday card used beside the home overview at the full shared-header width. A pill header switches between By Round and By Team. Both modes use a compact dropdown above the same centred fixture cards: team names and crests around the score or kickoff time, with `FT` as plain text under a completed score and `Live` under a live score. By Round groups those cards under sunken weekday headers and uses a slightly shorter card height. Historical seasons append the compact year to the round label (`Round 12, 2022/23`) and to weekday dates (`Friday, August 12, 2022`). By Team shows one roughly two-month block at a time, with the weekday date in the top-left of each card and previous/next period controls below the rows. Its controls use `/fixtures?season={id}&matchday={n}` for rounds and `/fixtures?season={id}&view=team&team={id}&period={n}` for teams. Missing or invalid view, matchday, team, and period values resolve to deterministic defaults.
 
@@ -49,17 +49,33 @@ The match chrome is a single card with three stacked blocks:
 
 Broadcast listings, follow/favorites, and predicted lineups are out of scope.
 
+## Team hub
+
+`/teams/{id}` is a dedicated team surface for the current season. It keeps the site brand bar and omits the Overview / Table / Fixtures season card so the team chrome can occupy that space, matching the match hub.
+
+The team chrome is a single card with three stacked blocks:
+
+1. **Toolbar** — the same circular back control used on the match hub, and the Premier League lion to the left of `Premier League`. There is no season selector on this route.
+2. **Identity** — the club crest beside the full club name, with `England` as the country line under the name.
+3. **Tabs** — Fixtures, Table, and Roster sit on the bottom edge of the same card, with no divider above them. The selected tab is a server-rendered query (`/teams/{id}?tab=fixtures|table|roster`). Missing or invalid tab parameters fall back to Fixtures. Tab changes replace the current history entry so Back leaves the team page rather than undoing a tab. The active tab uses accent colour and an underline.
+
+**Fixtures** lists that club's current-season league matches as the compact dated cards used by the fixtures page By Team view: weekday date in the top-left of each card, with no sunken date-range headers above the rows. Matches paginate in blocks of ten. Previous and next controls sit in the same row as a `Fixtures` heading, matching By Round rather than the fixtures page team dropdown or the period buttons below the list. Page links use `/teams/{id}?page={n}`, including `page=0` for the first block. A missing or invalid `page` value resolves to the block that contains the next unplayed fixture, or the last block once the season is complete.
+
+**Table** uses the same overview league table as `/table` and the match hub, and highlights this club. Historical next-opponent rules still apply: the current season shows Next; a completed season would omit it, but this route always reads the current season.
+
+**Roster** is a visible placeholder until squad data ships. It does not fetch player snapshots.
+
 ## Data boundary
 
 Server components read the main API through `NEXT_PUBLIC_API_URL`. Pages that render teams also read `/v1/teams` to resolve display names and abbreviations; short names and three-letter abbreviations are API data, never derived in the UI when the API provides them.
 
-Derivations that the API does not expose — grouping by day, recent form, matchday selection, season aggregates, match-hub tabs, head-to-head scope, countdown labels, head-to-head records, and visitor-timezone clocks — live in pure modules under `src/lib` (`season.ts`, `teams.ts`, `match.ts`, `time.ts`), not in components. UI components contain presentation logic only.
+Derivations that the API does not expose — grouping by day, recent form, matchday selection, season aggregates, match-hub tabs, team-hub tabs, fixture page index, head-to-head scope, countdown labels, head-to-head records, and visitor-timezone clocks — live in pure modules under `src/lib` (`season.ts`, `teams.ts`, `match.ts`, `team-page.ts`, `time.ts`), not in components. UI components contain presentation logic only.
 
 API failures produce a clear unavailable state; empty datasets produce intentional empty states. Provider IDs are never rendered or used in routes.
 
 ## Navigation and layout
 
-Every page shares a sticky brand bar with the PremSight logo and a dedicated Draft button. Season-scoped pages add a second header card containing Overview, Table, Fixtures, and the season selector. The Draft page and match hub omit that season navigation. Navigation among the three season-scoped surfaces preserves the selected season, while Draft remains independent of season selection. Changing seasons from a match or team surface returns to the overview because those routes are not season-scoped. Content uses a centered responsive container, readable maximum widths, visible keyboard focus, and semantic tables/lists. Mobile layouts preserve scores and team names without horizontal page scrolling; wide tables scroll within their card.
+Every page shares a sticky brand bar with the PremSight logo and a dedicated Draft button. Season-scoped pages add a second header card with the Premier League crest, competition name, England, and a pill season selector on one row, and Overview, Table, and Fixtures on the bottom edge. The Draft page, match hub, and team hub omit that season navigation. Navigation among the three season-scoped surfaces preserves the selected season, while Draft remains independent of season selection. Changing seasons from a match or team surface returns to the overview because those routes are not season-scoped. Content uses a centered responsive container, readable maximum widths, visible keyboard focus, and semantic tables/lists. Mobile layouts preserve scores and team names without horizontal page scrolling; wide tables scroll within their card.
 
 ## Rendering
 
@@ -73,7 +89,7 @@ Every page shares a sticky brand bar with the PremSight logo and a dedicated Dra
 - Authentication and favorites
 - Live polling, WebSockets, or value/entrance animations (hover and focus transitions only)
 - Predicted lineups, broadcast listings, or follow controls on the match hub
-- Client-side filtering; matchday and match-hub tab selection are server-rendered links, not client state
+- Client-side filtering; matchday, match-hub tab, and team-hub tab and page selection are server-rendered links, not client state
 
 ## References
 
