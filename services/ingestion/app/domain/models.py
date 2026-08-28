@@ -6,6 +6,9 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict
 
 FixtureStatus = Literal["scheduled", "live", "postponed", "cancelled", "completed"]
+MatchEventType = Literal["goal", "card", "substitution"]
+GoalType = Literal["regular", "own", "penalty"]
+CardType = Literal["yellow", "yellow_red", "red"]
 PlayerPosition = Literal["GK", "DEF", "MID", "FWD"]
 DetailedPlayerPosition = Literal[
     "GK",
@@ -56,6 +59,20 @@ class ProviderTeam(NormalizedModel):
     crest_url: str | None = None
 
 
+class ProviderMatchEvent(NormalizedModel):
+    event_type: MatchEventType
+    minute: int | None = None
+    extra_minute: int | None = None
+    period: str | None = None
+    team_provider_id: str | None = None
+    player_name: str | None = None
+    related_player_name: str | None = None
+    goal_type: GoalType | None = None
+    card_type: CardType | None = None
+    home_score: int | None = None
+    away_score: int | None = None
+
+
 class ProviderFixture(NormalizedModel):
     provider_id: str
     home_team_provider_id: str
@@ -66,6 +83,7 @@ class ProviderFixture(NormalizedModel):
     home_score: int | None = None
     away_score: int | None = None
     venue: str | None = None
+    events: tuple[ProviderMatchEvent, ...] = ()
 
 
 class HistoricalSnapshot(NormalizedModel):

@@ -4,8 +4,15 @@ from uuid import UUID
 
 import psycopg
 from psycopg import Connection
+from psycopg.types.json import Json
 
-from app.domain.models import HistoricalSnapshot, ProviderFixture, ProviderTeam, SyncResult
+from app.domain.models import (
+    HistoricalSnapshot,
+    ProviderFixture,
+    ProviderMatchEvent,
+    ProviderTeam,
+    SyncResult,
+)
 
 
 class PostgresHistoricalRepository:
@@ -110,14 +117,28 @@ class PostgresHistoricalRepository:
     ) -> UUID:
         entity_id = self._reference_id(conn, provider, "team", team.provider_id)
         if entity_id is None:
-            entity_id = conn.execute(
-                """
-                INSERT INTO teams (name, short_name, tla, crest_url)
-                VALUES (%s, %s, %s, %s)
-                RETURNING id
-                """,
-                (team.name, team.short_name, team.tla, team.crest_url),
-            ).fetchone()[0]
+            # If team already exists with same name or tla, reuse it
+            existing = None
+            if team.tla:
+                existing = conn.execute(
+                    "SELECT id FROM teams WHERE tla = %s LIMIT 1", (team.tla,)
+                ).fetchone()
+            if existing is None:
+                existing = conn.execute(
+                    "SELECT id FROM teams WHERE name = %s LIMIT 1", (team.name,)
+                ).fetchone()
+
+            if existing is not None:
+                entity_id = existing[0]
+            else:
+                entity_id = conn.execute(
+                    """
+                    INSERT INTO teams (name, short_name, tla, crest_url)
+                    VALUES (%s, %s, %s, %s)
+                    RETURNING id
+                    """,
+                    (team.name, team.short_name, team.tla, team.crest_url),
+                ).fetchone()[0]
             self._insert_reference(conn, provider, "team", entity_id, team.provider_id)
         else:
             conn.execute(
@@ -181,7 +202,52 @@ class PostgresHistoricalRepository:
                 """,
                 (*values, entity_id),
             )
+        self._replace_events(conn, entity_id, fixture, team_ids)
         return entity_id
+
+    def _replace_events(
+        self,
+        conn: Connection,
+        fixture_id: UUID,
+        fixture: ProviderFixture,
+        team_ids: dict[str, UUID],
+    ) -> None:
+        conn.execute("DELETE FROM match_events WHERE fixture_id = %s", (fixture_id,))
+        for sort_key, event in enumerate(fixture.events):
+            team_id = team_ids.get(event.team_provider_id) if event.team_provider_id else None
+            detail = self._event_detail(event)
+            conn.execute(
+                """
+                INSERT INTO match_events (
+                    fixture_id, event_type, minute, extra_minute, period, team_id,
+                    player_name, related_player_name, detail, sort_key
+                )
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """,
+                (
+                    fixture_id,
+                    event.event_type,
+                    event.minute,
+                    event.extra_minute,
+                    event.period,
+                    team_id,
+                    event.player_name,
+                    event.related_player_name,
+                    Json(detail) if detail else None,
+                    sort_key,
+                ),
+            )
+
+    @staticmethod
+    def _event_detail(event: ProviderMatchEvent) -> dict[str, object]:
+        detail: dict[str, object] = {}
+        if event.goal_type is not None:
+            detail["goal_type"] = event.goal_type
+        if event.card_type is not None:
+            detail["card_type"] = event.card_type
+        if event.home_score is not None and event.away_score is not None:
+            detail["score"] = {"home": event.home_score, "away": event.away_score}
+        return detail
 
     @staticmethod
     def _reference_id(

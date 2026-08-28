@@ -12,6 +12,7 @@ from app.domain.models import (
     HistoricalSnapshot,
     ProviderCompetition,
     ProviderFixture,
+    ProviderMatchEvent,
     ProviderSeason,
     ProviderTeam,
 )
@@ -29,6 +30,13 @@ STATUS_MAP = {
     "CANCELLED": "cancelled",
     "FINISHED": "completed",
     "AWARDED": "completed",
+}
+GOAL_TYPE_MAP = {"REGULAR": "regular", "OWN": "own", "PENALTY": "penalty"}
+CARD_TYPE_MAP = {"YELLOW": "yellow", "YELLOW_RED": "yellow_red", "RED": "red"}
+UNFOLD_HEADERS = {
+    "X-Unfold-Goals": "true",
+    "X-Unfold-Bookings": "true",
+    "X-Unfold-Subs": "true",
 }
 
 
@@ -77,6 +85,35 @@ class ScorePayload(ProviderPayload):
     full_time: ScoreSide = Field(alias="fullTime")
 
 
+class NamedEntity(ProviderPayload):
+    id: int | None = None
+    name: str | None = None
+
+
+class GoalPayload(ProviderPayload):
+    minute: int | None = None
+    injury_time: int | None = Field(default=None, alias="injuryTime")
+    type: str | None = None
+    team: NamedEntity | None = None
+    scorer: NamedEntity | None = None
+    assist: NamedEntity | None = None
+    score: ScoreSide | None = None
+
+
+class BookingPayload(ProviderPayload):
+    minute: int | None = None
+    team: NamedEntity | None = None
+    player: NamedEntity | None = None
+    card: str | None = None
+
+
+class SubstitutionPayload(ProviderPayload):
+    minute: int | None = None
+    team: NamedEntity | None = None
+    player_out: NamedEntity | None = Field(default=None, alias="playerOut")
+    player_in: NamedEntity | None = Field(default=None, alias="playerIn")
+
+
 class MatchPayload(ProviderPayload):
     id: int
     utc_date: datetime = Field(alias="utcDate")
@@ -85,6 +122,9 @@ class MatchPayload(ProviderPayload):
     home_team: TeamPayload = Field(alias="homeTeam")
     away_team: TeamPayload = Field(alias="awayTeam")
     score: ScorePayload
+    goals: list[GoalPayload] = Field(default_factory=list)
+    bookings: list[BookingPayload] = Field(default_factory=list)
+    substitutions: list[SubstitutionPayload] = Field(default_factory=list)
 
 
 class MatchesResponse(ProviderPayload):
@@ -128,7 +168,11 @@ class FootballDataProvider:
             self._get(f"/competitions/{competition_code}/teams", params=params)
         )
         matches_payload = MatchesResponse.model_validate(
-            self._get(f"/competitions/{competition_code}/matches", params=params)
+            self._get(
+                f"/competitions/{competition_code}/matches",
+                params=params,
+                headers=UNFOLD_HEADERS,
+            )
         )
 
         competition = teams_payload.competition
@@ -157,10 +201,16 @@ class FootballDataProvider:
             fixtures=fixtures,
         )
 
-    def _get(self, path: str, *, params: dict[str, str]) -> Any:
+    def _get(
+        self,
+        path: str,
+        *,
+        params: dict[str, str],
+        headers: dict[str, str] | None = None,
+    ) -> Any:
         for attempt in range(1, self._max_attempts + 1):
             try:
-                response = self._client.get(path, params=params)
+                response = self._client.get(path, params=params, headers=headers)
             except httpx.TransportError:
                 if attempt == self._max_attempts:
                     raise
@@ -217,4 +267,81 @@ class FootballDataProvider:
             home_score=score.home,
             away_score=score.away,
             venue=team_by_id[home_provider_id].venue,
+            events=FootballDataProvider._normalize_events(match),
         )
+
+    @staticmethod
+    def _normalize_events(match: MatchPayload) -> tuple[ProviderMatchEvent, ...]:
+        events: list[ProviderMatchEvent] = []
+        for goal in match.goals:
+            goal_type = GOAL_TYPE_MAP.get((goal.type or "REGULAR").upper())
+            if goal_type is None:
+                raise ValueError(f"unsupported football-data goal type: {goal.type}")
+            events.append(
+                ProviderMatchEvent(
+                    event_type="goal",
+                    minute=goal.minute,
+                    extra_minute=goal.injury_time,
+                    period=FootballDataProvider._period(goal.minute),
+                    team_provider_id=FootballDataProvider._entity_id(goal.team),
+                    player_name=FootballDataProvider._entity_name(goal.scorer),
+                    related_player_name=FootballDataProvider._entity_name(goal.assist),
+                    goal_type=goal_type,
+                    home_score=goal.score.home if goal.score else None,
+                    away_score=goal.score.away if goal.score else None,
+                )
+            )
+        for booking in match.bookings:
+            if not booking.card:
+                raise ValueError(f"booking in match {match.id} is missing a card type")
+            card_type = CARD_TYPE_MAP.get(booking.card.upper())
+            if card_type is None:
+                raise ValueError(f"unsupported football-data card type: {booking.card}")
+            events.append(
+                ProviderMatchEvent(
+                    event_type="card",
+                    minute=booking.minute,
+                    period=FootballDataProvider._period(booking.minute),
+                    team_provider_id=FootballDataProvider._entity_id(booking.team),
+                    player_name=FootballDataProvider._entity_name(booking.player),
+                    card_type=card_type,
+                )
+            )
+        for substitution in match.substitutions:
+            events.append(
+                ProviderMatchEvent(
+                    event_type="substitution",
+                    minute=substitution.minute,
+                    period=FootballDataProvider._period(substitution.minute),
+                    team_provider_id=FootballDataProvider._entity_id(substitution.team),
+                    player_name=FootballDataProvider._entity_name(substitution.player_in),
+                    related_player_name=FootballDataProvider._entity_name(substitution.player_out),
+                )
+            )
+        events.sort(
+            key=lambda event: (
+                event.minute if event.minute is not None else 10_000,
+                event.extra_minute or 0,
+                {"goal": 0, "card": 1, "substitution": 2}[event.event_type],
+                event.player_name or "",
+            )
+        )
+        return tuple(events)
+
+    @staticmethod
+    def _period(minute: int | None) -> str | None:
+        if minute is None:
+            return None
+        return "1H" if minute <= 45 else "2H"
+
+    @staticmethod
+    def _entity_id(entity: NamedEntity | None) -> str | None:
+        if entity is None or entity.id is None:
+            return None
+        return str(entity.id)
+
+    @staticmethod
+    def _entity_name(entity: NamedEntity | None) -> str | None:
+        if entity is None or not entity.name:
+            return None
+        return entity.name
