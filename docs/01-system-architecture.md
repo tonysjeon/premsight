@@ -123,9 +123,12 @@ The prediction engine must remain independent of the frontend.
 Responsible for:
 
 - Historical imports
+- Periodic fixture and result refresh
 - Live provider synchronization
 - Event normalization
 - Match-state updates
+
+The scheduled fixture refresh runs inside the ingestion process. It does not belong in the product API or the frontend.
 
 ---
 

@@ -47,6 +47,42 @@ def _responses(match_status: str = "FINISHED") -> dict[str, dict[str, object]]:
                     "homeTeam": match_arsenal,
                     "awayTeam": match_chelsea,
                     "score": {"fullTime": {"home": 2, "away": 1}},
+                    "goals": [
+                        {
+                            "minute": 12,
+                            "injuryTime": None,
+                            "type": "REGULAR",
+                            "team": {"id": 57, "name": "Arsenal"},
+                            "scorer": {"id": 1, "name": "Bukayo Saka"},
+                            "assist": {"id": 2, "name": "Martin Ødegaard"},
+                            "score": {"home": 1, "away": 0},
+                        },
+                        {
+                            "minute": 90,
+                            "injuryTime": 3,
+                            "type": "PENALTY",
+                            "team": {"id": 61, "name": "Chelsea"},
+                            "scorer": {"id": 3, "name": "Cole Palmer"},
+                            "assist": None,
+                            "score": {"home": 2, "away": 1},
+                        },
+                    ],
+                    "bookings": [
+                        {
+                            "minute": 34,
+                            "team": {"id": 61, "name": "Chelsea"},
+                            "player": {"id": 4, "name": "Moises Caicedo"},
+                            "card": "YELLOW",
+                        }
+                    ],
+                    "substitutions": [
+                        {
+                            "minute": 70,
+                            "team": {"id": 57, "name": "Arsenal"},
+                            "playerOut": {"id": 5, "name": "Kai Havertz"},
+                            "playerIn": {"id": 6, "name": "Gabriel Jesus"},
+                        }
+                    ],
                 }
             ]
         },
@@ -77,6 +113,21 @@ def test_provider_normalizes_teams_fixtures_and_results() -> None:
     assert snapshot.fixtures[0].status == "completed"
     assert snapshot.fixtures[0].home_score == 2
     assert snapshot.fixtures[0].venue == "Emirates Stadium"
+    assert [event.event_type for event in snapshot.fixtures[0].events] == [
+        "goal",
+        "card",
+        "substitution",
+        "goal",
+    ]
+    assert snapshot.fixtures[0].events[0].player_name == "Bukayo Saka"
+    assert snapshot.fixtures[0].events[0].related_player_name == "Martin Ødegaard"
+    assert snapshot.fixtures[0].events[1].card_type == "yellow"
+    assert snapshot.fixtures[0].events[3].extra_minute == 3
+    assert snapshot.fixtures[0].events[3].goal_type == "penalty"
+    matches_request = requested[1]
+    assert matches_request.headers["x-unfold-goals"] == "true"
+    assert matches_request.headers["x-unfold-bookings"] == "true"
+    assert matches_request.headers["x-unfold-subs"] == "true"
 
 
 def test_provider_rejects_unknown_match_status() -> None:

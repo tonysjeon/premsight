@@ -67,7 +67,16 @@ class FootballRepository:
         return self._all(self._fixture_select() + where + " ORDER BY f.kickoff_at", tuple(params))
 
     def fixture(self, fixture_id: UUID) -> dict[str, Any] | None:
-        return self._one(self._fixture_select() + " WHERE f.id=%s", (fixture_id,))
+        item = self._one(self._fixture_select() + " WHERE f.id=%s", (fixture_id,))
+        if item is None:
+            return None
+        item["events"] = self._all(
+            """SELECT id, event_type, minute, extra_minute, period, team_id,
+                      player_name, related_player_name, detail
+               FROM match_events WHERE fixture_id=%s ORDER BY sort_key""",
+            (fixture_id,),
+        )
+        return item
 
     def prediction_history(
         self, competition_id: UUID, before_kickoff: datetime

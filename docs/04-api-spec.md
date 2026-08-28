@@ -8,7 +8,7 @@ Define the public HTTP surface of PremSight services, starting with health and e
 
 Primary product API: `services/api` (default local port `8000`).  
 Prediction engine: `services/prediction-engine` (port `8001`).  
-Ingestion: `services/ingestion` (port `8002`, not in Compose yet).
+Ingestion: `services/ingestion` (port `8002`; Compose runs the fixture refresh scheduler in this process).
 
 Contracts should eventually be reflected in OpenAPI and `packages/shared-types`.
 

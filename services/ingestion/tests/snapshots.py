@@ -4,6 +4,7 @@ from app.domain.models import (
     HistoricalSnapshot,
     ProviderCompetition,
     ProviderFixture,
+    ProviderMatchEvent,
     ProviderSeason,
     ProviderTeam,
 )
@@ -25,12 +26,8 @@ def historical_snapshot() -> HistoricalSnapshot:
             end_date=date(2026, 5, 24),
         ),
         teams=(
-            ProviderTeam(
-                provider_id="team-1", name="Arsenal", short_name="Arsenal", tla="ARS"
-            ),
-            ProviderTeam(
-                provider_id="team-2", name="Chelsea", short_name="Chelsea", tla="CHE"
-            ),
+            ProviderTeam(provider_id="team-1", name="Arsenal", short_name="Arsenal", tla="ARS"),
+            ProviderTeam(provider_id="team-2", name="Chelsea", short_name="Chelsea", tla="CHE"),
         ),
         fixtures=(
             ProviderFixture(
@@ -43,6 +40,27 @@ def historical_snapshot() -> HistoricalSnapshot:
                 home_score=2,
                 away_score=1,
                 venue="Emirates Stadium",
+                events=(
+                    ProviderMatchEvent(
+                        event_type="goal",
+                        minute=12,
+                        period="1H",
+                        team_provider_id="team-1",
+                        player_name="Bukayo Saka",
+                        related_player_name="Martin Odegaard",
+                        goal_type="regular",
+                        home_score=1,
+                        away_score=0,
+                    ),
+                    ProviderMatchEvent(
+                        event_type="card",
+                        minute=34,
+                        period="1H",
+                        team_provider_id="team-2",
+                        player_name="Moises Caicedo",
+                        card_type="yellow",
+                    ),
+                ),
             ),
         ),
     )

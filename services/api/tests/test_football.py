@@ -43,6 +43,14 @@ def client() -> TestClient:
                VALUES(%s,%s,%s,%s,'completed','2026-08-15T14:00:00Z',1,2,1) RETURNING id""",
             (competition_id, season_id, home_id, away_id),
         ).fetchone()[0]
+        conn.execute(
+            """INSERT INTO match_events(
+                 fixture_id,event_type,minute,period,team_id,player_name,
+                 related_player_name,detail,sort_key)
+               VALUES(%s,'goal',12,'1H',%s,'Bukayo Saka','Martin Odegaard',
+                      '{"goal_type":"regular"}'::jsonb,0)""",
+            (fixture_id, home_id),
+        )
         snapshot_id = conn.execute(
             """INSERT INTO player_snapshot_runs(season_id,provider,captured_at)
                VALUES(%s,'fpl','2026-08-04T12:00:00Z') RETURNING id""",
@@ -90,7 +98,11 @@ def test_core_read_endpoints(client: TestClient) -> None:
     fixtures = client.get("/v1/fixtures", params={"status": "completed"}).json()
     assert fixtures["count"] == 1
     assert fixtures["items"][0]["home_team_name"] == "Arsenal"
-    assert client.get(f"/v1/fixtures/{ids['fixture']}").json()["home_score"] == 2
+    match = client.get(f"/v1/fixtures/{ids['fixture']}").json()
+    assert match["home_score"] == 2
+    assert match["events"][0]["player_name"] == "Bukayo Saka"
+    assert match["events"][0]["minute"] == 12
+    assert "events" not in fixtures["items"][0]
     assert len(client.get(f"/v1/teams/{ids['home']}").json()["fixtures"]) == 1
     table = client.get("/v1/standings", params={"season_id": ids["season"]}).json()
     assert [(row["team_name"], row["points"]) for row in table["items"]] == [

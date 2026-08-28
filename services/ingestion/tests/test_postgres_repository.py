@@ -46,12 +46,17 @@ def test_snapshot_replay_is_idempotent(database_url: str) -> None:
                 (SELECT count(*) FROM seasons),
                 (SELECT count(*) FROM teams),
                 (SELECT count(*) FROM fixtures),
-                (SELECT count(*) FROM provider_references)
+                (SELECT count(*) FROM provider_references),
+                (SELECT count(*) FROM match_events)
             """
         ).fetchone()
         fixture = conn.execute(
             "SELECT status, home_score, away_score, venue FROM fixtures"
         ).fetchone()
+        events = conn.execute(
+            "SELECT event_type, minute, player_name FROM match_events ORDER BY sort_key"
+        ).fetchall()
 
-    assert counts == (1, 1, 2, 1, 5)
+    assert counts == (1, 1, 2, 1, 5, 2)
     assert fixture == ("completed", 2, 1, "Emirates Stadium")
+    assert events == [("goal", 12, "Bukayo Saka"), ("card", 34, "Moises Caicedo")]

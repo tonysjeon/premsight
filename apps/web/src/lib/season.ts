@@ -32,6 +32,51 @@ export type DayGroup = { key: string; label: string; fixtures: Fixture[] };
 export type VenueFilter = 'all' | 'home' | 'away';
 export type FixturePeriod = { key: string; label: string; fixtures: Fixture[] };
 
+const SEASON_YEAR = /^(\d{4})\s*[/–-]\s*(\d{2}|\d{4})$/;
+
+/** Compact football season, e.g. `2022/2023` → `2022/23`. */
+export function seasonYearLabel(name: string): string {
+  const matched = name.trim().match(SEASON_YEAR);
+  if (!matched) return name;
+  const start = matched[1];
+  const rawEnd = matched[2];
+  if (start === undefined || rawEnd === undefined) return name;
+  const end = rawEnd.length === 4 ? rawEnd.slice(-2) : rawEnd;
+  return `${start}/${end}`;
+}
+
+/** Compact earliest stored season for Head-to-Head coverage, e.g. `2021/22`. */
+export function headToHeadCoverageLabel(
+  seasons: readonly { name: string; start_date: string }[],
+): string | null {
+  if (!seasons.length) return null;
+  const earliest = [...seasons].sort((a, b) => a.start_date.localeCompare(b.start_date))[0]!;
+  return seasonYearLabel(earliest.name);
+}
+
+export function roundOptionLabel(
+  matchday: number,
+  seasonName?: string,
+  isCurrentSeason = true,
+): string {
+  if (isCurrentSeason || seasonName === undefined) return `Round ${matchday}`;
+  return `Round ${matchday}, ${seasonYearLabel(seasonName)}`;
+}
+
+/** Match-hub caption. Historical seasons use Round plus the compact year. */
+export function matchRoundLabel(
+  competitionName: string,
+  matchday: number | null,
+  seasonName?: string,
+  isCurrentSeason = true,
+): string {
+  const year =
+    !isCurrentSeason && seasonName !== undefined ? `, ${seasonYearLabel(seasonName)}` : '';
+  if (matchday === null) return `${competitionName}${year}`.trim();
+  const roundWord = isCurrentSeason ? 'Matchday' : 'Round';
+  return `${competitionName} ${roundWord} ${matchday}${year}`;
+}
+
 function byKickoff(a: Fixture, b: Fixture): number {
   return a.kickoff_at.localeCompare(b.kickoff_at);
 }
@@ -233,6 +278,41 @@ export function formTable(
     record(fixture.away_team_id, home === away ? 'D' : away > home ? 'W' : 'L');
   }
   return form;
+}
+
+export type TeamFormMatch = {
+  fixture: Fixture;
+  result: ResultMark;
+  isHome: boolean;
+};
+
+function resultFor(fixture: Fixture, teamId: string): ResultMark {
+  const isHome = fixture.home_team_id === teamId;
+  const scored = isHome ? fixture.home_score! : fixture.away_score!;
+  const conceded = isHome ? fixture.away_score! : fixture.home_score!;
+  if (scored > conceded) return 'W';
+  if (scored < conceded) return 'L';
+  return 'D';
+}
+
+/** Newest completed league results for one club, capped at `limit`. */
+export function recentTeamForm(
+  fixtures: readonly Fixture[],
+  teamId: string,
+  limit = 5,
+  excludeFixtureId?: string,
+): TeamFormMatch[] {
+  return fixtures
+    .filter(isPlayed)
+    .filter((fixture) => fixture.home_team_id === teamId || fixture.away_team_id === teamId)
+    .filter((fixture) => fixture.id !== excludeFixtureId)
+    .sort((a, b) => b.kickoff_at.localeCompare(a.kickoff_at))
+    .slice(0, limit)
+    .map((fixture) => ({
+      fixture,
+      result: resultFor(fixture, teamId),
+      isHome: fixture.home_team_id === teamId,
+    }));
 }
 
 export type SeasonSummary = {

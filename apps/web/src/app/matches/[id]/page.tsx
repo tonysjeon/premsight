@@ -1,15 +1,20 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { TeamBadge } from '@/components/team-badge';
+import { MatchHeadToHead } from '@/components/match-head-to-head';
+import { MatchHero } from '@/components/match-hero';
+import { MatchPrediction } from '@/components/match-prediction';
+import { MatchTabs } from '@/components/match-tabs';
+import { Table, TableLegend } from '@/components/table';
 import { api } from '@/lib/api';
+import {
+  headToHeadMeetings,
+  isCurrentWeekMatch,
+  resolveH2hScope,
+  resolveMatchTab,
+} from '@/lib/match';
+import { formTable, headToHeadCoverageLabel, nextFixtures } from '@/lib/season';
 import { buildTeamDirectory, teamVisual } from '@/lib/teams';
 
-const KICKOFF = new Intl.DateTimeFormat('en-US', {
-  dateStyle: 'full',
-  timeStyle: 'short',
-  hour12: true,
-  timeZone: 'UTC',
-});
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({
   params,
@@ -20,90 +25,106 @@ export async function generateMetadata({
   return { title: `${match.home_team_name} vs ${match.away_team_name}` };
 }
 
-export default async function Match({ params }: { params: Promise<{ id: string }> }) {
-  const match = await api.fixture((await params).id);
-  const canPredict = match.status === 'scheduled' || match.status === 'postponed';
-  const [teams, prediction] = await Promise.all([
+export default async function Match({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ tab?: string | string[]; h2h?: string | string[] }>;
+}) {
+  const { id } = await params;
+  const { tab: requestedTab, h2h: requestedH2h } = await searchParams;
+  const match = await api.fixture(id);
+  const [teams, seasons, seasonFixtures] = await Promise.all([
     api.teams(),
-    canPredict ? api.prediction(match.id) : Promise.resolve(null),
+    api.seasons(),
+    api.fixtures(`season_id=${match.season_id}`),
   ]);
+
+  const season = seasons.find((item) => item.id === match.season_id);
+  const isCurrentSeason = season?.is_current ?? false;
+  const hasPreview = isCurrentWeekMatch(match, seasonFixtures ?? [], isCurrentSeason);
+  const tab = resolveMatchTab(requestedTab, hasPreview);
+  const h2hScope = resolveH2hScope(requestedH2h);
+
+  const [prediction, standings, priorFixtures] = await Promise.all([
+    tab === 'preview' && hasPreview ? api.prediction(match.id) : Promise.resolve(null),
+    tab === 'table' ? api.standings(match.season_id) : Promise.resolve(null),
+    tab === 'h2h' ? api.fixtures(`team_id=${match.home_team_id}`) : Promise.resolve(null),
+  ]);
+
   const directory = buildTeamDirectory(teams);
   const home = teamVisual(directory, match.home_team_id, match.home_team_name);
   const away = teamVisual(directory, match.away_team_id, match.away_team_name);
-  const outcomes = prediction
-    ? [
-        { label: home.abbr, value: prediction.outcomes.home_win },
-        { label: 'Draw', value: prediction.outcomes.draw },
-        { label: away.abbr, value: prediction.outcomes.away_win },
-      ]
+  const allMeetings = priorFixtures
+    ? headToHeadMeetings(priorFixtures, match.home_team_id, match.away_team_id, match.id)
     : [];
+
   return (
-    <main className="shell page">
-      <p className="eyebrow">
-        {match.status === 'completed' ? 'Full time' : match.status}
-        {match.matchday === null ? '' : ` · Matchday ${match.matchday}`}
-      </p>
-      <div className="scorecard">
-        <Link className="scorecard-team" href={`/teams/${match.home_team_id}`}>
-          <TeamBadge large visual={home} />
-          {home.label}
-        </Link>
-        <strong>
-          {match.home_score ?? '–'} <span>:</span> {match.away_score ?? '–'}
-        </strong>
-        <Link className="scorecard-team" href={`/teams/${match.away_team_id}`}>
-          <TeamBadge large visual={away} />
-          {away.label}
-        </Link>
-      </div>
-      <p className="match-meta">
-        {KICKOFF.format(new Date(match.kickoff_at))} UTC{match.venue ? ` · ${match.venue}` : ''}
-      </p>
-      {prediction ? (
-        <section className="prediction-card" aria-labelledby="prediction-heading">
-          <div className="prediction-heading">
-            <div>
-              <p className="eyebrow">Pre-match probabilities</p>
-              <h2 id="prediction-heading">Model estimate</h2>
-            </div>
-            <span>{prediction.model_version}</span>
-          </div>
-          <div className="probability-grid">
-            {outcomes.map((outcome) => (
-              <div className="probability" key={outcome.label}>
-                <div>
-                  <span>{outcome.label}</span>
-                  <strong>{Math.round(outcome.value * 100)}%</strong>
-                </div>
-                <div className="probability-track" aria-hidden="true">
-                  <span style={{ width: `${outcome.value * 100}%` }} />
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="prediction-summary">
-            <span>
-              Expected goals <strong>{prediction.expected_goals.home.toFixed(1)}</strong> –{' '}
-              <strong>{prediction.expected_goals.away.toFixed(1)}</strong>
-            </span>
-            <span>
-              Most likely score{' '}
-              <strong>
-                {prediction.likely_scores[0]?.home_goals ?? 0}–
-                {prediction.likely_scores[0]?.away_goals ?? 0}
-              </strong>
-            </span>
-          </div>
+    <main className="shell match-page">
+      <h1 className="sr-only">
+        {home.label} vs {away.label}
+      </h1>
+      <MatchHero
+        away={away}
+        competitionName={season?.competition_name ?? 'Premier League'}
+        home={home}
+        isCurrentSeason={season?.is_current ?? true}
+        match={match}
+        seasonName={season?.name}
+      >
+        <MatchTabs fixtureId={match.id} hasPreview={hasPreview} value={tab} />
+      </MatchHero>
+      {tab === 'table' ? (
+        <section
+          aria-labelledby="match-table-heading"
+          className="match-panel match-panel--table table-page-overview"
+        >
+          <h2 className="sr-only" id="match-table-heading">
+            League table
+          </h2>
+          {standings?.length ? (
+            <>
+              <Table
+                form={seasonFixtures ? formTable(seasonFixtures, 5) : undefined}
+                highlightTeamIds={new Set([match.home_team_id, match.away_team_id])}
+                items={standings}
+                leagueSize={standings.length}
+                nextByTeam={isCurrentSeason ? nextFixtures(seasonFixtures ?? []) : undefined}
+                overview
+                teams={directory}
+              />
+              <TableLegend />
+            </>
+          ) : (
+            <p className="empty">The table appears once this season has teams.</p>
+          )}
         </section>
-      ) : canPredict ? (
-        <section className="prediction-card prediction-empty" aria-labelledby="prediction-heading">
-          <p className="eyebrow">Pre-match probabilities</p>
-          <h2 id="prediction-heading">Model estimate unavailable</h2>
-          <p>
-            An estimate is not ready for this fixture. This can happen when a team lacks completed
-            league history or the prediction service is temporarily unavailable.
-          </p>
-        </section>
+      ) : null}
+      {tab === 'h2h' ? (
+        <MatchHeadToHead
+          allMeetings={allMeetings}
+          away={away}
+          awayTeamId={match.away_team_id}
+          coverageLabel={headToHeadCoverageLabel(seasons)}
+          fixtureId={match.id}
+          home={home}
+          homeTeamId={match.home_team_id}
+          scope={h2hScope}
+          teams={directory}
+        />
+      ) : null}
+      {tab === 'preview' && hasPreview ? (
+        <MatchPrediction
+          away={away}
+          awayTeamId={match.away_team_id}
+          excludeFixtureId={match.id}
+          fixtures={seasonFixtures ?? []}
+          home={home}
+          homeTeamId={match.home_team_id}
+          prediction={prediction}
+          teams={directory}
+        />
       ) : null}
     </main>
   );
