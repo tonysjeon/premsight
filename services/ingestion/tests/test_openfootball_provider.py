@@ -1,5 +1,4 @@
-from datetime import date
-from app.providers.openfootball import parse_openfootball_text, normalize_team_name, OpenFootballProvider, parse_match_line
+from app.providers.openfootball import parse_match_line, parse_openfootball_text
 
 SAMPLE_DATA_V1 = """= English Premier League 2023/24
 
@@ -57,11 +56,23 @@ def test_parse_openfootball_format_v2():
 
 def test_parse_match_line():
     assert parse_match_line("20:00 Manchester United FC v Fulham FC 1-0 (0-0)") == (
-        "20:00", "Manchester United FC", 1, 0, "Fulham FC"
+        "20:00",
+        "Manchester United FC",
+        1,
+        0,
+        "Fulham FC",
     )
     assert parse_match_line("Everton FC v Brighton & Hove Albion FC 0-3 (0-1)") == (
-        None, "Everton FC", 0, 3, "Brighton & Hove Albion FC"
+        None,
+        "Everton FC",
+        0,
+        3,
+        "Brighton & Hove Albion FC",
     )
     assert parse_match_line("20:00 Burnley FC 0-3 (0-2) Manchester City FC") == (
-        "20:00", "Burnley FC", 0, 3, "Manchester City FC"
+        "20:00",
+        "Burnley FC",
+        0,
+        3,
+        "Manchester City FC",
     )

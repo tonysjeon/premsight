@@ -26,12 +26,8 @@ def historical_snapshot() -> HistoricalSnapshot:
             end_date=date(2026, 5, 24),
         ),
         teams=(
-            ProviderTeam(
-                provider_id="team-1", name="Arsenal", short_name="Arsenal", tla="ARS"
-            ),
-            ProviderTeam(
-                provider_id="team-2", name="Chelsea", short_name="Chelsea", tla="CHE"
-            ),
+            ProviderTeam(provider_id="team-1", name="Arsenal", short_name="Arsenal", tla="ARS"),
+            ProviderTeam(provider_id="team-2", name="Chelsea", short_name="Chelsea", tla="CHE"),
         ),
         fixtures=(
             ProviderFixture(

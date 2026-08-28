@@ -1,6 +1,13 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { formTable, headToHeadCoverageLabel, matchRoundLabel, recentTeamForm, roundOptionLabel, seasonYearLabel } from './season.ts';
+import {
+  formTable,
+  headToHeadCoverageLabel,
+  matchRoundLabel,
+  recentTeamForm,
+  roundOptionLabel,
+  seasonYearLabel,
+} from './season.ts';
 
 function match(overrides = {}) {
   return {
@@ -138,7 +145,10 @@ test('roundOptionLabel adds the compact season only for historical seasons', () 
 });
 
 test('matchRoundLabel uses Matchday now and Round plus year for past seasons', () => {
-  assert.equal(matchRoundLabel('Premier League', 2, '2026/2027', true), 'Premier League Matchday 2');
+  assert.equal(
+    matchRoundLabel('Premier League', 2, '2026/2027', true),
+    'Premier League Matchday 2',
+  );
   assert.equal(
     matchRoundLabel('Premier League', 12, '2022/2023', false),
     'Premier League Round 12, 2022/23',

@@ -49,9 +49,27 @@ test('isCurrentWeekMatch checks if fixture belongs to the active upcoming matchd
     fixture({ id: 'f3', matchday: 3, status: 'scheduled', home_score: null, away_score: null }),
   ];
 
-  const currentWeekMatch = fixture({ id: 'f2', matchday: 2, status: 'scheduled', home_score: null, away_score: null });
-  const futureWeekMatch = fixture({ id: 'f3', matchday: 3, status: 'scheduled', home_score: null, away_score: null });
-  const completedMatch = fixture({ id: 'f1', matchday: 1, status: 'completed', home_score: 2, away_score: 0 });
+  const currentWeekMatch = fixture({
+    id: 'f2',
+    matchday: 2,
+    status: 'scheduled',
+    home_score: null,
+    away_score: null,
+  });
+  const futureWeekMatch = fixture({
+    id: 'f3',
+    matchday: 3,
+    status: 'scheduled',
+    home_score: null,
+    away_score: null,
+  });
+  const completedMatch = fixture({
+    id: 'f1',
+    matchday: 1,
+    status: 'completed',
+    home_score: 2,
+    away_score: 0,
+  });
 
   assert.equal(isCurrentWeekMatch(currentWeekMatch, seasonFixtures, true), true);
   assert.equal(isCurrentWeekMatch(futureWeekMatch, seasonFixtures, true), false);

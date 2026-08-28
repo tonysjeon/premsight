@@ -15,7 +15,10 @@ test('formats a kickoff clock in the visitor timezone', () => {
 test('formats the local calendar day for a kickoff', () => {
   assert.equal(kickoffDayLabel(KICKOFF, 'UTC'), 'Saturday, August 29');
   assert.equal(kickoffDayLabel(KICKOFF, 'America/Los_Angeles'), 'Saturday, August 29');
-  assert.equal(kickoffDayLabel('2026-08-30T02:00:00Z', 'America/Los_Angeles'), 'Saturday, August 29');
+  assert.equal(
+    kickoffDayLabel('2026-08-30T02:00:00Z', 'America/Los_Angeles'),
+    'Saturday, August 29',
+  );
   assert.equal(kickoffDayLabel(KICKOFF, 'UTC', true), 'Saturday, August 29, 2026');
 });
 

@@ -3,12 +3,7 @@ import Link from 'next/link';
 import { Card } from '@/components/card';
 import { Table, TableLegend } from '@/components/table';
 import { api } from '@/lib/api';
-import {
-  formTable,
-  nextFixtures,
-  standingsByVenue,
-  type VenueFilter,
-} from '@/lib/season';
+import { formTable, nextFixtures, standingsByVenue, type VenueFilter } from '@/lib/season';
 import { buildTeamDirectory } from '@/lib/teams';
 
 export const metadata: Metadata = { title: 'League table' };

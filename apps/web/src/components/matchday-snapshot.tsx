@@ -60,7 +60,10 @@ function FixtureRow({
       <span className="round-result">
         <strong>{matchLabel(fixture)}</strong>
         {caption ? (
-          <small aria-hidden="true" className={fixture.status === 'live' ? 'round-result-live' : undefined}>
+          <small
+            aria-hidden="true"
+            className={fixture.status === 'live' ? 'round-result-live' : undefined}
+          >
             {caption}
           </small>
         ) : null}

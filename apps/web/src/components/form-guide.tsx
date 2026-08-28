@@ -14,10 +14,7 @@ export function FormGuide({ marks }: { marks: readonly ResultMark[] }) {
             className={`form-item${isLatest ? ' form-item--latest' : ''}`}
             key={`${index}-${mark}`}
           >
-            <span
-              className={`form-mark form-mark--${mark.toLowerCase()}`}
-              aria-hidden="true"
-            >
+            <span className={`form-mark form-mark--${mark.toLowerCase()}`} aria-hidden="true">
               {mark}
             </span>
             {isLatest ? (

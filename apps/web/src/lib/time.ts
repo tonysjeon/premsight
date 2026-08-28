@@ -23,8 +23,13 @@ export function kickoffClockParts(
   return period ? { clock, period } : { clock };
 }
 
-export function kickoffFactLabel(iso: string, timeZone: string, nowIso = new Date().toISOString()): string {
-  const includeYear = calendarDayKey(iso, timeZone).slice(0, 4) !== calendarDayKey(nowIso, timeZone).slice(0, 4);
+export function kickoffFactLabel(
+  iso: string,
+  timeZone: string,
+  nowIso = new Date().toISOString(),
+): string {
+  const includeYear =
+    calendarDayKey(iso, timeZone).slice(0, 4) !== calendarDayKey(nowIso, timeZone).slice(0, 4);
   const date = new Intl.DateTimeFormat('en-US', {
     weekday: 'short',
     month: 'long',

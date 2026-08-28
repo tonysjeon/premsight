@@ -17,7 +17,10 @@ def build_parser() -> argparse.ArgumentParser:
     historical.add_argument("--competition", default="PL")
     historical.add_argument("--season", type=int, required=True, dest="season_start_year")
     subparsers.add_parser("player-snapshot", help="Store each club's projected starting XI")
-    openfb = subparsers.add_parser("openfootball-season", help="Import one season from openfootball")
+    openfb = subparsers.add_parser(
+        "openfootball-season",
+        help="Import one season from openfootball",
+    )
     openfb.add_argument("--season", type=int, required=True, dest="season_start_year")
     return parser
 

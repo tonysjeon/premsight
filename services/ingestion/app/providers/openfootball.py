@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import re
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime
+
 import httpx
 
 from app.domain.models import (
@@ -13,6 +14,7 @@ from app.domain.models import (
 )
 
 PROVIDER_NAME = "openfootball"
+OPENFOOTBALL_BASE_URL = "https://raw.githubusercontent.com/openfootball/england/master"
 
 MONTH_MAP = {
     "Jan": 1,
@@ -73,7 +75,7 @@ def parse_match_line(line: str) -> tuple[str | None, str, int, int, str] | None:
     body = line
     if time_match:
         time_str = time_match.group(1)
-        body = line[time_match.end():].strip()
+        body = line[time_match.end() :].strip()
 
     # Pattern A: "Team A v Team B 2-1 (1-0)" or "Team A v Team B 2-1"
     match_a = re.match(r"^(.+?)\s+v\s+(.+?)\s+(\d+)-(\d+)(?:\s+\([0-9-]+\))?$", body)
@@ -158,7 +160,9 @@ def parse_openfootball_text(
             if name not in teams_by_name:
                 registry_entry = TEAM_REGISTRY.get(name, {})
                 tla = registry_entry.get("tla") or name[:3].upper()
-                short_name = registry_entry.get("short_name") or name.replace(" FC", "").replace("AFC ", "")
+                short_name = registry_entry.get("short_name") or name.replace(" FC", "").replace(
+                    "AFC ", ""
+                )
                 provider_team_id = f"openfb-team-{tla.lower()}"
                 teams_by_name[name] = ProviderTeam(
                     provider_id=provider_team_id,
@@ -178,12 +182,14 @@ def parse_openfootball_text(
                 current_date.day,
                 hours,
                 minutes,
-                tzinfo=timezone.utc,
+                tzinfo=UTC,
             )
         else:
-            kickoff_at = datetime(season_start_year, 8, 1, 15, 0, tzinfo=timezone.utc)
+            kickoff_at = datetime(season_start_year, 8, 1, 15, 0, tzinfo=UTC)
 
-        fixture_id = f"openfb-pl-{season_start_year}-m{current_matchday}-{home_team.tla}-{away_team.tla}"
+        fixture_id = (
+            f"openfb-pl-{season_start_year}-m{current_matchday}-{home_team.tla}-{away_team.tla}"
+        )
 
         fixtures.append(
             ProviderFixture(
@@ -202,7 +208,7 @@ def parse_openfootball_text(
 
 
 class OpenFootballProvider:
-    def __init__(self, base_url: str = "https://raw.githubusercontent.com/openfootball/england/master") -> None:
+    def __init__(self, base_url: str = OPENFOOTBALL_BASE_URL) -> None:
         self._base_url = base_url.rstrip("/")
 
     def fetch_season_snapshot(self, season_start_year: int) -> HistoricalSnapshot:

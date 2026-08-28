@@ -8,23 +8,23 @@ PremSight presents a dense matchday product surface with the restraint of a mode
 
 Defined as custom properties in `apps/web/src/app/globals.css`.
 
-| Token              | Value     | Use                                 |
-| ------------------ | --------- | ----------------------------------- |
-| `--ink`            | `#101110` | Page canvas                         |
-| `--surface`        | `#1b1c1b` | Card background                     |
-| `--surface-hover`  | `#242624` | Row hover                           |
-| `--surface-sunken` | `#252625` | Stat tiles and inset table headers  |
+| Token              | Value     | Use                                                |
+| ------------------ | --------- | -------------------------------------------------- |
+| `--ink`            | `#101110` | Page canvas                                        |
+| `--surface`        | `#1b1c1b` | Card background                                    |
+| `--surface-hover`  | `#242624` | Row hover                                          |
+| `--surface-sunken` | `#252625` | Stat tiles and inset table headers                 |
 | `--chip`           | `#343534` | Idle filter chips, fixture day bars, pager buttons |
-| `--chip-hover`     | `#404140` | Filter chip hover                   |
-| `--chip-ink`       | `#f4f4f4` | Text on idle chips and matching bars |
-| `--line`           | `#303230` | Card and row borders                |
-| `--text`           | `#f3f4f2` | Primary text                        |
-| `--muted`          | `#a1a5a1` | Secondary text and column headers   |
-| `--accent`         | `#4fd18b` | Brand, selected state, points, wins |
-| `--live`           | `#f05c72` | Live status                         |
-| `--zone-ucl`       | `#4385e0` | Champions League positions          |
-| `--zone-uel`       | `#d58a31` | Europa League position              |
-| `--zone-drop`      | `#e25757` | Relegation positions, losses        |
+| `--chip-hover`     | `#404140` | Filter chip hover                                  |
+| `--chip-ink`       | `#f4f4f4` | Text on idle chips and matching bars               |
+| `--line`           | `#303230` | Card and row borders                               |
+| `--text`           | `#f3f4f2` | Primary text                                       |
+| `--muted`          | `#a1a5a1` | Secondary text and column headers                  |
+| `--accent`         | `#4fd18b` | Brand, selected state, points, wins                |
+| `--live`           | `#f05c72` | Live status                                        |
+| `--zone-ucl`       | `#4385e0` | Champions League positions                         |
+| `--zone-uel`       | `#d58a31` | Europa League position                             |
+| `--zone-drop`      | `#e25757` | Relegation positions, losses                       |
 
 Radii are 20px for cards and 11px for nested tiles. Matchday filters use compact pills, while statuses retain smaller labels.
 

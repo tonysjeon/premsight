@@ -8,9 +8,7 @@ import type { Fixture } from '@/lib/api';
 import { matchRoundLabel } from '@/lib/season';
 import type { TeamVisual } from '@/lib/teams';
 
-function centreCopy(
-  match: Fixture,
-): { primary: ReactNode; secondary: ReactNode } {
+function centreCopy(match: Fixture): { primary: ReactNode; secondary: ReactNode } {
   if (match.status === 'completed') {
     return {
       primary: `${match.home_score ?? '–'} - ${match.away_score ?? '–'}`,

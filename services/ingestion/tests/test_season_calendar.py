@@ -18,9 +18,7 @@ def test_settings_override_wins_over_calendar() -> None:
 
 def test_scheduler_requires_token() -> None:
     assert not scheduler_should_run(Settings(schedule_enabled=True, football_data_api_token=""))
-    assert scheduler_should_run(
-        Settings(schedule_enabled=True, football_data_api_token="token")
-    )
+    assert scheduler_should_run(Settings(schedule_enabled=True, football_data_api_token="token"))
     assert not scheduler_should_run(
         Settings(schedule_enabled=False, football_data_api_token="token")
     )

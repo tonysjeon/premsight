@@ -160,9 +160,7 @@ class PostgresHistoricalRepository:
         season_id: UUID,
         team_ids: dict[str, UUID],
     ) -> UUID:
-        entity_id = self._reference_id(
-            conn, snapshot.provider, "fixture", fixture.provider_id
-        )
+        entity_id = self._reference_id(conn, snapshot.provider, "fixture", fixture.provider_id)
         values = (
             competition_id,
             season_id,
