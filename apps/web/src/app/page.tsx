@@ -51,17 +51,11 @@ export default async function Home({
         <aside className="home-rail">
           <Card flush>
             <MatchdayNavigation
-              isCurrentSeason={season.is_current}
               matchdays={matchdays(fixtures)}
               seasonId={season.id}
-              seasonName={season.name}
               value={selectedMatchday}
             />
-            <MatchdaySnapshot
-              includeYear={!season.is_current}
-              items={selectedFixtures}
-              teams={directory}
-            />
+            <MatchdaySnapshot items={selectedFixtures} teams={directory} />
           </Card>
         </aside>
       </div>

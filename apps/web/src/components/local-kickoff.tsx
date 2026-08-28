@@ -32,13 +32,7 @@ export function LocalKickoffRelative({ value }: { value: string }) {
   return <span suppressHydrationWarning>{label ?? 'Kickoff'}</span>;
 }
 
-export function LocalDayLabel({
-  value,
-  includeYear = false,
-}: {
-  value: string;
-  includeYear?: boolean;
-}) {
+export function LocalDayLabel({ value, includeYear }: { value: string; includeYear?: boolean }) {
   return (
     <span suppressHydrationWarning>{kickoffDayLabel(value, visitorTimeZone(), includeYear)}</span>
   );

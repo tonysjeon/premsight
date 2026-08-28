@@ -98,6 +98,19 @@ export function matchdayTeamLabel(visual: Pick<TeamVisual, 'abbr' | 'label'>): s
   return MATCHDAY_TEAM_LABELS[visual.abbr] ?? visual.label;
 }
 
+/** Browser title for a match hub; same labels as the match board. */
+export function matchDocumentTitle(
+  directory: TeamDirectory | undefined,
+  homeTeamId: string,
+  homeTeamName: string,
+  awayTeamId: string,
+  awayTeamName: string,
+): string {
+  const home = teamVisual(directory, homeTeamId, homeTeamName);
+  const away = teamVisual(directory, awayTeamId, awayTeamName);
+  return `${home.label} vs ${away.label}`;
+}
+
 export function teamVisual(
   directory: TeamDirectory | undefined,
   teamId: string,

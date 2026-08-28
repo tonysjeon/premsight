@@ -13,13 +13,21 @@ test('formats a kickoff clock in the visitor timezone', () => {
 });
 
 test('formats the local calendar day for a kickoff', () => {
-  assert.equal(kickoffDayLabel(KICKOFF, 'UTC'), 'Saturday, August 29');
-  assert.equal(kickoffDayLabel(KICKOFF, 'America/Los_Angeles'), 'Saturday, August 29');
+  assert.equal(kickoffDayLabel(KICKOFF, 'UTC', false), 'Saturday, August 29');
+  assert.equal(kickoffDayLabel(KICKOFF, 'America/Los_Angeles', false), 'Saturday, August 29');
   assert.equal(
-    kickoffDayLabel('2026-08-30T02:00:00Z', 'America/Los_Angeles'),
+    kickoffDayLabel('2026-08-30T02:00:00Z', 'America/Los_Angeles', false),
     'Saturday, August 29',
   );
   assert.equal(kickoffDayLabel(KICKOFF, 'UTC', true), 'Saturday, August 29, 2026');
+  assert.equal(
+    kickoffDayLabel(KICKOFF, 'UTC', undefined, '2026-08-01T00:00:00Z'),
+    'Saturday, August 29',
+  );
+  assert.equal(
+    kickoffDayLabel(KICKOFF, 'UTC', undefined, '2025-12-01T00:00:00Z'),
+    'Saturday, August 29, 2026',
+  );
 });
 
 test('formats a compact local date and time for match facts', () => {

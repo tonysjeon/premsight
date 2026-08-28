@@ -41,12 +41,20 @@ export function kickoffFactLabel(
   return period ? `${date}, ${clock} ${period}` : `${date}, ${clock}`;
 }
 
-export function kickoffDayLabel(iso: string, timeZone: string, includeYear = false): string {
+export function kickoffDayLabel(
+  iso: string,
+  timeZone: string,
+  includeYear?: boolean,
+  nowIso = new Date().toISOString(),
+): string {
+  const showYear =
+    includeYear ??
+    calendarDayKey(iso, timeZone).slice(0, 4) !== calendarDayKey(nowIso, timeZone).slice(0, 4);
   return new Intl.DateTimeFormat('en-US', {
     weekday: 'long',
     month: 'long',
     day: 'numeric',
-    ...(includeYear ? { year: 'numeric' as const } : {}),
+    ...(showYear ? { year: 'numeric' as const } : {}),
     timeZone,
   }).format(new Date(iso));
 }

@@ -12,7 +12,7 @@ import {
   resolveMatchTab,
 } from '@/lib/match';
 import { formTable, headToHeadCoverageLabel, nextFixtures } from '@/lib/season';
-import { buildTeamDirectory, teamVisual } from '@/lib/teams';
+import { buildTeamDirectory, matchDocumentTitle, teamVisual } from '@/lib/teams';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,8 +21,17 @@ export async function generateMetadata({
 }: {
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const match = await api.fixture((await params).id);
-  return { title: `${match.home_team_name} vs ${match.away_team_name}` };
+  const id = (await params).id;
+  const [match, teams] = await Promise.all([api.fixture(id), api.teams()]);
+  return {
+    title: matchDocumentTitle(
+      buildTeamDirectory(teams),
+      match.home_team_id,
+      match.home_team_name,
+      match.away_team_id,
+      match.away_team_name,
+    ),
+  };
 }
 
 export default async function Match({

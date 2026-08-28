@@ -33,7 +33,7 @@ function FixtureRow({
   fixture,
   teams,
   dateIso,
-  includeYear = false,
+  includeYear,
 }: {
   fixture: Fixture;
   teams: TeamDirectory;
@@ -78,7 +78,7 @@ function FixtureDays({
   items,
   teams,
   dateOnCard = false,
-  includeYear = false,
+  includeYear,
 }: {
   items: readonly Fixture[];
   teams: TeamDirectory;
@@ -113,20 +113,24 @@ export function MatchdaySnapshot({
   items,
   periodLabel,
   teams,
-  includeYear = false,
+  includeYear,
+  dateOnCard = false,
+  empty = 'No matches are available for this round.',
 }: {
   items: readonly Fixture[];
   periodLabel?: string;
   teams: TeamDirectory;
   includeYear?: boolean;
+  dateOnCard?: boolean;
+  empty?: string;
 }) {
-  if (!items.length) return <p className="empty">No matches are available for this round.</p>;
+  if (!items.length) return <p className="empty">{empty}</p>;
 
-  if (periodLabel) {
+  if (periodLabel || dateOnCard) {
     return (
       <div className="fixture-period-list">
         <section className="fixture-period">
-          <h2 className="fixture-period-title">{periodLabel}</h2>
+          {periodLabel ? <h2 className="fixture-period-title">{periodLabel}</h2> : null}
           <div className="round-list round-list--cards">
             <FixtureDays dateOnCard includeYear={includeYear} items={items} teams={teams} />
           </div>

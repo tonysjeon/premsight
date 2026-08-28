@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { Fixture } from '@/lib/api';
-import { recentTeamForm, type TeamFormMatch } from '@/lib/season';
+import { recentTeamForm, TEAM_FORM_LIMIT, type TeamFormMatch } from '@/lib/season';
 import { matchdayTeamLabel, teamVisual, type TeamDirectory, type TeamVisual } from '@/lib/teams';
 
 const RESULT_LABEL = { W: 'won', D: 'drew', L: 'lost' } as const;
@@ -22,8 +22,8 @@ export function MatchTeamForm({
   excludeFixtureId: string;
   teams: TeamDirectory;
 }) {
-  const homeForm = recentTeamForm(fixtures, homeTeamId, 5, excludeFixtureId);
-  const awayForm = recentTeamForm(fixtures, awayTeamId, 5, excludeFixtureId);
+  const homeForm = recentTeamForm(fixtures, homeTeamId, TEAM_FORM_LIMIT, excludeFixtureId);
+  const awayForm = recentTeamForm(fixtures, awayTeamId, TEAM_FORM_LIMIT, excludeFixtureId);
   if (!homeForm.length && !awayForm.length) return null;
 
   return (
@@ -31,6 +31,7 @@ export function MatchTeamForm({
       <h3 className="prediction-section-title prediction-section-title--center">Team form</h3>
       <div className="team-form-grid">
         <TeamFormColumn entries={homeForm} team={home} teams={teams} />
+        <span aria-hidden="true" className="team-form-rule" />
         <TeamFormColumn entries={awayForm} team={away} teams={teams} />
       </div>
     </div>
