@@ -32,6 +32,11 @@ export type DayGroup = { key: string; label: string; fixtures: Fixture[] };
 export type VenueFilter = 'all' | 'home' | 'away';
 export type FixturePeriod = { key: string; label: string; fixtures: Fixture[] };
 
+/** Team-hub fixture list size; the fixtures page By Team view still uses the default of 8. */
+export const TEAM_FIXTURE_PAGE_SIZE = 10;
+/** Match-hub Team form list size per club. */
+export const TEAM_FORM_LIMIT = 5;
+
 const SEASON_YEAR = /^(\d{4})\s*[/–-]\s*(\d{2}|\d{4})$/;
 
 /** Compact football season, e.g. `2022/2023` → `2022/23`. */
@@ -131,6 +136,33 @@ export function groupByTwoMonthPeriod(fixtures: readonly Fixture[], size = 8): F
     periods.push({ key: String(periods.length), label, fixtures: periodFixtures });
   }
   return periods;
+}
+
+/**
+ * The fixture block a visitor most likely wants: the one with the next unplayed match,
+ * or the last block once every remaining fixture is completed or cancelled.
+ */
+export function defaultPeriodIndex(periods: readonly FixturePeriod[]): number {
+  if (!periods.length) return 0;
+  const upcoming = periods.findIndex((period) =>
+    period.fixtures.some(
+      (fixture) => fixture.status !== 'completed' && fixture.status !== 'cancelled',
+    ),
+  );
+  return upcoming >= 0 ? upcoming : periods.length - 1;
+}
+
+/** Accepts an untrusted query value and falls back to the default fixture block. */
+export function resolvePeriodIndex(
+  periods: readonly FixturePeriod[],
+  requested: string | string[] | undefined,
+): number {
+  const raw = Array.isArray(requested) ? requested[0] : requested;
+  if (raw !== undefined && /^\d{1,2}$/.test(raw)) {
+    const parsed = Number.parseInt(raw, 10);
+    if (parsed >= 0 && parsed < periods.length) return parsed;
+  }
+  return defaultPeriodIndex(periods);
 }
 
 export function matchdays(fixtures: readonly Fixture[]): number[] {
@@ -299,7 +331,7 @@ function resultFor(fixture: Fixture, teamId: string): ResultMark {
 export function recentTeamForm(
   fixtures: readonly Fixture[],
   teamId: string,
-  limit = 5,
+  limit = TEAM_FORM_LIMIT,
   excludeFixtureId?: string,
 ): TeamFormMatch[] {
   return fixtures

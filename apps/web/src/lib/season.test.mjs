@@ -1,10 +1,15 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
+  TEAM_FIXTURE_PAGE_SIZE,
+  TEAM_FORM_LIMIT,
+  defaultPeriodIndex,
   formTable,
+  groupByTwoMonthPeriod,
   headToHeadCoverageLabel,
   matchRoundLabel,
   recentTeamForm,
+  resolvePeriodIndex,
   roundOptionLabel,
   seasonYearLabel,
 } from './season.ts';
@@ -131,6 +136,17 @@ test('recentTeamForm lists newest completed matches first and skips the open fix
   assert.deepEqual(recentTeamForm(fixtures, 'MUN', 5), []);
 });
 
+test('recentTeamForm caps each club at five matches', () => {
+  const fixtures = Array.from({ length: 6 }, (_, index) =>
+    match({
+      id: `m${index + 1}`,
+      kickoff_at: `2026-08-${String(15 + index).padStart(2, '0')}T14:00:00Z`,
+    }),
+  );
+  assert.equal(recentTeamForm(fixtures, 'ARS').length, TEAM_FORM_LIMIT);
+  assert.equal(TEAM_FORM_LIMIT, 5);
+});
+
 test('seasonYearLabel shortens a four-digit season span', () => {
   assert.equal(seasonYearLabel('2022/2023'), '2022/23');
   assert.equal(seasonYearLabel('2022/23'), '2022/23');
@@ -158,6 +174,60 @@ test('matchRoundLabel uses Matchday now and Round plus year for past seasons', (
     'Premier League, 2022/23',
   );
   assert.equal(matchRoundLabel('Premier League', null, '2026/2027', true), 'Premier League');
+});
+
+test("groupByTwoMonthPeriod paginates a team's fixtures into labelled blocks", () => {
+  const fixtures = Array.from({ length: 21 }, (_, index) =>
+    match({
+      id: `m${index + 1}`,
+      kickoff_at: new Date(Date.UTC(2026, 7, 15 + index, 14)).toISOString(),
+    }),
+  );
+  const pages = groupByTwoMonthPeriod(fixtures, TEAM_FIXTURE_PAGE_SIZE);
+  assert.equal(pages.length, 3);
+  assert.equal(pages[0].fixtures.length, 10);
+  assert.equal(pages[1].fixtures.length, 10);
+  assert.equal(pages[2].fixtures.length, 1);
+  assert.equal(pages[0].label, 'Aug 15 – Aug 24');
+});
+
+test('resolvePeriodIndex prefers the block with the next unplayed fixture', () => {
+  const periods = groupByTwoMonthPeriod(
+    [
+      match({ id: 'played', kickoff_at: '2026-08-15T14:00:00Z' }),
+      match({
+        id: 'next',
+        kickoff_at: '2026-09-15T14:00:00Z',
+        status: 'scheduled',
+        home_score: null,
+        away_score: null,
+      }),
+      match({
+        id: 'later',
+        kickoff_at: '2026-10-15T14:00:00Z',
+        status: 'scheduled',
+        home_score: null,
+        away_score: null,
+      }),
+    ],
+    1,
+  );
+  assert.equal(defaultPeriodIndex(periods), 1);
+  assert.equal(resolvePeriodIndex(periods, '0'), 0);
+  assert.equal(resolvePeriodIndex(periods, '9'), 1);
+  assert.equal(resolvePeriodIndex(periods, 'nope'), 1);
+});
+
+test('defaultPeriodIndex uses the last block when the season is complete', () => {
+  const periods = groupByTwoMonthPeriod(
+    [
+      match({ id: 'm1', kickoff_at: '2026-08-15T14:00:00Z' }),
+      match({ id: 'm2', kickoff_at: '2026-09-15T14:00:00Z' }),
+    ],
+    1,
+  );
+  assert.equal(defaultPeriodIndex(periods), 1);
+  assert.equal(defaultPeriodIndex([]), 0);
 });
 
 test('headToHeadCoverageLabel uses the earliest stored season', () => {
