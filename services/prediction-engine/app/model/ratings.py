@@ -42,16 +42,51 @@ def calculate_ratings(results: list[MatchResult]) -> RatingSet:
 
     teams: dict[str, TeamRating] = {}
     for team_id, team in totals.items():
-        if team.home_matches == 0 or team.away_matches == 0:
+        if team.home_matches == 0 and team.away_matches == 0:
             continue
+        total_matches = team.home_matches + team.away_matches
+        overall_attack = (
+            ((team.home_for + team.away_for) / total_matches)
+            / ((league_home_average + league_away_average) / 2)
+            if total_matches > 0
+            else 1.0
+        )
+        overall_defense = (
+            ((team.home_against + team.away_against) / total_matches)
+            / ((league_home_average + league_away_average) / 2)
+            if total_matches > 0
+            else 1.0
+        )
+
+        home_attack = (
+            (team.home_for / team.home_matches) / league_home_average
+            if team.home_matches > 0
+            else overall_attack
+        )
+        home_defense = (
+            (team.home_against / team.home_matches) / league_away_average
+            if team.home_matches > 0
+            else overall_defense
+        )
+        away_attack = (
+            (team.away_for / team.away_matches) / league_away_average
+            if team.away_matches > 0
+            else overall_attack
+        )
+        away_defense = (
+            (team.away_against / team.away_matches) / league_home_average
+            if team.away_matches > 0
+            else overall_defense
+        )
+
         teams[team_id] = TeamRating(
             team_id=team_id,
             home_matches=team.home_matches,
             away_matches=team.away_matches,
-            home_attack=(team.home_for / team.home_matches) / league_home_average,
-            home_defense=(team.home_against / team.home_matches) / league_away_average,
-            away_attack=(team.away_for / team.away_matches) / league_away_average,
-            away_defense=(team.away_against / team.away_matches) / league_home_average,
+            home_attack=home_attack,
+            home_defense=home_defense,
+            away_attack=away_attack,
+            away_defense=away_defense,
         )
     return RatingSet(
         league_home_average=league_home_average,

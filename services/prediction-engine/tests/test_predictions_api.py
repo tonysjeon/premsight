@@ -20,7 +20,7 @@ def test_prediction_endpoint_returns_versioned_probabilities() -> None:
     payload = response.json()
     assert payload["model_version"] == "poisson-v1"
     assert abs(sum(payload["outcomes"].values()) - 1) < 1e-12
-    assert len(payload["likely_scores"]) == 3
+    assert len(payload["likely_scores"]) == 5
 
 
 def test_prediction_endpoint_reports_insufficient_history() -> None:
@@ -28,7 +28,7 @@ def test_prediction_endpoint_reports_insufficient_history() -> None:
         "/v1/predict",
         json={
             "home_team_id": "A",
-            "away_team_id": "B",
+            "away_team_id": "UNKNOWN",
             "results": [
                 {
                     "home_team_id": "A",
@@ -41,4 +41,4 @@ def test_prediction_endpoint_reports_insufficient_history() -> None:
     )
 
     assert response.status_code == 422
-    assert "lacks home or away history" in response.json()["detail"]
+    assert "lacks" in response.json()["detail"]

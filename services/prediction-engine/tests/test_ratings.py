@@ -22,15 +22,15 @@ def test_ratings_and_expected_goals_are_finite_and_deterministic() -> None:
     assert ratings.teams["A"].away_matches == 2
 
 
-def test_empty_or_one_sided_history_is_rejected() -> None:
+def test_empty_or_unknown_team_history_is_rejected() -> None:
     with pytest.raises(InsufficientHistoryError, match="at least one"):
         calculate_ratings([])
 
     ratings = calculate_ratings(
         [MatchResult(home_team_id="A", away_team_id="B", home_score=1, away_score=1)]
     )
-    with pytest.raises(InsufficientHistoryError, match="lacks home or away history"):
-        expected_goals(ratings, "A", "B")
+    with pytest.raises(InsufficientHistoryError, match="lacks"):
+        expected_goals(ratings, "A", "UNKNOWN")
 
 
 def test_zero_scoring_league_is_rejected() -> None:

@@ -45,7 +45,7 @@ def outcome_probabilities(matrix: np.ndarray) -> OutcomeProbabilities:
     )
 
 
-def most_likely_scores(matrix: np.ndarray, limit: int = 3) -> tuple[ScoreProbability, ...]:
+def most_likely_scores(matrix: np.ndarray, limit: int = 5) -> tuple[ScoreProbability, ...]:
     if limit < 1:
         raise ValueError("limit must be positive")
     scores = [
