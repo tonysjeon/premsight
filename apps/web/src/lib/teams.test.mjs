@@ -34,5 +34,8 @@ test('matchDocumentTitle uses the same display labels as the match board', () =>
     ),
     "Brighton vs Nott'm Forest",
   );
-  assert.equal(matchDocumentTitle(undefined, 'a', 'Arsenal FC', 'c', 'Chelsea FC'), 'Arsenal vs Chelsea');
+  assert.equal(
+    matchDocumentTitle(undefined, 'a', 'Arsenal FC', 'c', 'Chelsea FC'),
+    'Arsenal vs Chelsea',
+  );
 });
