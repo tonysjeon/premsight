@@ -34,7 +34,7 @@ export function LocalKickoffRelative({ value }: { value: string }) {
 
 export function LocalDayLabel({
   value,
-  includeYear = false,
+  includeYear,
 }: {
   value: string;
   includeYear?: boolean;
