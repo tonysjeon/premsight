@@ -21,9 +21,8 @@ PremSight will eventually provide fixtures, live matches, standings, team pages,
                     └──────────────────────┘
 
                     ┌──────────────────────┐
-                    │ ingestion (structure)│
-                    │ provider integration │
-                    │ deferred             │
+                    │ ingestion            │
+                    │ (scheduler + CLI)    │
                     └──────────────────────┘
 ```
 
@@ -36,7 +35,7 @@ Services stay loosely coupled. Prediction logic lives only in `services/predicti
 | Frontend          | Next.js (App Router), TypeScript, Tailwind CSS, ESLint, Prettier |
 | API               | Python 3.12, FastAPI, uv                                         |
 | Prediction engine | FastAPI, NumPy, pandas, SciPy                                    |
-| Ingestion         | FastAPI (structure only)                                         |
+| Ingestion         | FastAPI, scheduled fixture refresh, uv                           |
 | Data              | PostgreSQL 16, Redis 7                                           |
 | Tooling           | pnpm workspaces, Docker Compose, GitHub Actions                  |
 
@@ -48,7 +47,7 @@ premsight/
 ├── services/
 │   ├── api/                   # Primary HTTP API
 │   ├── prediction-engine/     # Isolated prediction service
-│   └── ingestion/             # Future data ingestion
+│   └── ingestion/             # Provider sync and fixture refresh scheduler
 ├── packages/
 │   ├── shared-types/          # Shared TypeScript contracts
 │   └── database/              # SQL migrations, seeds, and schema tests
@@ -75,6 +74,8 @@ premsight/
 cp .env.example .env
 ```
 
+Set `FOOTBALL_DATA_API_TOKEN` in `.env` so Compose can refresh fixtures. Without it, the ingestion service stays healthy and skips the scheduler.
+
 ### 2. Start with Docker Compose
 
 ```bash
@@ -86,10 +87,11 @@ docker compose up --build
 | Web                      | http://localhost:3000        |
 | API health               | http://localhost:8000/health |
 | Prediction engine health | http://localhost:8001/health |
+| Ingestion health         | http://localhost:8002/health |
 | PostgreSQL               | localhost:5433               |
 | Redis                    | localhost:6379               |
 
-Ingestion is scaffolded under `services/ingestion` but is not part of Compose yet.
+Compose starts a fixture refresh job in the ingestion service: one sync at startup, then every 15 minutes for the current Premier League season. Manual backfill remains available via `premsight-ingest`.
 
 ### 3. Native development (optional)
 
@@ -118,7 +120,13 @@ uv run uvicorn app.main:app --reload --port 8001
 
 ```bash
 cd services/ingestion && uv sync
-uv run uvicorn app.main:app --reload --port 8002
+uv run uvicorn app.main:app --host 0.0.0.0 --port 8002
+```
+
+Omit `--reload` when the scheduler is enabled so code reloads do not replay provider requests. The CLI still runs an immediate one-off sync:
+
+```bash
+uv run premsight-ingest historical-season --competition PL --season 2026
 ```
 
 ## Quality checks

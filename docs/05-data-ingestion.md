@@ -13,12 +13,13 @@ The first historical-data slice imports one Premier League season from `football
 - scheduled fixtures and completed results
 - stable mappings between provider IDs and PremSight UUIDs
 
-Standings are derived from completed fixtures. Live events, lineups, scheduled jobs, and public ingestion endpoints remain out of scope.
+Standings are derived from completed fixtures. Live events, lineups, and public ingestion write endpoints remain out of scope.
 
 ## Architecture
 
 ```text
 CLI/manual trigger
+Interval scheduler (ingestion process)
       │
       ▼
 HistoricalSyncService ──▶ FootballDataProvider (HTTP + normalization)
@@ -27,21 +28,29 @@ HistoricalSyncService ──▶ FootballDataProvider (HTTP + normalization)
 PostgresHistoricalRepository ──▶ PostgreSQL
 ```
 
-The sync service consumes normalized provider models. It does not inspect vendor JSON. Provider adapters own authentication, HTTP behavior, status mapping, and payload validation. The repository owns transactions, provider-reference resolution, and database upserts.
+The sync service consumes normalized provider models. It does not inspect vendor JSON. Provider adapters own authentication, HTTP behavior, status mapping, and payload validation. The repository owns transactions, provider-reference resolution, and database upserts. The scheduler and CLI call the same sync path.
 
-## Initial provider decision
+## Providers
 
-`football-data.org` v4 is the initial adapter because it exposes Premier League teams and competition matches with season filters through a small REST surface. The provider remains replaceable; no external identifier is used as a PremSight primary key.
+1. `football-data.org` v4 — Primary REST provider for current season, live fixtures, and schedule refreshes.
+2. `openfootball` — Open public-domain data provider (`https://github.com/openfootball/england`) used to seed multiple historical Premier League seasons (e.g. 2021/22 through 2024/25) for Head-to-Head records and training match prediction models. Normalized via `OpenFootballProvider` in `app/providers/openfootball.py`.
+
+## Architecture
 
 Before production use, confirm that the selected plan and license allow the intended historical retention and public display. Provider credentials must only be supplied through environment variables.
 
 Configuration:
 
-| Variable                  | Required | Purpose                                      |
-| ------------------------- | -------- | -------------------------------------------- |
-| `FOOTBALL_DATA_API_TOKEN` | yes      | Sent as the provider `X-Auth-Token` header   |
-| `FOOTBALL_DATA_BASE_URL`  | no       | Defaults to the provider v4 production URL   |
-| `DATABASE_URL`            | yes      | PostgreSQL connection used by the repository |
+| Variable                    | Required | Purpose                                                                |
+| --------------------------- | -------- | ---------------------------------------------------------------------- |
+| `FOOTBALL_DATA_API_TOKEN`   | yes      | Sent as the provider `X-Auth-Token` header                             |
+| `FOOTBALL_DATA_BASE_URL`    | no       | Defaults to the provider v4 production URL                             |
+| `DATABASE_URL`              | yes      | PostgreSQL connection used by the repository                           |
+| `SCHEDULE_ENABLED`          | no       | Run the fixture refresh loop in the ingestion process (default: true)  |
+| `SCHEDULE_INTERVAL_SECONDS` | no       | Seconds between refreshes; minimum 60 (default: 900, 15 minutes)       |
+| `SCHEDULE_RUN_ON_STARTUP`   | no       | Sync once immediately when the process starts (default: true)          |
+| `INGEST_COMPETITION`        | no       | Competition code for the scheduled job (default: `PL`)                 |
+| `INGEST_SEASON_START_YEAR`  | no       | Override season start year; default is the current Premier League year |
 
 ## Normalized contract
 
@@ -80,7 +89,28 @@ Unknown statuses fail validation instead of silently producing incorrect match s
 - Do not retry authentication, permission, or malformed-payload failures.
 - Log job start, completion counts, provider, competition, season, and failures without logging credentials or full provider payloads.
 
-The initial manual sync performs two coarse provider requests—teams and matches—to stay within the provider's documented request limits. Scheduling and distributed rate limiting are deferred until automated jobs are introduced.
+The initial sync performs two coarse provider requests—teams and matches—to stay within the provider's documented request limits (10 requests per minute on the registered free plan). Distributed rate limiting across multiple ingestion replicas is out of scope; run a single ingestion process.
+
+## Scheduled fixture refresh
+
+The ingestion service owns the job. Product API, web, and prediction-engine processes do not call the provider.
+
+When `SCHEDULE_ENABLED` is true and `FOOTBALL_DATA_API_TOKEN` is set, the process:
+
+1. Optionally runs one sync at startup
+2. Replays the current competition season on a fixed interval
+3. Skips a tick if the previous run is still in progress
+4. Logs failures and waits for the next interval instead of exiting
+
+The current Premier League season start year is August-based in UTC: on or after 1 August the year is `Y`; before that it is `Y - 1`. Set `INGEST_SEASON_START_YEAR` only to pin a specific season.
+
+This job refreshes delayed full-time results and remaining fixtures. It is not a live match feed. In-play events remain a later phase.
+
+Docker Compose starts this scheduler with the rest of the stack. The CLI remains the operator path for backfill and ad-hoc replays:
+
+```bash
+uv run premsight-ingest historical-season --competition PL --season 2026
+```
 
 ## Historical backfill
 
@@ -130,6 +160,7 @@ Automated scheduling is a deployment concern; daily refresh is the recommended i
 | Vendor payload validation | provider adapter     |
 | Normalization             | provider adapter     |
 | Idempotent persistence    | ingestion repository |
+| Scheduled fixture refresh | ingestion            |
 | Product reads             | API                  |
 | Prediction calculations   | prediction-engine    |
 

@@ -35,6 +35,8 @@ services:
     build:
       context: ./services/api
       dockerfile: Dockerfile
+      additional_contexts:
+        database: ./packages/database
     restart: unless-stopped
     environment:
       ENVIRONMENT: ${ENVIRONMENT:-development}
@@ -43,6 +45,7 @@ services:
       PORT: ${API_PORT:-8000}
       DATABASE_URL: ${DATABASE_URL:-postgresql://premsight:premsight@postgres:5432/premsight}
       REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      PREDICTION_ENGINE_URL: ${PREDICTION_ENGINE_URL:-http://prediction-engine:8001}
       CORS_ORIGINS: ${API_CORS_ORIGINS:-http://localhost:3000}
     ports:
       - '${API_PORT:-8000}:8000'
@@ -51,6 +54,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      prediction-engine:
+        condition: service_started
     networks:
       - premsight
 
@@ -66,6 +71,33 @@ services:
       PORT: ${PREDICTION_ENGINE_PORT:-8001}
     ports:
       - '${PREDICTION_ENGINE_PORT:-8001}:8001'
+    networks:
+      - premsight
+
+  ingestion:
+    build:
+      context: ./services/ingestion
+      dockerfile: Dockerfile
+      additional_contexts:
+        database: ./packages/database
+    restart: unless-stopped
+    environment:
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      HOST: ${INGESTION_HOST:-0.0.0.0}
+      PORT: ${INGESTION_PORT:-8002}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-premsight}:${POSTGRES_PASSWORD:-premsight}@postgres:5432/${POSTGRES_DB:-premsight}
+      FOOTBALL_DATA_API_TOKEN: ${FOOTBALL_DATA_API_TOKEN:-}
+      FOOTBALL_DATA_BASE_URL: ${FOOTBALL_DATA_BASE_URL:-https://api.football-data.org/v4}
+      SCHEDULE_ENABLED: ${SCHEDULE_ENABLED:-true}
+      SCHEDULE_INTERVAL_SECONDS: ${SCHEDULE_INTERVAL_SECONDS:-900}
+      SCHEDULE_RUN_ON_STARTUP: ${SCHEDULE_RUN_ON_STARTUP:-true}
+      INGEST_COMPETITION: ${INGEST_COMPETITION:-PL}
+    ports:
+      - '${INGESTION_PORT:-8002}:8002'
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - premsight
 
