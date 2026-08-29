@@ -1,3 +1,5 @@
+import { getApiBase } from '@/lib/api-base';
+
 export type DraftPosition = 'GK' | 'DEF' | 'MID' | 'FWD';
 export type DetailedDraftPosition =
   | DraftPosition
@@ -33,7 +35,7 @@ export type DraftPlayer = {
   teamCrestUrl: string | null;
 };
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
+const API_BASE = getApiBase();
 const POSITIONS = new Set<DraftPosition>(['GK', 'DEF', 'MID', 'FWD']);
 const DETAILED_POSITIONS = new Set<DetailedDraftPosition>([
   'GK',

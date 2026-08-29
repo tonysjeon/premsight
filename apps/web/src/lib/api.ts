@@ -1,7 +1,6 @@
-const BASE =
-  (typeof window === 'undefined'
-    ? (process.env.INTERNAL_API_URL ?? process.env.NEXT_PUBLIC_API_URL)
-    : process.env.NEXT_PUBLIC_API_URL) ?? 'http://localhost:8000';
+import { getApiBase } from '@/lib/api-base';
+
+const BASE = getApiBase();
 export type Season = {
   id: string;
   name: string;
