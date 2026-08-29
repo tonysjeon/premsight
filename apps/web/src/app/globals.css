@@ -205,30 +205,31 @@ button:focus-visible {
 }
 
 .site-header-league-identity {
-  display: grid;
-  grid-template-columns: auto max-content;
-  align-items: stretch;
-  column-gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   flex: none;
+  min-width: 0;
 }
 
 .site-header-league-copy {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .site-header-league-identity .site-header-league-mark {
   display: block;
   box-sizing: border-box;
-  align-self: stretch;
-  width: auto;
-  height: auto;
-  aspect-ratio: 1;
-  min-width: 0;
-  min-height: 0;
-  margin-block: 4px;
+  flex: none;
+  width: 2.35em;
+  height: 2.35em;
+  min-width: 2.35em;
+  min-height: 2.35em;
+  margin: 0;
   overflow: hidden;
   color: var(--text);
+  font-size: 1.35rem;
 }
 
 .site-header-league-name {
@@ -3904,7 +3905,14 @@ button.draft-slot {
 .match-board .crest--hero {
   width: 44px;
   height: 44px;
-  border-radius: 999px;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.match-board .crest--hero:not(.crest--image),
+.team-identity .crest--hero:not(.crest--image) {
+  border-radius: 18px;
+  overflow: hidden;
 }
 
 .match-board-centre {
@@ -3998,8 +4006,8 @@ button.draft-slot {
 .team-identity .crest--hero {
   width: 56px;
   height: 56px;
-  border-radius: 999px;
-  overflow: hidden;
+  border-radius: 0;
+  overflow: visible;
 }
 
 .team-page .matchday-navigation {
@@ -4648,11 +4656,15 @@ button.draft-slot {
   }
 
   .site-header-league-identity {
-    column-gap: 9px;
+    gap: 8px;
   }
 
   .site-header-league-identity .site-header-league-mark {
-    margin-block: 3px;
+    width: 2.2em;
+    height: 2.2em;
+    min-width: 2.2em;
+    min-height: 2.2em;
+    font-size: 1.08rem;
   }
 
   .site-header-league-name {
@@ -4692,11 +4704,15 @@ button.draft-slot {
     }
 
     .site-header-league-identity {
-      column-gap: 7px;
+      gap: 7px;
     }
 
     .site-header-league-identity .site-header-league-mark {
-      margin-block: 2px;
+      width: 2.05em;
+      height: 2.05em;
+      min-width: 2.05em;
+      min-height: 2.05em;
+      font-size: 0.95rem;
     }
 
     .site-header-league-name {
