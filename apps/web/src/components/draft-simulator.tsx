@@ -584,7 +584,10 @@ export function DraftSimulator({
   } | null>(null);
   const suppressClickRef = useRef(false);
   const slotsRef = useRef(slots);
-  slotsRef.current = slots;
+
+  useEffect(() => {
+    slotsRef.current = slots;
+  }, [slots]);
 
   useEffect(() => {
     if (!dragSourceId) return;

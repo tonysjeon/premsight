@@ -48,18 +48,18 @@ Rules:
 
 ## Repository map
 
-| Path | Role |
-| --- | --- |
-| `apps/web` | Next.js 16 App Router UI (`@premsight/web`) |
-| `services/api` | Product HTTP API (port 8000) |
-| `services/prediction-engine` | Isolated `poisson-v1` (port 8001) |
-| `services/ingestion` | Provider sync, scheduler, `premsight-ingest` CLI (port 8002) |
-| `packages/database` | SQL migrations, seeds, `premsight-db` CLI, schema tests |
-| `packages/shared-types` | Intended shared TS contracts; currently `HealthResponse` only |
-| `infrastructure/` | Future IaC — unused |
-| `.github/workflows/ci.yml` | Frontend, backend, database, and Postgres integration jobs |
-| `docker-compose.yml` | Full local stack |
-| `.cursor/rules.md` | Short engineering principles (same intent as this file) |
+| Path                         | Role                                                          |
+| ---------------------------- | ------------------------------------------------------------- |
+| `apps/web`                   | Next.js 16 App Router UI (`@premsight/web`)                   |
+| `services/api`               | Product HTTP API (port 8000)                                  |
+| `services/prediction-engine` | Isolated `poisson-v1` (port 8001)                             |
+| `services/ingestion`         | Provider sync, scheduler, `premsight-ingest` CLI (port 8002)  |
+| `packages/database`          | SQL migrations, seeds, `premsight-db` CLI, schema tests       |
+| `packages/shared-types`      | Intended shared TS contracts; currently `HealthResponse` only |
+| `infrastructure/`            | Future IaC — unused                                           |
+| `.github/workflows/ci.yml`   | Frontend, backend, database, and Postgres integration jobs    |
+| `docker-compose.yml`         | Full local stack                                              |
+| `.cursor/rules.md`           | Short engineering principles (same intent as this file)       |
 
 Python services use `uv` and `app/` packages. The API and ingestion Docker builds take `packages/database` as an additional build context.
 
@@ -72,14 +72,14 @@ cp .env.example .env   # set FOOTBALL_DATA_API_TOKEN for scheduled fixture refre
 docker compose up --build
 ```
 
-| Service | URL / port |
-| --- | --- |
-| Web | http://localhost:3000 |
-| API | http://localhost:8000 (`GET /health`) |
-| Prediction | http://localhost:8001 (`GET /health`) |
-| Ingestion | http://localhost:8002 (`GET /health`) |
+| Service    | URL / port                                                                           |
+| ---------- | ------------------------------------------------------------------------------------ |
+| Web        | http://localhost:3000                                                                |
+| API        | http://localhost:8000 (`GET /health`)                                                |
+| Prediction | http://localhost:8001 (`GET /health`)                                                |
+| Ingestion  | http://localhost:8002 (`GET /health`)                                                |
 | PostgreSQL | **localhost:5433** (container 5432) — 5433 avoids clashing with other local Postgres |
-| Redis | localhost:6379 |
+| Redis      | localhost:6379                                                                       |
 
 Native web: `pnpm install` then `pnpm dev:web`. Native Python: `cd services/<name> && uv sync` then uvicorn as in the README.
 
@@ -115,18 +115,18 @@ Standings are **derived from completed fixtures**, not a stored table. League ta
 
 Prefix `/v1`. Persistence via `FootballRepository` (psycopg, dict rows). CORS from `API_CORS_ORIGINS`.
 
-| Method | Path | Notes |
-| --- | --- | --- |
-| GET | `/health` | `{ status, service }` |
-| GET | `/v1/seasons/current` | 404 if none |
-| GET | `/v1/seasons` | `{ items, count }` |
-| GET | `/v1/teams` | optional `season_id` |
-| GET | `/v1/teams/{id}` | includes that team's fixtures |
-| GET | `/v1/fixtures` | `season_id`, `status`, `team_id` |
-| GET | `/v1/fixtures/{id}` | includes `events` |
-| GET | `/v1/fixtures/{id}/prediction` | proxies prediction engine; 422/503 on insufficient history / down |
-| GET | `/v1/standings?season_id=` | computed |
-| GET | `/v1/player-snapshots/latest` | Draft XI catalog |
+| Method | Path                           | Notes                                                             |
+| ------ | ------------------------------ | ----------------------------------------------------------------- |
+| GET    | `/health`                      | `{ status, service }`                                             |
+| GET    | `/v1/seasons/current`          | 404 if none                                                       |
+| GET    | `/v1/seasons`                  | `{ items, count }`                                                |
+| GET    | `/v1/teams`                    | optional `season_id`                                              |
+| GET    | `/v1/teams/{id}`               | includes that team's fixtures                                     |
+| GET    | `/v1/fixtures`                 | `season_id`, `status`, `team_id`                                  |
+| GET    | `/v1/fixtures/{id}`            | includes `events`                                                 |
+| GET    | `/v1/fixtures/{id}/prediction` | proxies prediction engine; 422/503 on insufficient history / down |
+| GET    | `/v1/standings?season_id=`     | computed                                                          |
+| GET    | `/v1/player-snapshots/latest`  | Draft XI catalog                                                  |
 
 The web client maps 422/503 on prediction to `null` (hide the module, do not error the page).
 
@@ -166,14 +166,14 @@ Stack: Next.js App Router, React 19, TypeScript **strict**, Tailwind 4, Manrope,
 
 Routes:
 
-| Path | Purpose |
-| --- | --- |
-| `/` | Overview: table snapshot + selected matchday |
-| `/table` | Full table |
-| `/fixtures` | Fixtures / results |
-| `/matches/[id]` | Match hub (hero, H2H, form, prediction) |
-| `/teams/[id]` | Team hub |
-| `/draft` | Draft XI simulator |
+| Path            | Purpose                                      |
+| --------------- | -------------------------------------------- |
+| `/`             | Overview: table snapshot + selected matchday |
+| `/table`        | Full table                                   |
+| `/fixtures`     | Fixtures / results                           |
+| `/matches/[id]` | Match hub (hero, H2H, form, prediction)      |
+| `/teams/[id]`   | Team hub                                     |
+| `/draft`        | Draft XI simulator                           |
 
 Season is a `?season=` query on Overview / Table / Fixtures. Match and team pages and Draft hide that season chrome. Preserve `season` when linking those list routes.
 
@@ -214,14 +214,14 @@ Do not merge with failing tests. CI matches the commands above plus Postgres int
 
 ## Where to put new work
 
-| Change | Put it here |
-| --- | --- |
-| SQL / constraints / seeds | `packages/database` + tests |
-| Provider fetch / mapping / scheduler | `services/ingestion` |
-| Product HTTP + SQL reads | `services/api` |
-| Model math, new model version | `services/prediction-engine` only |
-| Pages, components, client UX | `apps/web` |
-| Cross-language DTO | Prefer extending `packages/shared-types` rather than duplicating; until then keep web types in `api.ts` in sync with API JSON |
+| Change                               | Put it here                                                                                                                   |
+| ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| SQL / constraints / seeds            | `packages/database` + tests                                                                                                   |
+| Provider fetch / mapping / scheduler | `services/ingestion`                                                                                                          |
+| Product HTTP + SQL reads             | `services/api`                                                                                                                |
+| Model math, new model version        | `services/prediction-engine` only                                                                                             |
+| Pages, components, client UX         | `apps/web`                                                                                                                    |
+| Cross-language DTO                   | Prefer extending `packages/shared-types` rather than duplicating; until then keep web types in `api.ts` in sync with API JSON |
 
 Do not add a new service or package without a clear boundary and tests.
 

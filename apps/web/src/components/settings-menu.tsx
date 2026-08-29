@@ -1,19 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useSyncExternalStore } from 'react';
 import { IoMoon, IoSunny } from 'react-icons/io5';
-import { applyTheme, isTheme, readStoredTheme, type Theme } from '@/lib/theme';
+import { applyTheme, getServerThemeSnapshot, getThemeSnapshot, subscribeTheme } from '@/lib/theme';
 
 export function SettingsMenu() {
   const pickerRef = useRef<HTMLDetailsElement>(null);
-  const [theme, setTheme] = useState<Theme>('dark');
-
-  useEffect(() => {
-    const current = document.documentElement.dataset.theme;
-    const next = isTheme(current) ? current : readStoredTheme();
-    setTheme(next);
-    applyTheme(next);
-  }, []);
+  const theme = useSyncExternalStore(subscribeTheme, getThemeSnapshot, getServerThemeSnapshot);
 
   useEffect(() => {
     const picker = pickerRef.current;
@@ -61,7 +54,6 @@ export function SettingsMenu() {
                 aria-pressed={theme === 'light'}
                 type="button"
                 onClick={() => {
-                  setTheme('light');
                   applyTheme('light');
                 }}
               >
@@ -73,7 +65,6 @@ export function SettingsMenu() {
                 aria-pressed={theme === 'dark'}
                 type="button"
                 onClick={() => {
-                  setTheme('dark');
                   applyTheme('dark');
                 }}
               >

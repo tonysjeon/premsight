@@ -91,7 +91,12 @@ html[data-theme='light'] .table-page-overview .league-table--overview tbody tr.i
   background: color-mix(in srgb, var(--accent) 22%, var(--surface));
 }
 
-html[data-theme='light'] .table-page-overview .league-table--overview tbody tr.is-match-team:hover td {
+html[data-theme='light']
+  .table-page-overview
+  .league-table--overview
+  tbody
+  tr.is-match-team:hover
+  td {
   background: color-mix(in srgb, var(--accent) 30%, var(--surface-hover));
 }
 
