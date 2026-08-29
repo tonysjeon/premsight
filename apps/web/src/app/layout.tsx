@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import '@fontsource-variable/manrope';
 import { SiteHeader } from '@/components/site-header';
 import { api } from '@/lib/api';
+import { seasonPublicId } from '@/lib/public-id';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -15,7 +16,10 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const seasonNavigation = await Promise.all([api.currentSeason(), api.seasons()])
-    .then(([currentSeason, seasons]) => ({ currentSeasonId: currentSeason.id, seasons }))
+    .then(([currentSeason, seasons]) => ({
+      currentSeasonId: seasonPublicId(currentSeason),
+      seasons,
+    }))
     .catch(() => ({ currentSeasonId: null, seasons: [] }));
 
   return (

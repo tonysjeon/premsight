@@ -25,6 +25,20 @@ Prediction = Annotated[PredictionClient, Depends(prediction_client)]
 Status = Literal["scheduled", "live", "postponed", "cancelled", "completed"]
 
 
+def _season_id(repo: FootballRepository, key: str) -> UUID:
+    season_id = repo.resolve_season_id(key)
+    if season_id is None:
+        raise HTTPException(404, "Season not found")
+    return season_id
+
+
+def _team_id(repo: FootballRepository, key: str) -> UUID:
+    team_id = repo.resolve_team_id(key)
+    if team_id is None:
+        raise HTTPException(404, "Team not found")
+    return team_id
+
+
 @router.get("/seasons/current")
 def current_season(repo: Repo) -> dict:
     item = repo.current_season()
@@ -40,28 +54,32 @@ def seasons(repo: Repo) -> dict:
 
 
 @router.get("/teams")
-def teams(repo: Repo, season_id: UUID | None = None) -> dict:
-    items = repo.teams(season_id)
+def teams(repo: Repo, season_id: str | None = None) -> dict:
+    items = repo.teams(None if season_id is None else _season_id(repo, season_id))
     return {"items": items, "count": len(items)}
 
 
 @router.get("/teams/{team_id}")
-def team(team_id: UUID, repo: Repo) -> dict:
+def team(team_id: str, repo: Repo) -> dict:
     item = repo.team(team_id)
     if item is None:
         raise HTTPException(404, "Team not found")
-    item["fixtures"] = repo.fixtures(team_id=team_id)
+    item["fixtures"] = repo.fixtures(team_id=_team_id(repo, team_id))
     return item
 
 
 @router.get("/fixtures")
 def fixtures(
     repo: Repo,
-    season_id: UUID | None = None,
+    season_id: str | None = None,
     status: Annotated[Status | None, Query()] = None,
-    team_id: UUID | None = None,
+    team_id: str | None = None,
 ) -> dict:
-    items = repo.fixtures(season_id, status, team_id)
+    items = repo.fixtures(
+        None if season_id is None else _season_id(repo, season_id),
+        status,
+        None if team_id is None else _team_id(repo, team_id),
+    )
     return {"items": items, "count": len(items)}
 
 
@@ -90,8 +108,8 @@ def fixture_prediction(fixture_id: UUID, repo: Repo, client: Prediction) -> dict
 
 
 @router.get("/standings")
-def standings(season_id: UUID, repo: Repo) -> dict:
-    items = repo.standings(season_id)
+def standings(season_id: str, repo: Repo) -> dict:
+    items = repo.standings(_season_id(repo, season_id))
     return {"items": items, "count": len(items)}
 
 

@@ -5,8 +5,9 @@ import { KickoffTime, LocalKickoffFact, LocalKickoffRelative } from '@/component
 import { MatchBack } from '@/components/match-back';
 import { TeamBadge } from '@/components/team-badge';
 import type { Fixture } from '@/lib/api';
+import { teamPath } from '@/lib/public-id';
 import { matchRoundLabel } from '@/lib/season';
-import { matchdayTeamLabel, type TeamVisual } from '@/lib/teams';
+import { matchdayTeamLabel, type TeamDirectory, type TeamVisual } from '@/lib/teams';
 
 function centreCopy(match: Fixture): { primary: ReactNode; secondary: ReactNode } {
   if (match.status === 'completed') {
@@ -40,6 +41,7 @@ export function MatchHero({
   competitionName,
   seasonName,
   isCurrentSeason = true,
+  teams,
   children,
 }: {
   match: Fixture;
@@ -48,6 +50,7 @@ export function MatchHero({
   competitionName: string;
   seasonName?: string;
   isCurrentSeason?: boolean;
+  teams?: TeamDirectory;
   children?: ReactNode;
 }) {
   const centre = centreCopy(match);
@@ -77,7 +80,7 @@ export function MatchHero({
         ) : null}
       </ul>
       <div className="match-board">
-        <Link className="match-board-team" href={`/teams/${match.home_team_id}`}>
+        <Link className="match-board-team" href={teamPath(teams, match.home_team_id)}>
           <TeamBadge size="hero" visual={home} />
           <span className="match-board-team-name">{matchdayTeamLabel(home)}</span>
         </Link>
@@ -89,7 +92,7 @@ export function MatchHero({
         </div>
         <Link
           className="match-board-team match-board-team--away"
-          href={`/teams/${match.away_team_id}`}
+          href={teamPath(teams, match.away_team_id)}
         >
           <TeamBadge size="hero" visual={away} />
           <span className="match-board-team-name">{matchdayTeamLabel(away)}</span>

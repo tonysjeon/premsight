@@ -3954,7 +3954,7 @@ button.draft-slot {
   justify-content: flex-start;
   gap: 36px;
   margin: 20px -18px 0;
-  padding: 6px 18px 0 32px;
+  padding: 6px 18px 0;
 }
 
 .match-tabs a {
@@ -3998,11 +3998,6 @@ button.draft-slot {
   overflow: hidden;
 }
 
-.team-fixtures {
-  padding: 0 0 12px;
-  overflow: hidden;
-}
-
 .team-page .match-hero {
   padding-inline: 32px;
 }
@@ -4019,7 +4014,7 @@ button.draft-slot {
 
 .team-page .matchday-navigation {
   min-height: 64px;
-  padding: 14px 20px;
+  padding: 13px var(--pad);
   gap: 12px;
   grid-template-columns: 38px minmax(0, 1fr) 38px;
 }
@@ -4054,17 +4049,22 @@ button.draft-slot {
   border-radius: var(--radius);
 }
 
+.match-panel.team-fixtures {
+  padding: 0 0 12px;
+  overflow: hidden;
+}
+
 .match-panel--table {
   padding: 8px 0 12px;
   overflow: hidden;
 }
 
 .match-panel--h2h {
-  padding: 8px 22px 8px;
+  padding: 8px 18px 8px;
 }
 
 .match-panel--prediction {
-  padding: 8px 22px 20px;
+  padding: 8px 18px 20px;
 }
 
 .match-model-version {
@@ -4346,8 +4346,8 @@ button.draft-slot {
   display: flex;
   align-items: center;
   min-height: 50px;
-  margin-inline: -22px;
-  padding: 12px 22px;
+  margin-inline: -18px;
+  padding: 12px 18px;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }

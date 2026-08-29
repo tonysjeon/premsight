@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { FormGuide } from '@/components/form-guide';
 import { TeamBadge } from '@/components/team-badge';
 import type { Fixture, Standing } from '@/lib/api';
+import { teamPath } from '@/lib/public-id';
 import type { ResultMark } from '@/lib/season';
 import { matchdayTeamLabel, teamVisual, type TeamDirectory } from '@/lib/teams';
 
@@ -177,7 +178,7 @@ export function Table({
                   {row.position}
                 </td>
                 <td className="col-team">
-                  <Link className="team-cell" href={`/teams/${row.team_id}`}>
+                  <Link className="team-cell" href={teamPath(teams, row.team_id)}>
                     <TeamBadge visual={visual} />
                     <span>{tableLabelFor(teams, row)}</span>
                   </Link>
@@ -331,7 +332,7 @@ function OverviewTable({
                 {row.position}
               </td>
               <td className="col-team">
-                <Link className="team-cell" href={`/teams/${row.team_id}`}>
+                <Link className="team-cell" href={teamPath(teams, row.team_id)}>
                   <TeamBadge visual={visual} />
                   <span>{tableLabelFor(teams, row)}</span>
                 </Link>

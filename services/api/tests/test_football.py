@@ -93,7 +93,10 @@ def test_core_read_endpoints(client: TestClient) -> None:
     seasons = client.get("/v1/seasons").json()
     assert seasons["count"] == 1
     assert seasons["items"][0]["id"] == str(ids["season"])
-    teams = client.get("/v1/teams", params={"season_id": ids["season"]}).json()
+    assert seasons["items"][0]["slug"] == "2026-27"
+    teams = client.get("/v1/teams", params={"season_id": "2026-27"}).json()
+    assert {team["slug"] for team in teams["items"]} == {"ars", "che"}
+    assert client.get("/v1/teams/ars").status_code == 200
     assert teams["count"] == 2
     fixtures = client.get("/v1/fixtures", params={"status": "completed"}).json()
     assert fixtures["count"] == 1
@@ -104,7 +107,7 @@ def test_core_read_endpoints(client: TestClient) -> None:
     assert match["events"][0]["minute"] == 12
     assert "events" not in fixtures["items"][0]
     assert len(client.get(f"/v1/teams/{ids['home']}").json()["fixtures"]) == 1
-    table = client.get("/v1/standings", params={"season_id": ids["season"]}).json()
+    table = client.get("/v1/standings", params={"season_id": "2026-27"}).json()
     assert [(row["team_name"], row["points"]) for row in table["items"]] == [
         ("Arsenal", 3),
         ("Chelsea", 0),
