@@ -35,8 +35,6 @@ services:
     build:
       context: ./services/api
       dockerfile: Dockerfile
-      additional_contexts:
-        database: ./packages/database
     restart: unless-stopped
     environment:
       ENVIRONMENT: ${ENVIRONMENT:-development}
