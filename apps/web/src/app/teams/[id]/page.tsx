@@ -14,7 +14,7 @@ import {
   resolvePeriodIndex,
 } from '@/lib/season';
 import { resolveTeamTab } from '@/lib/team-page';
-import { buildTeamDirectory, shortenName, teamVisual } from '@/lib/teams';
+import { buildTeamDirectory, tableTeamLabel, teamVisual } from '@/lib/teams';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,7 +23,8 @@ export async function generateMetadata({
 }: {
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  return { title: (await api.team((await params).id)).name };
+  const team = await api.team((await params).id);
+  return { title: tableTeamLabel(teamVisual(buildTeamDirectory([team]), team.id, team.name)) };
 }
 
 export default async function TeamPage({
@@ -60,7 +61,7 @@ export default async function TeamPage({
     <main className="shell match-page team-page">
       <TeamHero
         competitionName={currentSeason.competition_name}
-        name={shortenName(team.name)}
+        name={tableTeamLabel(visual)}
         visual={visual}
       >
         <TeamTabs teamId={publicId} value={tab} />

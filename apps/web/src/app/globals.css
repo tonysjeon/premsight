@@ -4003,6 +4003,21 @@ button.draft-slot {
   font-weight: 700;
 }
 
+.team-identity-place {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 1rem;
+}
+
+.team-identity-place svg {
+  display: block;
+  width: 15px;
+  height: 15px;
+  flex: none;
+  fill: currentColor;
+}
+
 .team-identity .crest--hero {
   width: 56px;
   height: 56px;

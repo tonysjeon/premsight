@@ -63,6 +63,41 @@ const MATCHDAY_TEAM_LABELS: Readonly<Record<string, string>> = {
   NOT: 'Nottm Forest',
 };
 
+const TEAM_CITIES: Readonly<Record<string, string>> = {
+  ARS: 'London',
+  AVL: 'Birmingham',
+  BHA: 'Brighton',
+  BOU: 'Bournemouth',
+  BRE: 'London',
+  BUR: 'Burnley',
+  CHE: 'London',
+  COV: 'Coventry',
+  CRY: 'London',
+  EVE: 'Liverpool',
+  FUL: 'London',
+  HUL: 'Hull',
+  IPS: 'Ipswich',
+  LEE: 'Leeds',
+  LIV: 'Liverpool',
+  MCI: 'Manchester',
+  MUN: 'Manchester',
+  NEW: 'Newcastle',
+  NOT: 'Nottingham',
+  SUN: 'Sunderland',
+  TOT: 'London',
+  WHU: 'London',
+  WOL: 'Wolverhampton',
+};
+
+const TABLE_TEAM_LABELS: Readonly<Record<string, string>> = {
+  BHA: 'Brighton & Hove Albion',
+  MCI: 'Manchester City',
+  MUN: 'Manchester United',
+  NEW: 'Newcastle United',
+  NOT: 'Nottingham Forest',
+  TOT: 'Tottenham Hotspur',
+};
+
 const NAME_NOISE = /^(afc|fc)$|^&$/i;
 
 export type TeamDirectory = ReadonlyMap<string, Team>;
@@ -92,10 +127,16 @@ export type TeamVisual = {
   color: string;
   textColor: string;
   crestUrl?: string | null;
+  city?: string | null;
 };
 
 export function matchdayTeamLabel(visual: Pick<TeamVisual, 'abbr' | 'label'>): string {
   return MATCHDAY_TEAM_LABELS[visual.abbr] ?? visual.label;
+}
+
+/** League-table display name; also used for the team hub document title. */
+export function tableTeamLabel(visual: Pick<TeamVisual, 'abbr' | 'label'>): string {
+  return TABLE_TEAM_LABELS[visual.abbr] ?? visual.label;
 }
 
 /** Browser title for a match hub; same labels as the match board. */
@@ -126,6 +167,7 @@ export function teamVisual(
     color,
     textColor: readableTextOn(color),
     crestUrl: CREST_OVERRIDES[abbr] ?? team?.crest_url,
+    city: TEAM_CITIES[abbr] ?? null,
   };
 }
 
