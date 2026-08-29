@@ -1,6 +1,12 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { buildTeamDirectory, matchDocumentTitle, shortenName } from './teams.ts';
+import {
+  buildTeamDirectory,
+  matchDocumentTitle,
+  shortenName,
+  tableTeamLabel,
+  teamVisual,
+} from './teams.ts';
 
 test('shortenName drops FC boilerplate', () => {
   assert.equal(shortenName('Arsenal FC'), 'Arsenal');
@@ -37,5 +43,35 @@ test('matchDocumentTitle uses the same display labels as the match board', () =>
   assert.equal(
     matchDocumentTitle(undefined, 'a', 'Arsenal FC', 'c', 'Chelsea FC'),
     'Arsenal vs Chelsea',
+  );
+});
+
+test('teamVisual exposes the club city for the team hub', () => {
+  const directory = buildTeamDirectory([
+    {
+      id: 'mci',
+      name: 'Manchester City FC',
+      short_name: 'Man City',
+      tla: 'MCI',
+      crest_url: null,
+    },
+  ]);
+  assert.equal(teamVisual(directory, 'mci', 'Manchester City FC').city, 'Manchester');
+  assert.equal(teamVisual(undefined, 'unknown', 'Some Club FC').city, null);
+});
+
+test('tableTeamLabel matches the league table display name', () => {
+  const directory = buildTeamDirectory([
+    {
+      id: 'mci',
+      name: 'Manchester City Football Club',
+      short_name: 'Man City',
+      tla: 'MCI',
+      crest_url: null,
+    },
+  ]);
+  assert.equal(
+    tableTeamLabel(teamVisual(directory, 'mci', 'Manchester City Football Club')),
+    'Manchester City',
   );
 });
