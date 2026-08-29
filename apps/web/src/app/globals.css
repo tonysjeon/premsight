@@ -162,7 +162,7 @@ button:focus-visible {
 .site-header {
   position: sticky;
   top: 0;
-  z-index: 20;
+  z-index: 40;
   padding-bottom: 0;
   background: var(--header);
 }
@@ -237,6 +237,8 @@ button:focus-visible {
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1.15;
+  position: relative;
+  top: 1px;
 }
 
 .site-header-league-country {
@@ -2471,15 +2473,6 @@ button.draft-slot {
   color: var(--muted);
 }
 
-.draft-formation-stage {
-  position: relative;
-  min-height: 760px;
-}
-
-.draft-formation-stage > .draft-board {
-  min-height: inherit;
-}
-
 .draft-captain-stage {
   position: relative;
   min-height: 840px;
@@ -2490,13 +2483,14 @@ button.draft-slot {
 }
 
 .draft-captain-overlay {
-  position: absolute;
-  z-index: 3;
+  position: fixed;
+  z-index: 30;
   inset: 0;
   display: grid;
   place-items: center;
   padding: 24px;
-  border-radius: var(--radius);
+  overflow-y: auto;
+  border-radius: 0;
   background: #07100b9e;
   backdrop-filter: blur(2px);
   pointer-events: auto;
@@ -2530,13 +2524,6 @@ button.draft-slot {
 }
 
 .draft-formation-overlay {
-  position: absolute;
-  z-index: 3;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  padding: 24px;
-  border-radius: var(--radius);
   background: #07100bbd;
   backdrop-filter: blur(3px);
 }
@@ -4716,7 +4703,7 @@ button.draft-slot {
   }
 
   .draft-captain-overlay {
-    padding: 22% 10px 16px;
+    padding: 22vh 10px 16px;
     align-content: start;
     place-items: stretch;
   }
@@ -4841,10 +4828,6 @@ button.draft-slot {
 
   .draft-choice-grid--captains > :last-child:nth-child(odd) {
     grid-column: auto;
-  }
-
-  .draft-formation-overlay {
-    padding: 8px;
   }
 
   .draft-formation-modal {
