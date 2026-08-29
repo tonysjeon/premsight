@@ -33,6 +33,7 @@ function SiteHeaderContent({
     seasonId ? `${path}?season=${encodeURIComponent(seasonId)}` : path;
   const hideSeasonNav =
     pathname === '/draft' || pathname.startsWith('/matches/') || pathname.startsWith('/teams/');
+  const isHome = SEASON_ROUTES.includes(pathname);
   const leagueName = selectedSeason?.competition_name ?? 'Premier League';
 
   return (
@@ -45,7 +46,7 @@ function SiteHeaderContent({
             </Link>
             <div className="site-header-actions">
               <Link
-                aria-current={pathname === '/' ? 'page' : undefined}
+                aria-current={isHome ? 'page' : undefined}
                 className="header-nav-link"
                 href={href('/')}
               >

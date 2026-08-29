@@ -22,6 +22,7 @@
   --radius: 20px;
   --radius-sm: 11px;
   --pad: 14px;
+  --page-card-pad-x: 40px;
   --chip: #343534;
   --chip-hover: #404140;
   --chip-ink: #f4f4f4;
@@ -190,7 +191,7 @@ button:focus-visible {
   gap: 22px;
   min-height: 156px;
   margin-top: 16px;
-  padding: 28px 40px 0;
+  padding: 28px var(--page-card-pad-x) 0;
   border-radius: var(--radius);
   background: var(--surface);
 }
@@ -205,16 +206,15 @@ button:focus-visible {
 
 .site-header-league-identity {
   display: grid;
-  grid-template-columns: min-content auto;
+  grid-template-columns: auto max-content;
   align-items: stretch;
   column-gap: 12px;
-  min-width: 0;
+  flex: none;
 }
 
 .site-header-league-copy {
   display: flex;
   flex-direction: column;
-  min-width: 0;
 }
 
 .site-header-league-identity .site-header-league-mark {
@@ -239,6 +239,7 @@ button:focus-visible {
   line-height: 1.15;
   position: relative;
   top: 1px;
+  white-space: nowrap;
 }
 
 .site-header-league-country {
@@ -318,13 +319,6 @@ button:focus-visible {
 
 .header-nav-link:hover {
   color: var(--text);
-}
-
-.header-nav-link[aria-current='page'] {
-  color: var(--text);
-  text-decoration: underline;
-  text-underline-offset: 5px;
-  text-decoration-thickness: 2px;
 }
 
 .settings-picker {
@@ -1605,6 +1599,16 @@ button:focus-visible {
 
 .next-opponent:hover {
   background: var(--surface-sunken);
+}
+
+.table-page-overview .league-table--overview td.col-next {
+  overflow: visible;
+}
+
+.table-page-overview .next-opponent::after {
+  left: auto;
+  right: 0;
+  transform: none;
 }
 
 .next-none {
@@ -3715,7 +3719,7 @@ button.draft-slot {
 }
 
 .match-hero {
-  padding: 0 18px 0;
+  padding: 0 var(--page-card-pad-x) 0;
   overflow: hidden;
   background: var(--surface);
   border: 0;
@@ -3728,8 +3732,8 @@ button.draft-slot {
   align-items: center;
   gap: 12px;
   min-height: 60px;
-  margin: 0 -18px;
-  padding: 0 18px;
+  margin: 0 calc(-1 * var(--page-card-pad-x));
+  padding: 0 var(--page-card-pad-x);
   border-bottom: 1px solid var(--line);
 }
 
@@ -3811,8 +3815,8 @@ button.draft-slot {
   flex-wrap: wrap;
   justify-content: center;
   gap: 8px 18px;
-  margin: 0 -18px 20px;
-  padding: 14px 18px;
+  margin: 0 calc(-1 * var(--page-card-pad-x)) 20px;
+  padding: 14px var(--page-card-pad-x);
   border-bottom: 1px solid var(--line);
   list-style: none;
   color: var(--muted);
@@ -3953,8 +3957,8 @@ button.draft-slot {
   display: flex;
   justify-content: flex-start;
   gap: 36px;
-  margin: 20px -18px 0;
-  padding: 6px 18px 0;
+  margin: 20px calc(-1 * var(--page-card-pad-x)) 0;
+  padding: 6px var(--page-card-pad-x) 0;
 }
 
 .match-tabs a {
@@ -3996,20 +4000,6 @@ button.draft-slot {
   height: 56px;
   border-radius: 999px;
   overflow: hidden;
-}
-
-.team-page .match-hero {
-  padding-inline: 32px;
-}
-
-.team-page .match-toolbar {
-  margin-inline: -32px;
-  padding-inline: 32px;
-}
-
-.team-page .match-tabs {
-  margin-inline: -32px;
-  padding-inline: 32px;
 }
 
 .team-page .matchday-navigation {
@@ -4056,7 +4046,7 @@ button.draft-slot {
 
 .match-panel--table {
   padding: 8px 0 12px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .match-panel--h2h {
@@ -4597,6 +4587,10 @@ button.draft-slot {
 }
 
 @media (max-width: 620px) {
+  :root {
+    --page-card-pad-x: 18px;
+  }
+
   .shell {
     width: min(1160px, calc(100% - 36px));
   }
@@ -4605,7 +4599,7 @@ button.draft-slot {
     width: 100%;
     min-height: 156px;
     margin-top: 18px;
-    padding: 22px 18px 0;
+    padding: 22px var(--page-card-pad-x) 0;
     border-radius: 0;
   }
 
@@ -4649,6 +4643,10 @@ button.draft-slot {
     padding: 0;
   }
 
+  .site-header-league {
+    gap: 12px;
+  }
+
   .site-header-league-identity {
     column-gap: 9px;
   }
@@ -4678,6 +4676,49 @@ button.draft-slot {
   .site-header-card .nav-tabs {
     width: 100%;
     gap: 24px;
+  }
+
+  @media (max-width: 360px) {
+    :root {
+      --page-card-pad-x: 12px;
+    }
+
+    .site-header-card {
+      padding-inline: var(--page-card-pad-x);
+    }
+
+    .site-header-league {
+      gap: 8px;
+    }
+
+    .site-header-league-identity {
+      column-gap: 7px;
+    }
+
+    .site-header-league-identity .site-header-league-mark {
+      margin-block: 2px;
+    }
+
+    .site-header-league-name {
+      font-size: 0.95rem;
+    }
+
+    .site-header-league-country {
+      margin-top: 2px;
+      font-size: 0.62rem;
+    }
+
+    .site-header-card .season-select {
+      font-size: 0.7rem;
+    }
+
+    .site-header-card .season-select summary {
+      padding: 4px 24px 4px 10px;
+    }
+
+    .site-header-card .season-select summary svg {
+      right: 8px;
+    }
   }
 
   .draft-board-head {
