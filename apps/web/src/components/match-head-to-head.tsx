@@ -117,7 +117,7 @@ export function MatchHeadToHead({
                       </span>
                       <TeamBadge visual={meetingHome} />
                       <strong>
-                        {meeting.home_score} - {meeting.away_score}
+                        {meeting.home_score}–{meeting.away_score}
                       </strong>
                       <TeamBadge visual={meetingAway} />
                       <span className="h2h-meeting-team">{matchdayTeamLabel(meetingAway)}</span>

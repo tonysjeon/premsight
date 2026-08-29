@@ -7,6 +7,7 @@ export function MatchBack() {
 
   return (
     <button
+      aria-label="Back"
       className="match-back"
       type="button"
       onClick={() => {
@@ -22,7 +23,7 @@ export function MatchBack() {
           <path d="m10 3.5-4.5 4.5 4.5 4.5" />
         </svg>
       </span>
-      Back
+      <span className="match-back-label">Back</span>
     </button>
   );
 }

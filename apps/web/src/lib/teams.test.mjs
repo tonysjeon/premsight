@@ -32,7 +32,7 @@ test('matchDocumentTitle uses the same display labels as the match board', () =>
       'not',
       'Nottingham Forest FC',
     ),
-    "Brighton vs Nott'm Forest",
+    'Brighton vs Nottm Forest',
   );
   assert.equal(
     matchDocumentTitle(undefined, 'a', 'Arsenal FC', 'c', 'Chelsea FC'),
