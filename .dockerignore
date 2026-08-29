@@ -21,6 +21,4 @@ dist
 .cursor
 docs
 infrastructure
-services
-packages/database
 pnpm-debug.log*
