@@ -36,6 +36,8 @@ export type FixturePeriod = { key: string; label: string; fixtures: Fixture[] };
 export const TEAM_FIXTURE_PAGE_SIZE = 10;
 /** Match-hub Team form list size per club. */
 export const TEAM_FORM_LIMIT = 5;
+/** Home overview row count at the 620px mobile breakpoint. */
+export const OVERVIEW_MOBILE_ROWS = 10;
 
 const SEASON_YEAR = /^(\d{4})\s*[/–-]\s*(\d{2}|\d{4})$/;
 

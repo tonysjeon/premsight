@@ -1,7 +1,14 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useMemo, useState, type DragEvent as ReactDragEvent } from 'react';
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type DragEvent as ReactDragEvent,
+  type PointerEvent as ReactPointerEvent,
+} from 'react';
 import { scoreDraft } from '@/lib/draft-score';
 import type { DetailedDraftPosition, DraftPlayer, DraftPosition } from '@/lib/fpl';
 
@@ -20,6 +27,18 @@ type SquadSlot = {
   detailedPosition: DetailedDraftPosition | null;
   player: DraftPlayer | null;
 };
+
+const POINTER_DRAG_THRESHOLD = 10;
+
+function slotIdFromPoint(x: number, y: number, ignoreId: string): string | null {
+  const hit = document.elementsFromPoint(x, y);
+  for (const node of hit) {
+    const slot = node instanceof Element ? node.closest('[data-slot-id]') : null;
+    const id = slot?.getAttribute('data-slot-id');
+    if (id && id !== ignoreId) return id;
+  }
+  return null;
+}
 
 const FORMATIONS: readonly Formation[] = [
   {
@@ -336,6 +355,7 @@ function StarterPitch({
   onDragOver,
   onDragStart,
   onDrop,
+  onPointerDown,
   onSlot,
   slots,
   swapSourceId,
@@ -347,6 +367,7 @@ function StarterPitch({
   onDragOver: (event: ReactDragEvent<HTMLButtonElement>, slot: SquadSlot) => void;
   onDragStart: (event: ReactDragEvent<HTMLButtonElement>, slot: SquadSlot) => void;
   onDrop: (event: ReactDragEvent<HTMLButtonElement>, slot: SquadSlot) => void;
+  onPointerDown: (event: ReactPointerEvent<HTMLButtonElement>, slot: SquadSlot) => void;
   onSlot: (slot: SquadSlot) => void;
   slots: readonly SquadSlot[];
   swapSourceId: string | null;
@@ -367,12 +388,14 @@ function StarterPitch({
             {lineSlots.map((slot) => (
               <button
                 className={`draft-slot ${slot.player ? `draft-slot--filled ${ratingCardClass(slot.player.eaRating)}` : ''} ${swapSourceId === slot.id ? 'draft-slot--swap' : ''} ${dragSourceId === slot.id ? 'draft-slot--dragging' : ''} ${dragTargetId === slot.id ? 'draft-slot--drop-target' : ''}`}
+                data-slot-id={slot.id}
                 draggable={Boolean(slot.player)}
                 key={slot.id}
                 onDragEnd={onDragEnd}
                 onDragOver={(event) => onDragOver(event, slot)}
                 onDragStart={(event) => onDragStart(event, slot)}
                 onDrop={(event) => onDrop(event, slot)}
+                onPointerDown={(event) => onPointerDown(event, slot)}
                 onClick={() => onSlot(slot)}
                 type="button"
               >
@@ -399,6 +422,86 @@ function StarterPitch({
         );
       })}
     </div>
+  );
+}
+
+function SquadBench({
+  benchFilled,
+  dragSourceId,
+  dragTargetId,
+  inert,
+  onDragEnd,
+  onDragOver,
+  onDragStart,
+  onDrop,
+  onPointerDown,
+  onSlot,
+  reserveFilled,
+  slots,
+  swapSourceId,
+}: {
+  benchFilled: number;
+  dragSourceId: string | null;
+  dragTargetId: string | null;
+  inert?: boolean;
+  onDragEnd: () => void;
+  onDragOver: (event: ReactDragEvent<HTMLButtonElement>, slot: SquadSlot) => void;
+  onDragStart: (event: ReactDragEvent<HTMLButtonElement>, slot: SquadSlot) => void;
+  onDrop: (event: ReactDragEvent<HTMLButtonElement>, slot: SquadSlot) => void;
+  onPointerDown: (event: ReactPointerEvent<HTMLButtonElement>, slot: SquadSlot) => void;
+  onSlot: (slot: SquadSlot) => void;
+  reserveFilled: number;
+  slots: readonly SquadSlot[];
+  swapSourceId: string | null;
+}) {
+  return (
+    <aside className="draft-squad-side" inert={inert ? true : undefined}>
+      {(['bench', 'reserve'] as const).map((group) => (
+        <section
+          aria-label={group === 'bench' ? 'Substitutes' : 'Reserves'}
+          className="draft-squad-group"
+          key={group}
+        >
+          <div className="draft-squad-slots" data-group={group}>
+            {slots
+              .filter((slot) => slot.group === group)
+              .map((slot) => (
+                <button
+                  className={`draft-squad-slot ${slot.player ? `draft-squad-slot--filled ${ratingCardClass(slot.player.eaRating)}` : ''} ${swapSourceId === slot.id ? 'draft-slot--swap' : ''} ${dragSourceId === slot.id ? 'draft-slot--dragging' : ''} ${dragTargetId === slot.id ? 'draft-slot--drop-target' : ''}`}
+                  data-slot-id={slot.id}
+                  draggable={Boolean(slot.player)}
+                  key={slot.id}
+                  onDragEnd={onDragEnd}
+                  onDragOver={(event) => onDragOver(event, slot)}
+                  onDragStart={(event) => onDragStart(event, slot)}
+                  onDrop={(event) => onDrop(event, slot)}
+                  onPointerDown={(event) => onPointerDown(event, slot)}
+                  onClick={() => onSlot(slot)}
+                  type="button"
+                >
+                  {slot.player ? (
+                    <>
+                      <PlayerCardArtwork compact player={slot.player} />
+                      <strong>{slot.player.displayName}</strong>
+                    </>
+                  ) : (
+                    <>
+                      <PremSightCardMark />
+                      <strong>{group === 'bench' ? 'SUB' : 'RES'}</strong>
+                    </>
+                  )}
+                </button>
+              ))}
+          </div>
+        </section>
+      ))}
+      <p
+        aria-label={`${benchFilled} of 7 substitutes, ${reserveFilled} of 5 reserves`}
+        className="draft-squad-fill"
+      >
+        {benchFilled} / 7 SUB | {reserveFilled} / 5 RES
+      </p>
+    </aside>
   );
 }
 
@@ -467,6 +570,24 @@ export function DraftSimulator({
   const [dragSourceId, setDragSourceId] = useState<string | null>(null);
   const [dragTargetId, setDragTargetId] = useState<string | null>(null);
   const [isResultOpen, setIsResultOpen] = useState(false);
+  const [pointerGhost, setPointerGhost] = useState<{
+    name: string;
+    x: number;
+    y: number;
+  } | null>(null);
+  const pointerDragRef = useRef<{
+    active: boolean;
+    pointerId: number;
+    sourceId: string;
+    startX: number;
+    startY: number;
+  } | null>(null);
+  const suppressClickRef = useRef(false);
+  const slotsRef = useRef(slots);
+
+  useEffect(() => {
+    slotsRef.current = slots;
+  }, [slots]);
 
   useEffect(() => {
     if (!dragSourceId) return;
@@ -521,6 +642,8 @@ export function DraftSimulator({
       ),
     });
   }, [slots]);
+  const benchFilled = slots.filter((slot) => slot.group === 'bench' && slot.player).length;
+  const reserveFilled = slots.filter((slot) => slot.group === 'reserve' && slot.player).length;
   const activeSlot = slots.find((slot) => slot.id === activeSlotId) ?? null;
   const offers = useMemo(() => {
     if (!activeSlot || activeSlot.player) return [];
@@ -565,7 +688,7 @@ export function DraftSimulator({
   };
 
   const swapOccupiedSlots = (sourceId: string, targetSlot: SquadSlot) => {
-    const source = slots.find((item) => item.id === sourceId);
+    const source = slotsRef.current.find((item) => item.id === sourceId);
     if (!source || !canSwap(source, targetSlot)) {
       setSwapMessage('Those players cannot swap because their positions are incompatible.');
       return false;
@@ -582,7 +705,7 @@ export function DraftSimulator({
   };
 
   const handleDragStart = (event: ReactDragEvent<HTMLButtonElement>, slot: SquadSlot) => {
-    if (!slot.player || activeSlot) {
+    if (!slot.player || activeSlot || pointerDragRef.current) {
       event.preventDefault();
       return;
     }
@@ -620,6 +743,82 @@ export function DraftSimulator({
     finishDrag();
   };
 
+  const clearPointerDrag = () => {
+    pointerDragRef.current = null;
+    setPointerGhost(null);
+    finishDrag();
+  };
+
+  const handlePointerDown = (event: ReactPointerEvent<HTMLButtonElement>, slot: SquadSlot) => {
+    if (event.pointerType === 'mouse') return;
+    if (!slot.player || activeSlotId) return;
+
+    event.currentTarget.draggable = false;
+    const pointerId = event.pointerId;
+    const sourceId = slot.id;
+    const startX = event.clientX;
+    const startY = event.clientY;
+    pointerDragRef.current = {
+      active: false,
+      pointerId,
+      sourceId,
+      startX,
+      startY,
+    };
+
+    const onMove = (moveEvent: PointerEvent) => {
+      if (moveEvent.pointerId !== pointerId) return;
+      const drag = pointerDragRef.current;
+      if (!drag) return;
+      const distance = Math.hypot(moveEvent.clientX - startX, moveEvent.clientY - startY);
+      if (!drag.active) {
+        if (distance < POINTER_DRAG_THRESHOLD) return;
+        drag.active = true;
+        suppressClickRef.current = true;
+        setDragSourceId(sourceId);
+        moveEvent.preventDefault();
+      }
+      const source = slotsRef.current.find((item) => item.id === sourceId);
+      setPointerGhost({
+        name: source?.player?.displayName ?? '',
+        x: moveEvent.clientX,
+        y: moveEvent.clientY,
+      });
+      const targetId = slotIdFromPoint(moveEvent.clientX, moveEvent.clientY, sourceId);
+      const target = slotsRef.current.find((item) => item.id === targetId) ?? null;
+      setDragTargetId(source && target && canSwap(source, target) ? target.id : null);
+
+      const horizontalScroller = document
+        .elementsFromPoint(moveEvent.clientX, moveEvent.clientY)
+        .map((element) => element.closest<HTMLElement>('.draft-squad-slots'))
+        .find((element): element is HTMLElement => element !== null);
+      if (horizontalScroller) {
+        const bounds = horizontalScroller.getBoundingClientRect();
+        const edgeSize = 72;
+        if (moveEvent.clientX < bounds.left + edgeSize) horizontalScroller.scrollLeft -= 18;
+        if (moveEvent.clientX > bounds.right - edgeSize) horizontalScroller.scrollLeft += 18;
+      }
+    };
+
+    const onUp = (upEvent: PointerEvent) => {
+      if (upEvent.pointerId !== pointerId) return;
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('pointercancel', onUp);
+      const drag = pointerDragRef.current;
+      if (drag?.active) {
+        const targetId = slotIdFromPoint(upEvent.clientX, upEvent.clientY, sourceId);
+        const target = slotsRef.current.find((item) => item.id === targetId);
+        if (target) swapOccupiedSlots(sourceId, target);
+      }
+      clearPointerDrag();
+    };
+
+    window.addEventListener('pointermove', onMove, { passive: false });
+    window.addEventListener('pointerup', onUp);
+    window.addEventListener('pointercancel', onUp);
+  };
+
   const handleSlot = (slot: SquadSlot) => {
     setSwapMessage('');
     if (!slot.player) {
@@ -643,6 +842,14 @@ export function DraftSimulator({
     }
     swapOccupiedSlots(swapSourceId, slot);
     setSwapSourceId(null);
+  };
+
+  const handleSlotClick = (slot: SquadSlot) => {
+    if (suppressClickRef.current) {
+      suppressClickRef.current = false;
+      return;
+    }
+    handleSlot(slot);
   };
 
   const startNewDraft = () => {
@@ -705,21 +912,38 @@ export function DraftSimulator({
 
   if (stage === 'captain') {
     return (
-      <div className="draft-captain-stage">
-        <section className="draft-board">
+      <div className="draft-squad-layout draft-captain-stage">
+        <section className="draft-board" inert>
           <StarterPitch
             captainId={null}
-            dragSourceId={dragSourceId}
-            dragTargetId={dragTargetId}
+            dragSourceId={null}
+            dragTargetId={null}
             onDragEnd={finishDrag}
             onDragOver={handleDragOver}
             onDragStart={handleDragStart}
             onDrop={handleDrop}
+            onPointerDown={handlePointerDown}
             onSlot={() => setSwapMessage('Choose your captain before filling the formation.')}
             slots={slots}
             swapSourceId={null}
           />
+          {swapMessage ? <p className="draft-captain-message">{swapMessage}</p> : null}
         </section>
+        <SquadBench
+          benchFilled={benchFilled}
+          dragSourceId={null}
+          dragTargetId={null}
+          inert
+          onDragEnd={finishDrag}
+          onDragOver={handleDragOver}
+          onDragStart={handleDragStart}
+          onDrop={handleDrop}
+          onPointerDown={handlePointerDown}
+          onSlot={() => setSwapMessage('Choose your captain before filling the formation.')}
+          reserveFilled={reserveFilled}
+          slots={slots}
+          swapSourceId={null}
+        />
         <div className="draft-captain-overlay">
           <section className="card draft-step draft-captain-step">
             <h1>Choose your captain</h1>
@@ -730,7 +954,6 @@ export function DraftSimulator({
             </div>
           </section>
         </div>
-        {swapMessage ? <p className="draft-captain-message">{swapMessage}</p> : null}
       </div>
     );
   }
@@ -746,7 +969,8 @@ export function DraftSimulator({
           onDragOver={handleDragOver}
           onDragStart={handleDragStart}
           onDrop={handleDrop}
-          onSlot={handleSlot}
+          onPointerDown={handlePointerDown}
+          onSlot={handleSlotClick}
           slots={slots}
           swapSourceId={swapSourceId}
         />
@@ -769,45 +993,21 @@ export function DraftSimulator({
         ) : null}
       </section>
 
-      <aside className="draft-squad-side" inert={activeSlot || isResultOpen ? true : undefined}>
-        {(['bench', 'reserve'] as const).map((group) => (
-          <section
-            aria-label={group === 'bench' ? 'Substitutes' : 'Reserves'}
-            className="draft-squad-group"
-            key={group}
-          >
-            <div className="draft-squad-slots" data-group={group}>
-              {slots
-                .filter((slot) => slot.group === group)
-                .map((slot) => (
-                  <button
-                    className={`draft-squad-slot ${slot.player ? `draft-squad-slot--filled ${ratingCardClass(slot.player.eaRating)}` : ''} ${swapSourceId === slot.id ? 'draft-slot--swap' : ''} ${dragSourceId === slot.id ? 'draft-slot--dragging' : ''} ${dragTargetId === slot.id ? 'draft-slot--drop-target' : ''}`}
-                    draggable={Boolean(slot.player)}
-                    key={slot.id}
-                    onDragEnd={finishDrag}
-                    onDragOver={(event) => handleDragOver(event, slot)}
-                    onDragStart={(event) => handleDragStart(event, slot)}
-                    onDrop={(event) => handleDrop(event, slot)}
-                    onClick={() => handleSlot(slot)}
-                    type="button"
-                  >
-                    {slot.player ? (
-                      <>
-                        <PlayerCardArtwork compact player={slot.player} />
-                        <strong>{slot.player.displayName}</strong>
-                      </>
-                    ) : (
-                      <>
-                        <PremSightCardMark />
-                        <strong>{group === 'bench' ? 'SUB' : 'RES'}</strong>
-                      </>
-                    )}
-                  </button>
-                ))}
-            </div>
-          </section>
-        ))}
-      </aside>
+      <SquadBench
+        benchFilled={benchFilled}
+        dragSourceId={dragSourceId}
+        dragTargetId={dragTargetId}
+        inert={Boolean(activeSlot || isResultOpen)}
+        onDragEnd={finishDrag}
+        onDragOver={handleDragOver}
+        onDragStart={handleDragStart}
+        onDrop={handleDrop}
+        onPointerDown={handlePointerDown}
+        onSlot={handleSlotClick}
+        reserveFilled={reserveFilled}
+        slots={slots}
+        swapSourceId={swapSourceId}
+      />
 
       {activeSlot ? (
         <div
@@ -821,32 +1021,33 @@ export function DraftSimulator({
           >
             <header>
               <h1>Choose a player</h1>
+              <button
+                aria-label="View squad (click and hold)"
+                className="draft-view-squad"
+                onBlur={() => setIsViewingSquad(false)}
+                onContextMenu={(event) => event.preventDefault()}
+                onKeyDown={(event) => {
+                  if (event.key === ' ' || event.key === 'Enter') setIsViewingSquad(true);
+                }}
+                onKeyUp={(event) => {
+                  if (event.key === ' ' || event.key === 'Enter') setIsViewingSquad(false);
+                }}
+                onLostPointerCapture={() => setIsViewingSquad(false)}
+                onPointerDown={(event) => {
+                  event.currentTarget.setPointerCapture(event.pointerId);
+                  setIsViewingSquad(true);
+                }}
+                onPointerUp={() => setIsViewingSquad(false)}
+                type="button"
+              >
+                View squad<span className="draft-view-squad-hint"> (click &amp; hold)</span>
+              </button>
             </header>
             <div className="draft-choice-grid draft-choice-grid--captains">
               {offers.map((player) => (
                 <PlayerChoice hideMark key={player.id} onChoose={choosePlayer} player={player} />
               ))}
             </div>
-            <button
-              className="draft-view-squad"
-              onBlur={() => setIsViewingSquad(false)}
-              onContextMenu={(event) => event.preventDefault()}
-              onKeyDown={(event) => {
-                if (event.key === ' ' || event.key === 'Enter') setIsViewingSquad(true);
-              }}
-              onKeyUp={(event) => {
-                if (event.key === ' ' || event.key === 'Enter') setIsViewingSquad(false);
-              }}
-              onLostPointerCapture={() => setIsViewingSquad(false)}
-              onPointerDown={(event) => {
-                event.currentTarget.setPointerCapture(event.pointerId);
-                setIsViewingSquad(true);
-              }}
-              onPointerUp={() => setIsViewingSquad(false)}
-              type="button"
-            >
-              View squad (click &amp; hold)
-            </button>
           </section>
         </div>
       ) : null}
@@ -883,6 +1084,11 @@ export function DraftSimulator({
               Start New Draft
             </button>
           </section>
+        </div>
+      ) : null}
+      {pointerGhost ? (
+        <div className="draft-drag-ghost" style={{ left: pointerGhost.x, top: pointerGhost.y }}>
+          {pointerGhost.name}
         </div>
       ) : null}
       {swapMessage ? <p className="draft-swap-message">{swapMessage}</p> : null}

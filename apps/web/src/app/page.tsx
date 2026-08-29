@@ -4,6 +4,7 @@ import { MatchdaySnapshot } from '@/components/matchday-snapshot';
 import { Table, TableLegend } from '@/components/table';
 import { api } from '@/lib/api';
 import {
+  OVERVIEW_MOBILE_ROWS,
   fixturesInMatchday,
   formTable,
   matchdays,
@@ -41,6 +42,7 @@ export default async function Home({
             form={formTable(fixtures, 5)}
             items={standings}
             leagueSize={standings.length}
+            mobileLimit={OVERVIEW_MOBILE_ROWS}
             nextByTeam={season.is_current ? nextFixtures(fixtures) : undefined}
             overview
             teams={directory}

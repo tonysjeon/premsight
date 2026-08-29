@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { SeasonSelect } from '@/components/season-select';
+import { SettingsMenu } from '@/components/settings-menu';
 import type { Season } from '@/lib/api';
 
 const SEASON_ROUTES = ['/', '/fixtures', '/table'];
@@ -29,21 +30,33 @@ export function SiteHeader({
     seasons.find((item) => item.id === seasonId)?.competition_name ?? 'Premier League';
 
   return (
-    <header className="site-header">
-      <div className="site-brand-bar">
-        <div className="shell home-page site-brand-row">
-          <Link className="brand" href={href('/')}>
-            PREM<span>SIGHT</span>
-          </Link>
-          <Link
-            aria-current={pathname === '/draft' ? 'page' : undefined}
-            className="draft-header-link"
-            href="/draft"
-          >
-            Draft
-          </Link>
+    <>
+      <header className="site-header">
+        <div className="site-brand-bar">
+          <div className="shell home-page site-brand-row">
+            <Link className="brand" href={href('/')}>
+              PREM<span>SIGHT</span>
+            </Link>
+            <div className="site-header-actions">
+              <Link
+                aria-current={pathname === '/' ? 'page' : undefined}
+                className="header-nav-link"
+                href={href('/')}
+              >
+                Home
+              </Link>
+              <Link
+                aria-current={pathname === '/draft' ? 'page' : undefined}
+                className="header-nav-link"
+                href="/draft"
+              >
+                Draft
+              </Link>
+              <SettingsMenu />
+            </div>
+          </div>
         </div>
-      </div>
+      </header>
       {hideSeasonNav ? null : (
         <div className="shell home-page site-header-card">
           <div className="site-header-league">
@@ -79,6 +92,6 @@ export function SiteHeader({
           </nav>
         </div>
       )}
-    </header>
+    </>
   );
 }

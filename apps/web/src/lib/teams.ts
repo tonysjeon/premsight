@@ -108,7 +108,7 @@ export function matchDocumentTitle(
 ): string {
   const home = teamVisual(directory, homeTeamId, homeTeamName);
   const away = teamVisual(directory, awayTeamId, awayTeamName);
-  return `${home.label} vs ${away.label}`;
+  return `${matchdayTeamLabel(home)} vs ${matchdayTeamLabel(away)}`;
 }
 
 export function teamVisual(

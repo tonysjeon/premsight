@@ -3,6 +3,7 @@ import test from 'node:test';
 import {
   TEAM_FIXTURE_PAGE_SIZE,
   TEAM_FORM_LIMIT,
+  OVERVIEW_MOBILE_ROWS,
   defaultPeriodIndex,
   formTable,
   groupByTwoMonthPeriod,
@@ -145,6 +146,7 @@ test('recentTeamForm caps each club at five matches', () => {
   );
   assert.equal(recentTeamForm(fixtures, 'ARS').length, TEAM_FORM_LIMIT);
   assert.equal(TEAM_FORM_LIMIT, 5);
+  assert.equal(OVERVIEW_MOBILE_ROWS, 10);
 });
 
 test('seasonYearLabel shortens a four-digit season span', () => {

@@ -6,7 +6,7 @@ import { MatchBack } from '@/components/match-back';
 import { TeamBadge } from '@/components/team-badge';
 import type { Fixture } from '@/lib/api';
 import { matchRoundLabel } from '@/lib/season';
-import type { TeamVisual } from '@/lib/teams';
+import { matchdayTeamLabel, type TeamVisual } from '@/lib/teams';
 
 function centreCopy(match: Fixture): { primary: ReactNode; secondary: ReactNode } {
   if (match.status === 'completed') {
@@ -78,8 +78,8 @@ export function MatchHero({
       </ul>
       <div className="match-board">
         <Link className="match-board-team" href={`/teams/${match.home_team_id}`}>
-          <span className="match-board-team-name">{home.label}</span>
           <TeamBadge size="hero" visual={home} />
+          <span className="match-board-team-name">{matchdayTeamLabel(home)}</span>
         </Link>
         <div className="match-board-centre">
           <strong>{centre.primary}</strong>
@@ -92,7 +92,7 @@ export function MatchHero({
           href={`/teams/${match.away_team_id}`}
         >
           <TeamBadge size="hero" visual={away} />
-          <span className="match-board-team-name">{away.label}</span>
+          <span className="match-board-team-name">{matchdayTeamLabel(away)}</span>
         </Link>
       </div>
       {children}

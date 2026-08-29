@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { TeamBadge } from '@/components/team-badge';
 import type { Fixture } from '@/lib/api';
 import { recentTeamForm, TEAM_FORM_LIMIT, type TeamFormMatch } from '@/lib/season';
 import { matchdayTeamLabel, teamVisual, type TeamDirectory, type TeamVisual } from '@/lib/teams';
@@ -68,7 +69,10 @@ function TeamFormColumn({
               className="team-form-row"
               href={`/matches/${fixture.id}`}
             >
-              <span className="team-form-name team-form-name--home">{homeName}</span>
+              <span className="team-form-name team-form-name--home">
+                <TeamBadge visual={homeSide} />
+                <span className="team-form-name-text">{homeName}</span>
+              </span>
               <span
                 className={`team-form-score team-form-score--${result.toLowerCase()}${index === 0 ? ' team-form-score--latest' : ''}`}
               >
@@ -78,7 +82,10 @@ function TeamFormColumn({
                 </span>
                 <span className="team-form-goals">{fixture.away_score}</span>
               </span>
-              <span className="team-form-name">{awayName}</span>
+              <span className="team-form-name">
+                <TeamBadge visual={awaySide} />
+                <span className="team-form-name-text">{awayName}</span>
+              </span>
             </Link>
           </li>
         );
