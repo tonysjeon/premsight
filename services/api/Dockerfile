@@ -9,9 +9,11 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 COPY --from=ghcr.io/astral-sh/uv:0.9.26 /uv /usr/local/bin/uv
 
 FROM base AS deps
-COPY pyproject.toml uv.lock README.md ./
+RUN uv venv /app/.venv
+ENV PATH="/app/.venv/bin:$PATH"
+COPY pyproject.toml README.md ./
 COPY app ./app
-RUN uv sync --no-dev --no-install-workspace
+RUN uv pip install --no-cache -r pyproject.toml
 
 FROM base AS runtime
 WORKDIR /app
