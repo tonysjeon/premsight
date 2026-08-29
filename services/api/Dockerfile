@@ -10,10 +10,16 @@ COPY --from=ghcr.io/astral-sh/uv:0.9.26 /uv /usr/local/bin/uv
 
 FROM base AS deps
 RUN uv venv /app/.venv
-ENV PATH="/app/.venv/bin:$PATH"
-COPY pyproject.toml README.md ./
-COPY app ./app
-RUN uv pip install --no-cache -r pyproject.toml
+ENV VIRTUAL_ENV=/app/.venv \
+    PATH="/app/.venv/bin:$PATH"
+# Install runtime deps by name. Reading pyproject.toml still parses the
+# monorepo path source for premsight-database, which is not in this context.
+RUN uv pip install --python /app/.venv/bin/python --no-cache \
+    "fastapi>=0.115.0" \
+    "httpx>=0.28.0" \
+    "psycopg[binary]>=3.2.0" \
+    "uvicorn[standard]>=0.34.0" \
+    "pydantic-settings>=2.8.0"
 
 FROM base AS runtime
 WORKDIR /app
