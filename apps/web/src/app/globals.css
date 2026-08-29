@@ -983,6 +983,7 @@ button:focus-visible {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  display: block;
 }
 
 /* ---------- Match rows ---------- */
@@ -4494,6 +4495,25 @@ button.draft-slot {
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  @keyframes data-surface-enter {
+    from {
+      opacity: 0.15;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  .table-scroll,
+  .round-list,
+  .fixture-period-list,
+  .match-grid,
+  .h2h-list,
+  .team-form-list {
+    animation: data-surface-enter 90ms ease-out;
+  }
+
   @keyframes draft-overlay-enter {
     from {
       opacity: 0;
