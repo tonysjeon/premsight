@@ -5,18 +5,9 @@ import { TeamBadge } from '@/components/team-badge';
 import type { Fixture, Standing } from '@/lib/api';
 import { teamPath } from '@/lib/public-id';
 import type { ResultMark } from '@/lib/season';
-import { matchdayTeamLabel, teamVisual, type TeamDirectory } from '@/lib/teams';
+import { matchdayTeamLabel, tableTeamLabel, teamVisual, type TeamDirectory } from '@/lib/teams';
 
 type Zone = 'ucl' | 'uel' | 'drop' | null;
-
-const TABLE_TEAM_LABELS: Readonly<Record<string, string>> = {
-  BHA: 'Brighton & Hove Albion',
-  MCI: 'Manchester City',
-  MUN: 'Manchester United',
-  NEW: 'Newcastle United',
-  NOT: 'Nottingham Forest',
-  TOT: 'Tottenham Hotspur',
-};
 
 const NEXT_FIXTURE_DATE = new Intl.DateTimeFormat('en-US', {
   month: 'short',
@@ -32,8 +23,7 @@ function zoneFor(position: number, leagueSize: number): Zone {
 }
 
 function tableLabelFor(teams: TeamDirectory | undefined, row: Standing): string {
-  const visual = teamVisual(teams, row.team_id, row.team_name);
-  return TABLE_TEAM_LABELS[visual.abbr] ?? visual.label;
+  return tableTeamLabel(teamVisual(teams, row.team_id, row.team_name));
 }
 
 type TableProps = {
