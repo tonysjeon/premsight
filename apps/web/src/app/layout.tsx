@@ -19,7 +19,14 @@ export default async function RootLayout({
     .catch(() => ({ currentSeasonId: null, seasons: [] }));
 
   return (
-    <html lang="en">
+    <html data-theme="dark" lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('premsight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body>
         <SiteHeader {...seasonNavigation} />
         {children}
