@@ -9,14 +9,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 COPY --from=ghcr.io/astral-sh/uv:0.9.26 /uv /usr/local/bin/uv
 
 FROM base AS deps
-# uv parses path sources even with --no-dev. Keep the monorepo-relative
-# ../../packages/database path valid inside the image.
-# Compose supplies this named context; standalone:
-#   docker build -f services/api/Dockerfile --build-context database=packages/database services/api
-COPY --from=database . /src/packages/database
 COPY pyproject.toml uv.lock README.md ./
 COPY app ./app
-RUN uv sync --frozen --no-dev
+RUN uv sync --no-dev --no-install-workspace
 
 FROM base AS runtime
 COPY --from=deps /src/services/api/.venv /src/services/api/.venv

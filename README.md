@@ -144,11 +144,13 @@ cd services/api && uv run ruff check . && uv run pytest
 
 CI runs these on every push and pull request (see `.github/workflows/ci.yml`).
 
+## Vercel (frontend)
+
+`apps/web` deploys to Vercel. Import this GitHub repo, set the project **Root Directory** to `apps/web`, and use Node.js 22. Point `INTERNAL_API_URL` and `NEXT_PUBLIC_API_URL` at a reachable product API; Compose/API/Postgres are not hosted on Vercel. See [`apps/web/README.md`](./apps/web/README.md).
+
 ## Documentation
 
-Starter docs live in [`docs/`](./docs/). Begin with product vision and system architecture, then expand API, schema, and model specs before implementing domain features.
-
-Engineering principles for contributors: [`.cursor/rules.md`](./.cursor/rules.md).
+Engineering context lives in [`AGENTS.md`](./AGENTS.md). Package READMEs cover how to run each service.
 
 ## Roadmap summary
 

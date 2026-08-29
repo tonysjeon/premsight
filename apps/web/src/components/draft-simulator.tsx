@@ -161,6 +161,10 @@ function makeSlots(formation: Formation): SquadSlot[] {
       player: null,
     })),
   );
+  return [...starters, ...makeSidelineSlots()];
+}
+
+function makeSidelineSlots(): SquadSlot[] {
   const bench = Array.from({ length: 7 }, (_, index) => ({
     id: `bench-${index + 1}`,
     group: 'bench' as const,
@@ -175,8 +179,10 @@ function makeSlots(formation: Formation): SquadSlot[] {
     detailedPosition: null,
     player: null,
   }));
-  return [...starters, ...bench, ...reserves];
+  return [...bench, ...reserves];
 }
+
+const EMPTY_SIDELINE_SLOTS = makeSidelineSlots();
 
 function PlayerMark({ player }: { player: DraftPlayer }) {
   const initials = `${player.firstName[0] ?? ''}${player.lastName[0] ?? ''}`.toUpperCase();
@@ -872,11 +878,26 @@ export function DraftSimulator({
 
   if (stage === 'formation') {
     return (
-      <div className="draft-formation-stage">
-        <section className="draft-board">
+      <div className="draft-squad-layout draft-captain-stage">
+        <section className="draft-board" inert>
           <EmptyPitch />
         </section>
-        <div className="draft-formation-overlay">
+        <SquadBench
+          benchFilled={0}
+          dragSourceId={null}
+          dragTargetId={null}
+          inert
+          onDragEnd={finishDrag}
+          onDragOver={handleDragOver}
+          onDragStart={handleDragStart}
+          onDrop={handleDrop}
+          onPointerDown={handlePointerDown}
+          onSlot={() => undefined}
+          reserveFilled={0}
+          slots={EMPTY_SIDELINE_SLOTS}
+          swapSourceId={null}
+        />
+        <div className="draft-captain-overlay draft-formation-overlay">
           <section aria-labelledby="formation-heading" className="card draft-formation-modal">
             <div className="draft-formation-list-panel">
               <h1 id="formation-heading">CHOOSE A FORMATION</h1>

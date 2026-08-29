@@ -18,6 +18,7 @@ Implemented:
 - Product API for seasons, teams, fixtures, standings, predictions, draft catalog
 - Next.js surfaces: home overview, table, fixtures, match hub, team hub, Draft XI
 - Isolated `poisson-v1` prediction service
+- Vercel config for `apps/web` (frontend only; API/Postgres are not on Vercel)
 
 Not done (do not fake these with UI-only stubs):
 
@@ -179,7 +180,8 @@ Season is a `?season=` query on Overview / Table / Fixtures. Match and team page
 
 Conventions:
 
-- Fetch only through `apps/web/src/lib/api.ts` (server uses `INTERNAL_API_URL` in Docker, else `NEXT_PUBLIC_API_URL`).
+- Fetch only through `apps/web/src/lib/api.ts` and `src/lib/fpl.ts`. Server-side requests use `getApiBase()` in `src/lib/api-base.ts` (`INTERNAL_API_URL`, then `NEXT_PUBLIC_API_URL`).
+- **Vercel** hosts only Next.js. Import the GitHub repo, set Root Directory to `apps/web`, Node.js 22. Set `INTERNAL_API_URL` and `NEXT_PUBLIC_API_URL` to the deployed product API origin (no trailing slash). Add that Vercel origin to `API_CORS_ORIGINS` on the API. Config: `apps/web/vercel.json`. Docker still uses `output: 'standalone'`; Vercel builds omit it.
 - Pure season/table/form/H2H helpers live in `src/lib/season.ts` (UTC formatters so SSR is deterministic). Team display names/crests in `src/lib/teams.ts`. Draft scoring in `src/lib/draft-score.ts`. Theme in `src/lib/theme.ts`.
 - Alias `@/` → `src/`.
 - Prefer composition: small components under `src/components/`; keep scoring and grouping out of JSX.

@@ -2,13 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 import { SeasonSelect } from '@/components/season-select';
 import { SettingsMenu } from '@/components/settings-menu';
 import type { Season } from '@/lib/api';
 
 const SEASON_ROUTES = ['/', '/fixtures', '/table'];
 
-export function SiteHeader({
+function SiteHeaderContent({
   currentSeasonId,
   seasons,
 }: {
@@ -93,5 +94,74 @@ export function SiteHeader({
         </div>
       )}
     </>
+  );
+}
+
+function SiteHeaderFallback({
+  currentSeasonId,
+  seasons,
+}: {
+  currentSeasonId: string | null;
+  seasons: Season[];
+}) {
+  const seasonId = currentSeasonId;
+  const href = (path: string) =>
+    seasonId ? `${path}?season=${encodeURIComponent(seasonId)}` : path;
+  const leagueName =
+    seasons.find((item) => item.id === seasonId)?.competition_name ?? 'Premier League';
+
+  return (
+    <>
+      <header className="site-header">
+        <div className="site-brand-bar">
+          <div className="shell home-page site-brand-row">
+            <Link className="brand" href={href('/')}>
+              PREM<span>SIGHT</span>
+            </Link>
+            <div className="site-header-actions">
+              <Link className="header-nav-link" href={href('/')}>
+                Home
+              </Link>
+              <Link className="header-nav-link" href="/draft">
+                Draft
+              </Link>
+              <SettingsMenu />
+            </div>
+          </div>
+        </div>
+      </header>
+      <div className="shell home-page site-header-card">
+        <div className="site-header-league">
+          <div className="site-header-league-identity">
+            <span aria-hidden="true" className="match-round-mark site-header-league-mark" />
+            <div className="site-header-league-copy">
+              <p className="site-header-league-name">{leagueName}</p>
+              <p className="site-header-league-country">England</p>
+            </div>
+          </div>
+          {seasonId ? (
+            <div className="site-header-season">
+              <span aria-hidden="true" className="site-header-season-label">
+                Season
+              </span>
+              <SeasonSelect basePath="/" seasons={seasons} value={seasonId} />
+            </div>
+          ) : null}
+        </div>
+        <nav aria-label="Primary" className="nav-tabs">
+          <Link href={href('/')}>Overview</Link>
+          <Link href={href('/table')}>Table</Link>
+          <Link href={href('/fixtures')}>Fixtures</Link>
+        </nav>
+      </div>
+    </>
+  );
+}
+
+export function SiteHeader(props: { currentSeasonId: string | null; seasons: Season[] }) {
+  return (
+    <Suspense fallback={<SiteHeaderFallback {...props} />}>
+      <SiteHeaderContent {...props} />
+    </Suspense>
   );
 }

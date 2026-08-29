@@ -22,7 +22,15 @@ export function TeamBadge({
   if (visual.crestUrl) {
     return (
       <span className={`${crestClass} crest--image`}>
-        <Image alt="" height={pixels} src={visual.crestUrl} unoptimized width={pixels} />
+        <Image
+          alt=""
+          decoding="async"
+          height={pixels}
+          loading="eager"
+          src={visual.crestUrl}
+          unoptimized
+          width={pixels}
+        />
       </span>
     );
   }
