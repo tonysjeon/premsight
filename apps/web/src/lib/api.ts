@@ -1,9 +1,11 @@
 import { getApiBase } from '@/lib/api-base';
+import { findTeamByPublicId, isUuid } from '@/lib/public-id';
 
 const BASE = getApiBase();
 export type Season = {
   id: string;
   name: string;
+  slug?: string;
   competition_name: string;
   start_date: string;
   end_date: string;
@@ -29,6 +31,7 @@ export type Team = {
   name: string;
   short_name: string | null;
   tla: string | null;
+  slug?: string | null;
   crest_url: string | null;
   fixtures?: Fixture[];
 };
@@ -71,7 +74,15 @@ export const api = {
   fixtures: async (q = '') =>
     (await get<{ items: Fixture[] }>(`/v1/fixtures${q ? `?${q}` : ''}`)).items,
   fixture: (id: string) => get<Fixture>(`/v1/fixtures/${id}`),
-  team: (id: string) => get<Team>(`/v1/teams/${id}`),
+  team: async (id: string) => {
+    if (isUuid(id)) return get<Team>(`/v1/teams/${id}`);
+    const listed = await get<{ items: Team[] }>('/v1/teams');
+    const match = findTeamByPublicId(listed.items, id);
+    if (match === undefined) {
+      throw new Error(`API request failed: GET ${BASE}/v1/teams/${id} returned 404`);
+    }
+    return get<Team>(`/v1/teams/${match.id}`);
+  },
   standings: async (id: string) =>
     (await get<{ items: Standing[] }>(`/v1/standings?season_id=${id}`)).items,
   prediction: async (id: string): Promise<Prediction | null> => {

@@ -5,6 +5,13 @@ from uuid import UUID
 import psycopg
 from psycopg.rows import dict_row
 
+from app.core.public_ids import (
+    parse_uuid,
+    season_key_matches,
+    with_season_slug,
+    with_team_slug,
+)
+
 
 class FootballRepository:
     def __init__(self, database_url: str) -> None:
@@ -19,35 +26,67 @@ class FootballRepository:
             return conn.execute(query, params).fetchone()
 
     def current_season(self) -> dict[str, Any] | None:
-        return self._one(
+        item = self._one(
             """SELECT s.id, s.competition_id, c.name competition_name, s.name,
                       s.start_date, s.end_date, s.is_current
                FROM seasons s JOIN competitions c ON c.id=s.competition_id
                WHERE s.is_current ORDER BY s.start_date DESC LIMIT 1"""
         )
+        return None if item is None else with_season_slug(item)
 
     def seasons(self) -> list[dict[str, Any]]:
-        return self._all(
-            """SELECT s.id, s.competition_id, c.name competition_name, s.name,
-                      s.start_date, s.end_date, s.is_current
-               FROM seasons s JOIN competitions c ON c.id=s.competition_id
-               ORDER BY s.start_date DESC"""
-        )
+        return [
+            with_season_slug(item)
+            for item in self._all(
+                """SELECT s.id, s.competition_id, c.name competition_name, s.name,
+                          s.start_date, s.end_date, s.is_current
+                   FROM seasons s JOIN competitions c ON c.id=s.competition_id
+                   ORDER BY s.start_date DESC"""
+            )
+        ]
+
+    def resolve_season_id(self, key: str) -> UUID | None:
+        parsed = parse_uuid(key)
+        if parsed is not None:
+            item = self._one("SELECT id FROM seasons WHERE id=%s", (parsed,))
+            return None if item is None else item["id"]
+        for season in self.seasons():
+            if season_key_matches(str(season["name"]), key):
+                season_id = season["id"]
+                return season_id if isinstance(season_id, UUID) else UUID(str(season_id))
+        return None
+
+    def resolve_team_id(self, key: str) -> UUID | None:
+        item = self.team(key)
+        if item is None:
+            return None
+        team_id = item["id"]
+        return team_id if isinstance(team_id, UUID) else UUID(str(team_id))
 
     def teams(self, season_id: UUID | None = None) -> list[dict[str, Any]]:
         if season_id is None:
-            return self._all("SELECT id,name,short_name,tla,crest_url FROM teams ORDER BY name")
-        return self._all(
-            """SELECT DISTINCT t.id,t.name,t.short_name,t.tla,t.crest_url FROM teams t
-               JOIN fixtures f ON t.id IN (f.home_team_id,f.away_team_id)
-               WHERE f.season_id=%s ORDER BY t.name""",
-            (season_id,),
-        )
+            rows = self._all("SELECT id,name,short_name,tla,crest_url FROM teams ORDER BY name")
+        else:
+            rows = self._all(
+                """SELECT DISTINCT t.id,t.name,t.short_name,t.tla,t.crest_url FROM teams t
+                   JOIN fixtures f ON t.id IN (f.home_team_id,f.away_team_id)
+                   WHERE f.season_id=%s ORDER BY t.name""",
+                (season_id,),
+            )
+        return [with_team_slug(item) for item in rows]
 
-    def team(self, team_id: UUID) -> dict[str, Any] | None:
-        return self._one(
-            "SELECT id,name,short_name,tla,crest_url FROM teams WHERE id=%s", (team_id,)
+    def team(self, team_id: str | UUID) -> dict[str, Any] | None:
+        key = str(team_id)
+        parsed = parse_uuid(key)
+        item = (
+            self._one("SELECT id,name,short_name,tla,crest_url FROM teams WHERE id=%s", (parsed,))
+            if parsed is not None
+            else self._one(
+                "SELECT id,name,short_name,tla,crest_url FROM teams WHERE upper(tla)=upper(%s)",
+                (key,),
+            )
         )
+        return None if item is None else with_team_slug(item)
 
     def fixtures(
         self, season_id: UUID | None = None, status: str | None = None, team_id: UUID | None = None

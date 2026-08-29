@@ -6,6 +6,7 @@ import { Suspense } from 'react';
 import { SeasonSelect } from '@/components/season-select';
 import { SettingsMenu } from '@/components/settings-menu';
 import type { Season } from '@/lib/api';
+import { seasonMatches, seasonPublicId } from '@/lib/public-id';
 
 const SEASON_ROUTES = ['/', '/fixtures', '/table'];
 
@@ -19,16 +20,20 @@ function SiteHeaderContent({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const requestedSeasonId = searchParams.get('season');
-  const seasonId = seasons.some((season) => season.id === requestedSeasonId)
-    ? requestedSeasonId!
-    : currentSeasonId;
+  const matchedSeason = requestedSeasonId
+    ? seasons.find((season) => seasonMatches(season, requestedSeasonId))
+    : undefined;
+  const selectedSeason =
+    matchedSeason ??
+    seasons.find((season) => seasonMatches(season, currentSeasonId ?? '')) ??
+    seasons.find((season) => season.id === currentSeasonId);
+  const seasonId = selectedSeason ? seasonPublicId(selectedSeason) : currentSeasonId;
   const selectPath = SEASON_ROUTES.includes(pathname) ? pathname : '/';
   const href = (path: string) =>
     seasonId ? `${path}?season=${encodeURIComponent(seasonId)}` : path;
   const hideSeasonNav =
     pathname === '/draft' || pathname.startsWith('/matches/') || pathname.startsWith('/teams/');
-  const leagueName =
-    seasons.find((item) => item.id === seasonId)?.competition_name ?? 'Premier League';
+  const leagueName = selectedSeason?.competition_name ?? 'Premier League';
 
   return (
     <>
@@ -104,11 +109,13 @@ function SiteHeaderFallback({
   currentSeasonId: string | null;
   seasons: Season[];
 }) {
-  const seasonId = currentSeasonId;
+  const selectedSeason =
+    seasons.find((season) => seasonMatches(season, currentSeasonId ?? '')) ??
+    seasons.find((season) => season.id === currentSeasonId);
+  const seasonId = selectedSeason ? seasonPublicId(selectedSeason) : currentSeasonId;
   const href = (path: string) =>
     seasonId ? `${path}?season=${encodeURIComponent(seasonId)}` : path;
-  const leagueName =
-    seasons.find((item) => item.id === seasonId)?.competition_name ?? 'Premier League';
+  const leagueName = selectedSeason?.competition_name ?? 'Premier League';
 
   return (
     <>

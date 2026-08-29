@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Card } from '@/components/card';
 import { Table, TableLegend } from '@/components/table';
 import { api } from '@/lib/api';
+import { resolveSeason, withSeasonQuery } from '@/lib/public-id';
 import { formTable, nextFixtures, standingsByVenue, type VenueFilter } from '@/lib/season';
 import { buildTeamDirectory } from '@/lib/teams';
 
@@ -17,7 +18,7 @@ export default async function TablePage({
   const { season: requestedSeason, venue: requestedVenue } = await searchParams;
   const [currentSeason, seasons] = await Promise.all([api.currentSeason(), api.seasons()]);
   const requestedSeasonId = Array.isArray(requestedSeason) ? requestedSeason[0] : requestedSeason;
-  const season = seasons.find((item) => item.id === requestedSeasonId) ?? currentSeason;
+  const season = resolveSeason(seasons, requestedSeasonId, currentSeason);
   const rawVenue = Array.isArray(requestedVenue) ? requestedVenue[0] : requestedVenue;
   const venue: VenueFilter = rawVenue === 'home' || rawVenue === 'away' ? rawVenue : 'all';
   const [items, fixtures, teams] = await Promise.all([
@@ -40,7 +41,11 @@ export default async function TablePage({
               <Link
                 aria-current={filter.value === venue ? 'true' : undefined}
                 className="chip"
-                href={`/table?season=${encodeURIComponent(season.id)}${filter.value === 'all' ? '' : `&venue=${filter.value}`}`}
+                href={withSeasonQuery(
+                  '/table',
+                  season,
+                  filter.value === 'all' ? {} : { venue: filter.value },
+                )}
                 key={filter.value}
               >
                 {filter.label}

@@ -81,6 +81,7 @@ export default async function Match({
         isCurrentSeason={season?.is_current ?? true}
         match={match}
         seasonName={season?.name}
+        teams={directory}
       >
         <MatchTabs fixtureId={match.id} hasPreview={hasPreview} value={tab} />
       </MatchHero>

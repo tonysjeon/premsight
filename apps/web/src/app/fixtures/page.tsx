@@ -5,6 +5,7 @@ import { MatchdayNavigation } from '@/components/matchday-navigation';
 import { MatchdaySnapshot } from '@/components/matchday-snapshot';
 import { SelectionNavigation } from '@/components/selection-navigation';
 import { api } from '@/lib/api';
+import { resolveSeason, seasonPublicId, teamPublicId, withSeasonQuery } from '@/lib/public-id';
 import {
   fixturesInMatchday,
   groupByTwoMonthPeriod,
@@ -36,7 +37,7 @@ export default async function Fixtures({
   } = await searchParams;
   const [currentSeason, seasons] = await Promise.all([api.currentSeason(), api.seasons()]);
   const requestedSeasonId = Array.isArray(requestedSeason) ? requestedSeason[0] : requestedSeason;
-  const season = seasons.find((item) => item.id === requestedSeasonId) ?? currentSeason;
+  const season = resolveSeason(seasons, requestedSeasonId, currentSeason);
   const [fixtures, teams] = await Promise.all([
     api.fixtures(`season_id=${season.id}`),
     api.teams(`season_id=${season.id}`),
@@ -47,6 +48,7 @@ export default async function Fixtures({
       const visual = teamVisual(directory, team.id, team.name);
       return {
         id: team.id,
+        slug: teamPublicId(team),
         label: matchdayTeamLabel(visual),
         visual,
       };
@@ -55,7 +57,14 @@ export default async function Fixtures({
   const rawView = Array.isArray(requestedView) ? requestedView[0] : requestedView;
   const view = rawView === 'team' ? 'team' : 'matchday';
   const rawTeam = Array.isArray(requestedTeam) ? requestedTeam[0] : requestedTeam;
-  const selectedTeam = teamOptions.find((team) => team.id === rawTeam) ?? teamOptions[0] ?? null;
+  const selectedTeam =
+    teamOptions.find(
+      (team) =>
+        rawTeam !== undefined &&
+        (team.id === rawTeam || team.slug.toLowerCase() === rawTeam.toLowerCase()),
+    ) ??
+    teamOptions[0] ??
+    null;
   const allMatchdays = matchdays(fixtures);
   const selectedMatchday = resolveMatchday(fixtures, requestedMatchday);
   const teamFixtures =
@@ -77,8 +86,15 @@ export default async function Fixtures({
       : selectedMatchday === null
         ? []
         : fixturesInMatchday(fixtures, selectedMatchday);
-  const matchdayHref = `/fixtures?season=${encodeURIComponent(season.id)}${selectedMatchday === null ? '' : `&matchday=${selectedMatchday}`}`;
-  const teamHref = `/fixtures?season=${encodeURIComponent(season.id)}&view=team${selectedTeam === null ? '' : `&team=${encodeURIComponent(selectedTeam.id)}`}`;
+  const matchdayHref = withSeasonQuery(
+    '/fixtures',
+    season,
+    selectedMatchday === null ? {} : { matchday: selectedMatchday },
+  );
+  const teamHref = withSeasonQuery('/fixtures', season, {
+    view: 'team',
+    team: selectedTeam?.slug,
+  });
 
   return (
     <main className="shell home-page page fixtures-page">
@@ -105,20 +121,20 @@ export default async function Fixtures({
             emptyLabel="Teams"
             itemLabel="team"
             options={teamOptions.map((team) => ({
-              value: team.id,
+              value: team.slug,
               label: team.label,
               badge: team.visual,
-              href: `/fixtures?season=${encodeURIComponent(season.id)}&view=team&team=${encodeURIComponent(team.id)}`,
+              href: withSeasonQuery('/fixtures', season, { view: 'team', team: team.slug }),
             }))}
             showArrows={false}
-            value={selectedTeam?.id ?? null}
+            value={selectedTeam?.slug ?? null}
           />
         ) : (
           <MatchdayNavigation
             basePath="/fixtures"
             isCurrentSeason={season.is_current}
             matchdays={allMatchdays}
-            seasonId={season.id}
+            seasonId={seasonPublicId(season)}
             seasonName={season.name}
             value={selectedMatchday}
           />
@@ -134,7 +150,11 @@ export default async function Fixtures({
             {periodIndex > 0 ? (
               <Link
                 aria-label="Previous fixture period"
-                href={`/fixtures?season=${encodeURIComponent(season.id)}&view=team&team=${encodeURIComponent(selectedTeam.id)}&period=${periodIndex - 1}`}
+                href={withSeasonQuery('/fixtures', season, {
+                  view: 'team',
+                  team: selectedTeam.slug,
+                  period: periodIndex - 1,
+                })}
               >
                 ‹
               </Link>
@@ -144,7 +164,11 @@ export default async function Fixtures({
             {periodIndex < fixturePeriods.length - 1 ? (
               <Link
                 aria-label="Next fixture period"
-                href={`/fixtures?season=${encodeURIComponent(season.id)}&view=team&team=${encodeURIComponent(selectedTeam.id)}&period=${periodIndex + 1}`}
+                href={withSeasonQuery('/fixtures', season, {
+                  view: 'team',
+                  team: selectedTeam.slug,
+                  period: periodIndex + 1,
+                })}
               >
                 ›
               </Link>

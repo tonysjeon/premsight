@@ -5,6 +5,7 @@ import { Table, TableLegend } from '@/components/table';
 import { TeamHero } from '@/components/team-hero';
 import { TeamTabs } from '@/components/team-tabs';
 import { api } from '@/lib/api';
+import { teamPublicId } from '@/lib/public-id';
 import {
   TEAM_FIXTURE_PAGE_SIZE,
   formTable,
@@ -47,6 +48,7 @@ export default async function TeamPage({
 
   const directory = buildTeamDirectory(teams);
   const visual = teamVisual(directory, team.id, team.name);
+  const publicId = teamPublicId(team);
   const teamFixtures = (team.fixtures ?? []).filter(
     (fixture) => fixture.season_id === currentSeason.id,
   );
@@ -61,7 +63,7 @@ export default async function TeamPage({
         name={shortenName(team.name)}
         visual={visual}
       >
-        <TeamTabs teamId={team.id} value={tab} />
+        <TeamTabs teamId={publicId} value={tab} />
       </TeamHero>
       {tab === 'fixtures' ? (
         <section aria-labelledby="team-fixtures-heading" className="match-panel team-fixtures">
@@ -74,13 +76,12 @@ export default async function TeamPage({
             options={fixturePages.map((period, index) => ({
               value: String(index),
               label: period.label,
-              href: `/teams/${team.id}?page=${index}`,
+              href: `/teams/${publicId}?page=${index}`,
             }))}
             showPicker={false}
             value={fixturePages.length ? String(pageIndex) : null}
           />
           <MatchdaySnapshot
-            dateOnCard
             empty="No fixtures found for this team."
             items={selectedPage?.fixtures ?? []}
             teams={directory}

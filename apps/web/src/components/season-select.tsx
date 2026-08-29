@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useRef } from 'react';
 import type { Season } from '@/lib/api';
+import { seasonMatches, withSeasonQuery } from '@/lib/public-id';
 import { syncPickerAlignment } from '@/lib/picker-menu';
 
 export function SeasonSelect({
@@ -16,7 +17,9 @@ export function SeasonSelect({
 }) {
   const pickerRef = useRef<HTMLDetailsElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
-  const selectedSeason = seasons.find((season) => season.id === value);
+  const selectedSeason = seasons.find(
+    (season) => season.id === value || seasonMatches(season, value),
+  );
 
   useEffect(() => {
     const picker = pickerRef.current;
@@ -56,11 +59,11 @@ export function SeasonSelect({
       </summary>
       <div className="season-menu" ref={menuRef}>
         {seasons.map((season) => {
-          const current = season.id === value;
+          const current = season.id === value || seasonMatches(season, value);
           return (
             <Link
               aria-current={current ? 'page' : undefined}
-              href={`${basePath}?season=${encodeURIComponent(season.id)}`}
+              href={withSeasonQuery(basePath, season)}
               key={season.id}
             >
               <span aria-hidden="true" className="selection-check">

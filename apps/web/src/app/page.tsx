@@ -3,6 +3,7 @@ import { MatchdayNavigation } from '@/components/matchday-navigation';
 import { MatchdaySnapshot } from '@/components/matchday-snapshot';
 import { Table, TableLegend } from '@/components/table';
 import { api } from '@/lib/api';
+import { resolveSeason, seasonPublicId } from '@/lib/public-id';
 import {
   OVERVIEW_MOBILE_ROWS,
   fixturesInMatchday,
@@ -23,7 +24,7 @@ export default async function Home({
   const { matchday: requestedMatchday, season: requestedSeason } = await searchParams;
   const [currentSeason, seasons] = await Promise.all([api.currentSeason(), api.seasons()]);
   const requestedSeasonId = Array.isArray(requestedSeason) ? requestedSeason[0] : requestedSeason;
-  const season = seasons.find((item) => item.id === requestedSeasonId) ?? currentSeason;
+  const season = resolveSeason(seasons, requestedSeasonId, currentSeason);
   const [fixtures, standings, teams] = await Promise.all([
     api.fixtures(`season_id=${season.id}`),
     api.standings(season.id),
@@ -54,7 +55,7 @@ export default async function Home({
           <Card flush>
             <MatchdayNavigation
               matchdays={matchdays(fixtures)}
-              seasonId={season.id}
+              seasonId={seasonPublicId(season)}
               value={selectedMatchday}
             />
             <MatchdaySnapshot items={selectedFixtures} teams={directory} />
