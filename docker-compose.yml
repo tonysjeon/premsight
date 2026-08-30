@@ -45,6 +45,12 @@ services:
       REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
       PREDICTION_ENGINE_URL: ${PREDICTION_ENGINE_URL:-http://prediction-engine:8001}
       CORS_ORIGINS: ${API_CORS_ORIGINS:-http://localhost:3000}
+      AUTH_SECRET: ${AUTH_SECRET:-dev-insecure-premsight-auth-secret}
+      AUTH_COOKIE_SAMESITE: ${AUTH_COOKIE_SAMESITE:-lax}
+      AUTH_COOKIE_SECURE: ${AUTH_COOKIE_SECURE:-false}
+      GOOGLE_OAUTH_CLIENT_ID: ${GOOGLE_OAUTH_CLIENT_ID:-}
+      GOOGLE_OAUTH_CLIENT_SECRET: ${GOOGLE_OAUTH_CLIENT_SECRET:-}
+      GOOGLE_OAUTH_REDIRECT_URI: ${GOOGLE_OAUTH_REDIRECT_URI:-http://localhost:8000/v1/auth/google/callback}
     ports:
       - '${API_PORT:-8000}:8000'
     depends_on:
