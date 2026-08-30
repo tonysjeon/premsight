@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { SlidingTabs } from '@/components/sliding-tabs';
 import type { TeamTab } from '@/lib/team-page';
 
 const TABS: readonly { id: TeamTab; label: string }[] = [
@@ -9,7 +10,7 @@ const TABS: readonly { id: TeamTab; label: string }[] = [
 
 export function TeamTabs({ teamId, value }: { teamId: string; value: TeamTab }) {
   return (
-    <nav aria-label="Team sections" className="match-tabs">
+    <SlidingTabs className="match-tabs" label="Team sections" selected={value}>
       {TABS.map((tab) => {
         const href = tab.id === 'fixtures' ? `/teams/${teamId}` : `/teams/${teamId}?tab=${tab.id}`;
         return (
@@ -23,6 +24,6 @@ export function TeamTabs({ teamId, value }: { teamId: string; value: TeamTab }) 
           </Link>
         );
       })}
-    </nav>
+    </SlidingTabs>
   );
 }
