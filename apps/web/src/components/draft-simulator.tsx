@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import {
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -9,6 +10,7 @@ import {
   type DragEvent as ReactDragEvent,
   type PointerEvent as ReactPointerEvent,
 } from 'react';
+import { nationalityFlagUrl, playerArtworkSrcs } from '@/lib/draft-artwork';
 import { scoreDraft } from '@/lib/draft-score';
 import type { DetailedDraftPosition, DraftPlayer, DraftPosition } from '@/lib/fpl';
 
@@ -189,18 +191,59 @@ function PlayerMark({ player }: { player: DraftPlayer }) {
   return <span className="draft-player-mark">{initials}</span>;
 }
 
-function TeamCrest({ player }: { player: DraftPlayer }) {
-  return player.teamCrestUrl ? (
-    <Image
+function TeamCrest({ onReady, player }: { onReady?: () => void; player: DraftPlayer }) {
+  if (!player.teamCrestUrl) return null;
+  return (
+    <DraftAssetImage
       alt={`${player.teamName} crest`}
       className="draft-team-crest"
-      draggable={false}
       height={18}
+      onReady={onReady}
       src={player.teamCrestUrl}
-      unoptimized
       width={18}
     />
-  ) : null;
+  );
+}
+
+function DraftAssetImage({
+  alt,
+  className,
+  height,
+  onReady,
+  src,
+  width,
+}: {
+  alt: string;
+  className: string;
+  height: number;
+  onReady?: () => void;
+  src: string;
+  width: number;
+}) {
+  const doneRef = useRef(false);
+
+  const notify = () => {
+    if (doneRef.current) return;
+    doneRef.current = true;
+    onReady?.();
+  };
+
+  return (
+    <Image
+      alt={alt}
+      className={className}
+      draggable={false}
+      height={height}
+      onError={notify}
+      onLoad={notify}
+      ref={(image) => {
+        if (image?.complete) notify();
+      }}
+      src={src}
+      unoptimized
+      width={width}
+    />
+  );
 }
 
 function PremSightCardMark() {
@@ -279,40 +322,66 @@ function EmptyPitch() {
   );
 }
 
-function nationalityFlagUrl(code: string | null): string | null {
-  if (!code) return null;
-  const flagCode = { EN: 'gb-eng', NN: 'gb', S1: 'gb-sct', WA: 'gb-wls' }[code] ?? code;
-  return /^[a-z]{2}(?:-[a-z]{3})?$/i.test(flagCode)
-    ? `https://flagcdn.com/w80/${flagCode.toLowerCase()}.png`
-    : null;
-}
-
 function PlayerCardArtwork({
   compact = false,
+  onReady,
   player,
   position,
 }: {
   compact?: boolean;
+  onReady?: () => void;
   player: DraftPlayer;
   position?: DetailedDraftPosition;
 }) {
   const flagUrl = nationalityFlagUrl(player.nationalityCode);
+  const crestUrl = player.teamCrestUrl;
+  const needed = Number(Boolean(crestUrl)) + Number(Boolean(flagUrl));
+  const assetKey = `${crestUrl ?? ''}|${flagUrl ?? ''}`;
+  const [trackedKey, setTrackedKey] = useState(assetKey);
+  const [loaded, setLoaded] = useState(0);
+  const notifiedRef = useRef(false);
+  if (trackedKey !== assetKey) {
+    setTrackedKey(assetKey);
+    setLoaded(0);
+  }
+
+  const markLoaded = useCallback(() => {
+    setLoaded((count) => count + 1);
+  }, []);
+  const ready = needed === 0 || loaded >= needed;
   const hasSquareFlag = player.nationalityCode?.toUpperCase() === 'CH';
   const displayPosition = position ?? playerPositions(player)[0];
+
+  useEffect(() => {
+    notifiedRef.current = false;
+  }, [assetKey]);
+
+  useEffect(() => {
+    if (!ready || notifiedRef.current) return;
+    notifiedRef.current = true;
+    onReady?.();
+  }, [onReady, ready]);
+
   return (
     <>
-      <span className={`draft-captain-card-meta ${compact ? 'draft-slot-card-meta' : ''}`}>
+      <span
+        className={`draft-captain-card-meta ${compact ? 'draft-slot-card-meta' : ''} ${ready ? 'is-artwork-ready' : ''}`}
+      >
         <b className="draft-player-rating">{player.eaRating}</b>
         <small data-position={displayPosition}>{displayPosition}</small>
-        <TeamCrest player={player} />
+        <TeamCrest
+          key={crestUrl ?? player.id}
+          onReady={crestUrl ? markLoaded : undefined}
+          player={player}
+        />
         {flagUrl ? (
-          <Image
+          <DraftAssetImage
             alt={`${player.nationalityCode} flag`}
             className={`draft-country-flag ${hasSquareFlag ? 'draft-country-flag--square' : ''}`}
-            draggable={false}
             height={18}
+            key={flagUrl}
+            onReady={markLoaded}
             src={flagUrl}
-            unoptimized
             width={28}
           />
         ) : (
@@ -326,11 +395,13 @@ function PlayerCardArtwork({
 function PlayerChoice({
   hideMark = false,
   player,
+  onArtworkReady,
   onChoose,
 }: {
   hideMark?: boolean;
-  player: DraftPlayer;
+  onArtworkReady?: (playerId: string) => void;
   onChoose: (player: DraftPlayer) => void;
+  player: DraftPlayer;
 }) {
   return (
     <button
@@ -338,7 +409,11 @@ function PlayerChoice({
       onClick={() => onChoose(player)}
       type="button"
     >
-      {hideMark ? <PlayerCardArtwork player={player} /> : <PlayerMark player={player} />}
+      {hideMark ? (
+        <PlayerCardArtwork onReady={() => onArtworkReady?.(player.id)} player={player} />
+      ) : (
+        <PlayerMark player={player} />
+      )}
       <strong>{player.displayName}</strong>
       {hideMark ? null : (
         <>
@@ -350,6 +425,57 @@ function PlayerChoice({
         </>
       )}
     </button>
+  );
+}
+
+function DraftPickerGrid({
+  onChoose,
+  players,
+}: {
+  onChoose: (player: DraftPlayer) => void;
+  players: readonly DraftPlayer[];
+}) {
+  const packKey = players.map((player) => player.id).join(',');
+  const [seenPack, setSeenPack] = useState(packKey);
+  const [readyIds, setReadyIds] = useState<ReadonlySet<string>>(() => new Set());
+  const [timedOut, setTimedOut] = useState(false);
+
+  if (seenPack !== packKey) {
+    setSeenPack(packKey);
+    setReadyIds(new Set());
+    setTimedOut(false);
+  }
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setTimedOut(true), 900);
+    return () => window.clearTimeout(timer);
+  }, [packKey]);
+
+  const markReady = useCallback((playerId: string) => {
+    setReadyIds((current) => {
+      if (current.has(playerId)) return current;
+      const next = new Set(current);
+      next.add(playerId);
+      return next;
+    });
+  }, []);
+
+  const dealReady = timedOut || players.every((player) => readyIds.has(player.id));
+
+  return (
+    <div
+      className={`draft-choice-grid draft-choice-grid--captains ${dealReady ? 'is-deal-ready' : ''}`}
+    >
+      {players.map((player) => (
+        <PlayerChoice
+          hideMark
+          key={player.id}
+          onArtworkReady={markReady}
+          onChoose={onChoose}
+          player={player}
+        />
+      ))}
+    </div>
   );
 }
 
@@ -594,6 +720,14 @@ export function DraftSimulator({
   useEffect(() => {
     slotsRef.current = slots;
   }, [slots]);
+
+  useEffect(() => {
+    const unique = [...new Set(players.flatMap((player) => playerArtworkSrcs(player)))];
+    unique.forEach((src) => {
+      const image = new window.Image();
+      image.src = src;
+    });
+  }, [players]);
 
   useEffect(() => {
     if (!dragSourceId) return;
@@ -968,11 +1102,7 @@ export function DraftSimulator({
         <div className="draft-captain-overlay">
           <section className="card draft-step draft-captain-step">
             <h1>Choose your captain</h1>
-            <div className="draft-choice-grid draft-choice-grid--captains">
-              {captainOptions.map((player) => (
-                <PlayerChoice hideMark key={player.id} onChoose={chooseCaptain} player={player} />
-              ))}
-            </div>
+            <DraftPickerGrid onChoose={chooseCaptain} players={captainOptions} />
           </section>
         </div>
       </div>
@@ -1064,11 +1194,7 @@ export function DraftSimulator({
                 View squad<span className="draft-view-squad-hint"> (click &amp; hold)</span>
               </button>
             </header>
-            <div className="draft-choice-grid draft-choice-grid--captains">
-              {offers.map((player) => (
-                <PlayerChoice hideMark key={player.id} onChoose={choosePlayer} player={player} />
-              ))}
-            </div>
+            <DraftPickerGrid onChoose={choosePlayer} players={offers} />
           </section>
         </div>
       ) : null}

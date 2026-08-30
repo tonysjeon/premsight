@@ -1,14 +1,27 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import { SeasonSelect } from '@/components/season-select';
 import { SettingsMenu } from '@/components/settings-menu';
+import { SlidingTabs } from '@/components/sliding-tabs';
 import type { Season } from '@/lib/api';
 import { seasonMatches, seasonPublicId } from '@/lib/public-id';
 
 const SEASON_ROUTES = ['/', '/fixtures', '/table'];
+
+function BrandLink({ href }: { href: string }) {
+  return (
+    <Link className="brand" href={href}>
+      <Image alt="" className="brand-mark" height={22} src="/icon.svg" unoptimized width={22} />
+      <span className="brand-word">
+        PREM<span>SIGHT</span>
+      </span>
+    </Link>
+  );
+}
 
 function SiteHeaderContent({
   currentSeasonId,
@@ -32,7 +45,10 @@ function SiteHeaderContent({
   const href = (path: string) =>
     seasonId ? `${path}?season=${encodeURIComponent(seasonId)}` : path;
   const hideSeasonNav =
-    pathname === '/draft' || pathname.startsWith('/matches/') || pathname.startsWith('/teams/');
+    pathname === '/draft' ||
+    pathname === '/profile' ||
+    pathname.startsWith('/matches/') ||
+    pathname.startsWith('/teams/');
   const isHome = SEASON_ROUTES.includes(pathname);
   const leagueName = selectedSeason?.competition_name ?? 'Premier League';
 
@@ -41,9 +57,7 @@ function SiteHeaderContent({
       <header className="site-header">
         <div className="site-brand-bar">
           <div className="shell home-page site-brand-row">
-            <Link className="brand" href={href('/')}>
-              PREM<span>SIGHT</span>
-            </Link>
+            <BrandLink href={href('/')} />
             <div className="site-header-actions">
               <Link
                 aria-current={isHome ? 'page' : undefined}
@@ -83,7 +97,7 @@ function SiteHeaderContent({
               </div>
             ) : null}
           </div>
-          <nav aria-label="Primary" className="nav-tabs">
+          <SlidingTabs className="nav-tabs" label="Primary" selected={pathname}>
             <Link aria-current={pathname === '/' ? 'page' : undefined} href={href('/')}>
               Overview
             </Link>
@@ -96,7 +110,7 @@ function SiteHeaderContent({
             >
               Fixtures
             </Link>
-          </nav>
+          </SlidingTabs>
         </div>
       )}
     </>
@@ -123,9 +137,7 @@ function SiteHeaderFallback({
       <header className="site-header">
         <div className="site-brand-bar">
           <div className="shell home-page site-brand-row">
-            <Link className="brand" href={href('/')}>
-              PREM<span>SIGHT</span>
-            </Link>
+            <BrandLink href={href('/')} />
             <div className="site-header-actions">
               <Link className="header-nav-link" href={href('/')}>
                 Home

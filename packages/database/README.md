@@ -12,8 +12,9 @@ The package owns ordered, reversible SQL migrations, idempotent seed data, and P
 - teams and fixtures
 - match events
 - external provider references
+- users and oauth_identities (Google site accounts)
 
-Standings, players, users, and prediction data are deferred to later roadmap phases.
+Standings are derived in the API, not stored. Player catalog tables and `users` (site accounts) are included. Prediction outputs are not persisted.
 
 ## Migrations
 

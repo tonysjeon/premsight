@@ -16,24 +16,37 @@ from premsight_database.migrator import (
 
 
 def _database_url(explicit: str | None) -> str:
-    url = explicit or os.environ.get("DATABASE_URL")
-    if not url:
-        raise SystemExit(
-            "DATABASE_URL is required (env var or --database-url)."
-        )
-    return url
+    if explicit:
+        return explicit
+    if os.environ.get("DATABASE_URL"):
+        return os.environ["DATABASE_URL"]
+
+    # Try loading from .env files if present
+    for env_path in [".env", "../../.env", "../.env"]:
+        if os.path.exists(env_path):
+            with open(env_path, encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if line.startswith("DATABASE_URL=") and not line.startswith("#"):
+                        val = line.split("=", 1)[1].strip().strip("\"'")
+                        if val:
+                            return val
+
+    raise SystemExit("DATABASE_URL is required (env var, .env file, or --database-url).")
 
 
 def main(argv: list[str] | None = None) -> None:
-    parser = argparse.ArgumentParser(prog="premsight-db")
-    parser.add_argument(
+    parent = argparse.ArgumentParser(add_help=False)
+    parent.add_argument(
         "--database-url",
         help="PostgreSQL connection URL (defaults to DATABASE_URL)",
     )
+
+    parser = argparse.ArgumentParser(prog="premsight-db", parents=[parent])
     sub = parser.add_subparsers(dest="command", required=True)
 
-    sub.add_parser("up", help="Apply all pending migrations")
-    down = sub.add_parser("down", help="Roll back migrations")
+    sub.add_parser("up", parents=[parent], help="Apply all pending migrations")
+    down = sub.add_parser("down", parents=[parent], help="Roll back migrations")
     down.add_argument(
         "--steps",
         type=int,
@@ -45,8 +58,8 @@ def main(argv: list[str] | None = None) -> None:
         action="store_true",
         help="Roll back every applied migration",
     )
-    sub.add_parser("seed", help="Apply seed SQL files")
-    sub.add_parser("status", help="Show applied and pending migrations")
+    sub.add_parser("seed", parents=[parent], help="Apply seed SQL files")
+    sub.add_parser("status", parents=[parent], help="Show applied and pending migrations")
 
     args = parser.parse_args(argv)
     database_url = _database_url(args.database_url)

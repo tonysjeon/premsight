@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { SlidingTabs } from '@/components/sliding-tabs';
 import type { MatchTab } from '@/lib/match';
 
 const ALL_TABS: readonly { id: MatchTab; label: string }[] = [
@@ -18,7 +19,7 @@ export function MatchTabs({
 }) {
   const tabs = hasPreview ? ALL_TABS : ALL_TABS.filter((tab) => tab.id !== 'preview');
   return (
-    <nav aria-label="Match sections" className="match-tabs">
+    <SlidingTabs className="match-tabs" label="Match sections" selected={value}>
       {tabs.map((tab) => {
         const href =
           tab.id === 'preview' ? `/matches/${fixtureId}` : `/matches/${fixtureId}?tab=${tab.id}`;
@@ -33,6 +34,6 @@ export function MatchTabs({
           </Link>
         );
       })}
-    </nav>
+    </SlidingTabs>
   );
 }

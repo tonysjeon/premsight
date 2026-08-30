@@ -15,7 +15,7 @@ Implemented:
 - Monorepo, Docker Compose, GitHub Actions CI
 - PostgreSQL core football schema, reversible migrations, PL seed
 - Ingestion from football-data.org, openfootball backfill, FPL player snapshots
-- Product API for seasons, teams, fixtures, standings, predictions, draft catalog
+- Product API for seasons, teams, fixtures, standings, predictions, draft catalog, Google sign-in
 - Next.js surfaces: home overview, table, fixtures, match hub, team hub, Draft XI
 - Isolated `poisson-v1` prediction service
 - Vercel config for `apps/web` (frontend only; API/Postgres are not on Vercel)
@@ -100,7 +100,7 @@ uv run premsight-db status
 uv run premsight-db down          # one step; --all rolls back everything
 ```
 
-Core tables: `competitions`, `seasons` (at most one `is_current` per competition), `teams`, `fixtures`, `match_events`, `provider_references`. Later migrations add `crest_url`, `player_snapshot_runs` / `player_snapshot_entries` (Draft XI catalog: positions, global rank, nationality, photo, EA rating).
+Core tables: `competitions`, `seasons` (at most one `is_current` per competition), `teams`, `fixtures`, `match_events`, `provider_references`. Later migrations add `crest_url`, `player_snapshot_runs` / `player_snapshot_entries` (Draft XI catalog: positions, global rank, nationality, photo, EA rating), and `users` (Google accounts; emails stored lowercase; optional Google avatar URL).
 
 Fixture `status` is one of: `scheduled`, `live`, `postponed`, `cancelled`, `completed`. Completed rows must have both scores. Home and away teams must differ. Season FKs bind `(season_id, competition_id)`.
 
@@ -128,6 +128,14 @@ Prefix `/v1`. Persistence via `FootballRepository` (psycopg, dict rows). CORS fr
 | GET    | `/v1/fixtures/{id}/prediction` | proxies prediction engine; 422/503 on insufficient history / down |
 | GET    | `/v1/standings?season_id=`     | computed                                                          |
 | GET    | `/v1/player-snapshots/latest`  | Draft XI catalog                                                  |
+| POST   | `/v1/auth/logout`              | clear session cookie                                              |
+| GET    | `/v1/auth/me`                  | current user or 401                                               |
+| GET    | `/v1/auth/providers`           | which OAuth providers are configured                              |
+| GET    | `/v1/auth/google/start`        | redirect to Google OAuth                                          |
+| GET    | `/v1/auth/google/callback`     | Google callback; sets cookie; redirects to the web                |
+| DELETE | `/v1/auth/me`                  | delete the signed-in account and clear the session cookie         |
+
+Sign-in is Google OAuth. Accounts live in `users` plus `oauth_identities`. Sessions are a signed JWT in the `premsight_session` cookie. Set `AUTH_SECRET` in production and the Google OAuth env vars. The web client opens a modal, then navigates the browser to the start URL. The profile page at `/profile` shows the Google photo, sign-out, delete account, and saved-collection tabs.
 
 The web client maps 422/503 on prediction to `null` (hide the module, do not error the page).
 
@@ -167,22 +175,23 @@ Stack: Next.js App Router, React 19, TypeScript **strict**, Tailwind 4, Manrope,
 
 Routes:
 
-| Path            | Purpose                                      |
-| --------------- | -------------------------------------------- |
-| `/`             | Overview: table snapshot + selected matchday |
-| `/table`        | Full table                                   |
-| `/fixtures`     | Fixtures / results                           |
-| `/matches/[id]` | Match hub (hero, H2H, form, prediction)      |
-| `/teams/[id]`   | Team hub                                     |
-| `/draft`        | Draft XI simulator                           |
+| Path            | Purpose                                       |
+| --------------- | --------------------------------------------- |
+| `/`             | Overview: table snapshot + selected matchday  |
+| `/table`        | Full table                                    |
+| `/fixtures`     | Fixtures / results                            |
+| `/matches/[id]` | Match hub (hero, H2H, form, prediction)       |
+| `/teams/[id]`   | Team hub                                      |
+| `/draft`        | Draft XI simulator                            |
+| `/profile`      | Signed-in account: photo, collections, delete |
 
-Season is a `?season=` query on Overview / Table / Fixtures. Match and team pages and Draft hide that season chrome. Preserve `season` when linking those list routes.
+Season is a `?season=` query on Overview / Table / Fixtures. Match and team pages, Draft, and Profile hide that season chrome. Preserve `season` when linking those list routes.
 
 Conventions:
 
-- Fetch only through `apps/web/src/lib/api.ts` and `src/lib/fpl.ts`. Server-side requests use `getApiBase()` in `src/lib/api-base.ts` (`INTERNAL_API_URL`, then `NEXT_PUBLIC_API_URL`).
+- Fetch football data through `apps/web/src/lib/api.ts` and `src/lib/fpl.ts`. Auth uses `src/lib/auth.ts` from the browser. Server-side requests use `getApiBase()` in `src/lib/api-base.ts` (`INTERNAL_API_URL`, then `NEXT_PUBLIC_API_URL`).
 - **Vercel** hosts only Next.js. Import the GitHub repo, set Root Directory to `apps/web`, Node.js 22. Set `INTERNAL_API_URL` and `NEXT_PUBLIC_API_URL` to the deployed product API origin (no trailing slash). Add that Vercel origin to `API_CORS_ORIGINS` on the API. Config: `apps/web/vercel.json`. Docker still uses `output: 'standalone'`; Vercel builds omit it.
-- Pure season/table/form/H2H helpers live in `src/lib/season.ts` (UTC formatters so SSR is deterministic). Team display names/crests in `src/lib/teams.ts`. Draft scoring in `src/lib/draft-score.ts`. Theme in `src/lib/theme.ts`.
+- Pure season/table/form/H2H helpers live in `src/lib/season.ts` (UTC formatters so SSR is deterministic). Team display names/crests in `src/lib/teams.ts`. Draft scoring in `src/lib/draft-score.ts`. Theme in `src/lib/theme.ts`. Sign-in session helpers in `src/lib/auth.ts`. Profile helpers in `src/lib/profile.ts`. Sliding tab underline math in `src/lib/tab-indicator.ts`.
 - Alias `@/` → `src/`.
 - Prefer composition: small components under `src/components/`; keep scoring and grouping out of JSX.
 - Do not call the prediction engine from the browser; go through the product API.

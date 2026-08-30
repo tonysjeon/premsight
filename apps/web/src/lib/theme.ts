@@ -25,6 +25,10 @@ export function getServerThemeSnapshot(): Theme {
   return DEFAULT_THEME;
 }
 
+export function nextTheme(theme: Theme): Theme {
+  return theme === 'light' ? 'dark' : 'light';
+}
+
 export function applyTheme(theme: Theme) {
   document.documentElement.dataset.theme = theme;
   try {

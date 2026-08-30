@@ -18,6 +18,7 @@ RUN uv pip install --python /app/.venv/bin/python --no-cache \
     "fastapi>=0.115.0" \
     "httpx>=0.28.0" \
     "psycopg[binary]>=3.2.0" \
+    "pyjwt[crypto]>=2.10.0" \
     "uvicorn[standard]>=0.34.0" \
     "pydantic-settings>=2.8.0"
 
