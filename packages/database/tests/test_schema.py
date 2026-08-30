@@ -36,6 +36,10 @@ def test_runtime_package_contains_sql_assets() -> None:
         "0009_player_detailed_positions.up.sql",
         "0010_player_ratings.down.sql",
         "0010_player_ratings.up.sql",
+        "0011_users.down.sql",
+        "0011_users.up.sql",
+        "0012_user_avatar.down.sql",
+        "0012_user_avatar.up.sql",
     ]
     assert [path.name for path in SEEDS_DIR.glob("*.sql")] == ["001_premier_league.sql"]
 
@@ -44,7 +48,8 @@ def test_migrations_apply_on_empty_database(database_url: str) -> None:
     migrate_down_all(database_url)
     applied = migrate_up(database_url)
     assert applied == [
-        "0001", "0002", "0003", "0004", "0005", "0006", "0007", "0008", "0009", "0010"
+        "0001", "0002", "0003", "0004", "0005", "0006", "0007", "0008", "0009", "0010", "0011",
+        "0012",
     ]
 
     with psycopg.connect(database_url) as conn:
@@ -59,6 +64,8 @@ def test_migrations_apply_on_empty_database(database_url: str) -> None:
             "0008",
             "0009",
             "0010",
+            "0011",
+            "0012",
         ]
         tables = {
             row[0]
@@ -79,6 +86,8 @@ def test_migrations_apply_on_empty_database(database_url: str) -> None:
                         "provider_references",
                         "player_snapshot_runs",
                         "player_snapshot_entries",
+                        "users",
+                        "oauth_identities",
                         "schema_meta",
                         "schema_migrations",
                     ],
@@ -94,6 +103,8 @@ def test_migrations_apply_on_empty_database(database_url: str) -> None:
         "provider_references",
         "player_snapshot_runs",
         "player_snapshot_entries",
+        "users",
+        "oauth_identities",
         "schema_meta",
         "schema_migrations",
     }
@@ -102,6 +113,22 @@ def test_migrations_apply_on_empty_database(database_url: str) -> None:
 def test_migrations_roll_back_safely(database_url: str) -> None:
     migrate_down_all(database_url)
     migrate_up(database_url)
+
+    assert migrate_down(database_url, steps=1) == ["0012"]
+    with psycopg.connect(database_url) as conn:
+        columns = {
+            row[0]
+            for row in conn.execute(
+                """SELECT column_name FROM information_schema.columns
+                   WHERE table_schema='public' AND table_name='users'"""
+            ).fetchall()
+        }
+        assert "avatar_url" not in columns
+        assert "email" in columns
+
+    assert migrate_down(database_url, steps=1) == ["0011"]
+    with psycopg.connect(database_url) as conn:
+        assert conn.execute("SELECT to_regclass('public.users')").fetchone() == (None,)
 
     assert migrate_down(database_url, steps=1) == ["0010"]
     with psycopg.connect(database_url) as conn:
@@ -461,4 +488,67 @@ def test_completed_fixture_requires_both_scores(migrated_db: str) -> None:
                 VALUES (%s, %s, %s, %s, 'completed', now(), 2)
                 """,
                 (competition_id, season_id, home_id, away_id),
+            )
+
+
+def test_users_email_is_unique_and_lowercase(migrated_db: str) -> None:
+    with psycopg.connect(migrated_db) as conn:
+        user_id = conn.execute(
+            """
+            INSERT INTO users (email, display_name)
+            VALUES ('fan@example.com', 'Fan')
+            RETURNING id
+            """
+        ).fetchone()[0]
+        conn.execute(
+            """
+            INSERT INTO oauth_identities (user_id, provider, provider_user_id)
+            VALUES (%s, 'google', 'google-sub')
+            """,
+            (user_id,),
+        )
+        conn.commit()
+
+        with pytest.raises(UniqueViolation):
+            conn.execute(
+                """
+                INSERT INTO users (email, display_name)
+                VALUES ('fan@example.com', 'Other')
+                """
+            )
+        conn.rollback()
+
+        with pytest.raises(CheckViolation):
+            conn.execute(
+                """
+                INSERT INTO users (email, display_name)
+                VALUES ('Fan@Example.com', 'Fan')
+                """
+            )
+        conn.rollback()
+
+        with pytest.raises(UniqueViolation):
+            conn.execute(
+                """
+                INSERT INTO oauth_identities (user_id, provider, provider_user_id)
+                VALUES (%s, 'google', 'google-sub')
+                """,
+                (user_id,),
+            )
+        conn.rollback()
+
+        conn.execute(
+            """
+            UPDATE users SET avatar_url = %s WHERE id = %s
+            """,
+            ("https://lh3.googleusercontent.com/a/photo", user_id),
+        )
+        conn.commit()
+
+        with pytest.raises(CheckViolation):
+            conn.execute(
+                """
+                UPDATE users SET avatar_url = %s WHERE id = %s
+                """,
+                ("http://insecure.example/photo", user_id),
             )
