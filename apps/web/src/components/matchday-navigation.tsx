@@ -23,11 +23,7 @@ export function MatchdayNavigation({
       ariaLabel="Select round"
       emptyLabel="Matches"
       itemLabel="round"
-      onSelect={
-        onSelect
-          ? (option) => onSelect(Number(option.value), option.href)
-          : undefined
-      }
+      onSelect={onSelect ? (option) => onSelect(Number(option.value), option.href) : undefined}
       options={matchdays.map((matchday) => ({
         value: String(matchday),
         label: roundOptionLabel(matchday, seasonName, isCurrentSeason),

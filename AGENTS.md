@@ -49,19 +49,19 @@ Rules:
 
 ## Repository map
 
-| Path                         | Role                                                          |
-| ---------------------------- | ------------------------------------------------------------- |
-| `apps/web`                   | Next.js 16 App Router UI (`@premsight/web`)                   |
-| `services/api`               | Product HTTP API (port 8000)                                  |
-| `services/prediction-engine` | Isolated `poisson-v1` (port 8001)                             |
-| `services/ingestion`         | Provider sync, scheduler, `premsight-ingest` CLI (port 8002)  |
-| `packages/database`          | SQL migrations, seeds, `premsight-db` CLI, schema tests       |
-| `packages/shared-types`      | Intended shared TS contracts; currently `HealthResponse` only |
-| `infrastructure/`            | Future IaC — unused                                           |
-| `.github/workflows/ci.yml`   | Frontend, backend, database, and Postgres integration jobs    |
+| Path                                    | Role                                                          |
+| --------------------------------------- | ------------------------------------------------------------- |
+| `apps/web`                              | Next.js 16 App Router UI (`@premsight/web`)                   |
+| `services/api`                          | Product HTTP API (port 8000)                                  |
+| `services/prediction-engine`            | Isolated `poisson-v1` (port 8001)                             |
+| `services/ingestion`                    | Provider sync, scheduler, `premsight-ingest` CLI (port 8002)  |
+| `packages/database`                     | SQL migrations, seeds, `premsight-db` CLI, schema tests       |
+| `packages/shared-types`                 | Intended shared TS contracts; currently `HealthResponse` only |
+| `infrastructure/`                       | Future IaC — unused                                           |
+| `.github/workflows/ci.yml`              | Frontend, backend, database, and Postgres integration jobs    |
 | `.github/workflows/ingest-fixtures.yml` | Hourly Premier League fixture/result ingest (Actions secrets) |
-| `docker-compose.yml`         | Full local stack                                              |
-| `.cursor/rules.md`           | Short engineering principles (same intent as this file)       |
+| `docker-compose.yml`                    | Full local stack                                              |
+| `.cursor/rules.md`                      | Short engineering principles (same intent as this file)       |
 
 Python services use `uv` and `app/` packages. The API and ingestion Docker builds take `packages/database` as an additional build context.
 
@@ -117,27 +117,27 @@ Standings are **derived from completed fixtures**, not a stored table. League ta
 
 Prefix `/v1`. Persistence via `FootballRepository` (psycopg, dict rows). CORS from `API_CORS_ORIGINS`.
 
-| Method | Path                           | Notes                                                             |
-| ------ | ------------------------------ | ----------------------------------------------------------------- |
-| GET    | `/health`                      | `{ status, service }`                                             |
-| GET    | `/v1/seasons/current`          | 404 if none                                                       |
-| GET    | `/v1/seasons`                  | `{ items, count }`                                                |
-| GET    | `/v1/teams`                    | optional `season_id`                                              |
-| GET    | `/v1/teams/{id}`               | includes that team's fixtures                                     |
-| GET    | `/v1/fixtures`                 | `season_id`, `status`, `team_id`                                  |
-| GET    | `/v1/fixtures/{id}`            | includes `events`                                                 |
-| GET    | `/v1/fixtures/{id}/prediction` | proxies prediction engine; 422/503 on insufficient history / down |
-| GET    | `/v1/standings?season_id=`     | computed                                                          |
+| Method | Path                           | Notes                                                                                                                     |
+| ------ | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| GET    | `/health`                      | `{ status, service }`                                                                                                     |
+| GET    | `/v1/seasons/current`          | 404 if none                                                                                                               |
+| GET    | `/v1/seasons`                  | `{ items, count }`                                                                                                        |
+| GET    | `/v1/teams`                    | optional `season_id`                                                                                                      |
+| GET    | `/v1/teams/{id}`               | includes that team's fixtures                                                                                             |
+| GET    | `/v1/fixtures`                 | `season_id`, `status`, `team_id`                                                                                          |
+| GET    | `/v1/fixtures/{id}`            | includes `events`                                                                                                         |
+| GET    | `/v1/fixtures/{id}/prediction` | proxies prediction engine; 422/503 on insufficient history / down                                                         |
+| GET    | `/v1/standings?season_id=`     | computed                                                                                                                  |
 | GET    | `/v1/players`                  | list/search; `has_stats` with no `position` is all scout CSVs; GK/CB/FB/MID/ST/WG `has_stats` uses those CSVs (not FBref) |
-| GET    | `/v1/players/{id}`             | player identity, stats, archetype                                 |
-| GET    | `/v1/teams/{id}/roster`        | squad members grouped by position                                 |
-| GET    | `/v1/player-snapshots/latest`  | Draft XI catalog                                                  |
-| POST   | `/v1/auth/logout`              | clear session cookie                                              |
-| GET    | `/v1/auth/me`                  | current user or 401                                               |
-| GET    | `/v1/auth/providers`           | which OAuth providers are configured                              |
-| GET    | `/v1/auth/google/start`        | redirect to Google OAuth                                          |
-| GET    | `/v1/auth/google/callback`     | Google callback; sets cookie; redirects to the web                |
-| DELETE | `/v1/auth/me`                  | delete the signed-in account and clear the session cookie         |
+| GET    | `/v1/players/{id}`             | player identity, stats, archetype                                                                                         |
+| GET    | `/v1/teams/{id}/roster`        | squad members grouped by position                                                                                         |
+| GET    | `/v1/player-snapshots/latest`  | Draft XI catalog                                                                                                          |
+| POST   | `/v1/auth/logout`              | clear session cookie                                                                                                      |
+| GET    | `/v1/auth/me`                  | current user or 401                                                                                                       |
+| GET    | `/v1/auth/providers`           | which OAuth providers are configured                                                                                      |
+| GET    | `/v1/auth/google/start`        | redirect to Google OAuth                                                                                                  |
+| GET    | `/v1/auth/google/callback`     | Google callback; sets cookie; redirects to the web                                                                        |
+| DELETE | `/v1/auth/me`                  | delete the signed-in account and clear the session cookie                                                                 |
 
 Sign-in is Google OAuth. Accounts live in `users` plus `oauth_identities`. Sessions are a signed JWT in the `premsight_session` cookie. Set `AUTH_SECRET` in production and the Google OAuth env vars. The web client opens a modal, then navigates the browser to the start URL. The profile page at `/profile` shows the Google photo, sign-out, delete account, and saved-collection tabs.
 

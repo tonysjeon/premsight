@@ -325,7 +325,11 @@ const ST_TABLE_AXES = [
 
 const WG_RADAR_AXES = [
   { axis: 'npg', label: 'NPG', fullName: 'Non-penalty goals' },
-  { axis: 'npxg_xa', label: 'npxG + xA', fullName: 'Non-penalty expected goals plus expected assists' },
+  {
+    axis: 'npxg_xa',
+    label: 'npxG + xA',
+    fullName: 'Non-penalty expected goals plus expected assists',
+  },
   { axis: 'assists', label: 'Assists', fullName: 'Assists' },
   { axis: 'key_passes', label: 'Key passes', fullName: 'Key passes' },
   { axis: 'crosses_cmp', label: 'Crosses cmp', fullName: 'Crosses completed' },
@@ -578,7 +582,8 @@ export function apiPositionFamily(position: ComparePosition): 'GK' | 'DEF' | 'MI
 }
 
 export function apiPlayersQueryPosition(position: ComparePosition): string {
-  if (position === 'CB' || position === 'FB' || position === 'ST' || position === 'WG') return position;
+  if (position === 'CB' || position === 'FB' || position === 'ST' || position === 'WG')
+    return position;
   return apiPositionFamily(position);
 }
 

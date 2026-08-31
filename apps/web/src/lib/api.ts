@@ -122,8 +122,7 @@ async function get<T>(path: string, revalidate = 15): Promise<T> {
 export const api = {
   currentSeason: () => get<Season>('/v1/seasons/current', 60),
   seasons: async () => (await get<{ items: Season[] }>('/v1/seasons', 60)).items,
-  teams: async (q = '') =>
-    (await get<{ items: Team[] }>(`/v1/teams${q ? `?${q}` : ''}`, 60)).items,
+  teams: async (q = '') => (await get<{ items: Team[] }>(`/v1/teams${q ? `?${q}` : ''}`, 60)).items,
   fixtures: async (q = '') =>
     (await get<{ items: Fixture[] }>(`/v1/fixtures${q ? `?${q}` : ''}`)).items,
   fixture: (id: string) => get<Fixture>(`/v1/fixtures/${id}`),

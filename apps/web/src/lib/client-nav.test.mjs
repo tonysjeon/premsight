@@ -4,15 +4,33 @@ import { shouldSoftNavigate, withReplacedParams } from './client-nav.ts';
 
 test('shouldSoftNavigate ignores modified or non-primary clicks', () => {
   assert.equal(
-    shouldSoftNavigate({ metaKey: false, ctrlKey: false, shiftKey: false, altKey: false, button: 0 }),
+    shouldSoftNavigate({
+      metaKey: false,
+      ctrlKey: false,
+      shiftKey: false,
+      altKey: false,
+      button: 0,
+    }),
     true,
   );
   assert.equal(
-    shouldSoftNavigate({ metaKey: true, ctrlKey: false, shiftKey: false, altKey: false, button: 0 }),
+    shouldSoftNavigate({
+      metaKey: true,
+      ctrlKey: false,
+      shiftKey: false,
+      altKey: false,
+      button: 0,
+    }),
     false,
   );
   assert.equal(
-    shouldSoftNavigate({ metaKey: false, ctrlKey: false, shiftKey: false, altKey: false, button: 1 }),
+    shouldSoftNavigate({
+      metaKey: false,
+      ctrlKey: false,
+      shiftKey: false,
+      altKey: false,
+      button: 1,
+    }),
     false,
   );
 });

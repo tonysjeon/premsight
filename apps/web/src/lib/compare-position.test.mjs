@@ -99,42 +99,36 @@ test('compareFilterChips keeps families while DEF expands in place', () => {
 });
 
 test('playerDefSlot uses the primary detailed position', () => {
+  assert.equal(playerDefSlot(player({ position: 'DEF', positions: ['CB'] })), 'CB');
+  assert.equal(playerDefSlot(player({ position: 'DEF', positions: ['RB', 'RM'] })), 'FB');
+  assert.equal(playerDefSlot(player({ position: 'DEF', positions: ['LB', 'LM'] })), 'FB');
+  assert.equal(playerDefSlot(player({ position: 'DEF', positions: ['DEF'] })), 'CB');
   assert.equal(
-    playerDefSlot(player({ position: 'DEF', positions: ['CB'] })),
-    'CB',
+    playerMatchesComparePosition(player({ position: 'DEF', positions: ['RB'] }), 'FB'),
+    true,
   );
   assert.equal(
-    playerDefSlot(player({ position: 'DEF', positions: ['RB', 'RM'] })),
-    'FB',
+    playerMatchesComparePosition(player({ position: 'DEF', positions: ['LB'] }), 'FB'),
+    true,
   );
   assert.equal(
-    playerDefSlot(player({ position: 'DEF', positions: ['LB', 'LM'] })),
-    'FB',
+    playerMatchesComparePosition(player({ position: 'DEF', positions: ['RB'] }), 'CB'),
+    false,
   );
-  assert.equal(
-    playerDefSlot(player({ position: 'DEF', positions: ['DEF'] })),
-    'CB',
-  );
-  assert.equal(playerMatchesComparePosition(player({ position: 'DEF', positions: ['RB'] }), 'FB'), true);
-  assert.equal(playerMatchesComparePosition(player({ position: 'DEF', positions: ['LB'] }), 'FB'), true);
-  assert.equal(playerMatchesComparePosition(player({ position: 'DEF', positions: ['RB'] }), 'CB'), false);
 });
 
 test('playerAttSlot groups wingers and strikers', () => {
+  assert.equal(playerAttSlot(player({ position: 'FWD', positions: ['ST'] })), 'ST');
+  assert.equal(playerAttSlot(player({ position: 'FWD', positions: ['LW', 'LM'] })), 'WG');
+  assert.equal(playerAttSlot(player({ position: 'FWD', positions: ['RW'] })), 'WG');
   assert.equal(
-    playerAttSlot(player({ position: 'FWD', positions: ['ST'] })),
-    'ST',
+    playerMatchesComparePosition(player({ position: 'FWD', positions: ['LW'] }), 'WG'),
+    true,
   );
   assert.equal(
-    playerAttSlot(player({ position: 'FWD', positions: ['LW', 'LM'] })),
-    'WG',
+    playerMatchesComparePosition(player({ position: 'FWD', positions: ['ST'] }), 'WG'),
+    false,
   );
-  assert.equal(
-    playerAttSlot(player({ position: 'FWD', positions: ['RW'] })),
-    'WG',
-  );
-  assert.equal(playerMatchesComparePosition(player({ position: 'FWD', positions: ['LW'] }), 'WG'), true);
-  assert.equal(playerMatchesComparePosition(player({ position: 'FWD', positions: ['ST'] }), 'WG'), false);
 });
 
 test('resolveComparePosition prefers the query then selected players', () => {
@@ -180,7 +174,15 @@ test('emptyRadarAxes follows the position family', () => {
   );
   assert.deepEqual(
     emptyRadarAxes('CB').map((axis) => axis.label),
-    ['Passes cmp', 'Fwd pass%', 'Prog passes', 'Poss won', 'Def duel%', 'Aerial duel%', 'Prog carries'],
+    [
+      'Passes cmp',
+      'Fwd pass%',
+      'Prog passes',
+      'Poss won',
+      'Def duel%',
+      'Aerial duel%',
+      'Prog carries',
+    ],
   );
   assert.deepEqual(
     emptyRadarAxes('FB').map((axis) => axis.label),
@@ -238,7 +240,10 @@ test('compareStatLegend lists abbreviated GK names only', () => {
     legend.map((item) => item.axis),
     ['long_pct', 'short_pct', 'psxg_ga', 'int_padj'],
   );
-  assert.equal(legend.find((item) => item.axis === 'psxg_ga')?.fullName.includes('expected goals'), true);
+  assert.equal(
+    legend.find((item) => item.axis === 'psxg_ga')?.fullName.includes('expected goals'),
+    true,
+  );
 });
 
 test('playerCompareName uses Alisson and first initials', () => {
@@ -340,15 +345,9 @@ test('playerSearchPosition prefers CSV scout side for fullbacks', () => {
     playerSearchPosition(player({ position: 'DEF', positions: ['LB'], scout_position: 'LB' })),
     'LB',
   );
-  assert.equal(
-    playerSearchPosition(player({ position: 'DEF', scout_position: 'RB' })),
-    'RB',
-  );
+  assert.equal(playerSearchPosition(player({ position: 'DEF', scout_position: 'RB' })), 'RB');
   assert.equal(playerSearchPosition(player({ position: 'GK' })), 'GK');
-  assert.equal(
-    playerSearchPosition(player({ position: 'MID', scout_position: 'CAM' })),
-    'CAM',
-  );
+  assert.equal(playerSearchPosition(player({ position: 'MID', scout_position: 'CAM' })), 'CAM');
 });
 
 test('emptyRadarAxes returns 7 axes for ST', () => {

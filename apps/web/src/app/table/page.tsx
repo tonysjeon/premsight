@@ -1,6 +1,12 @@
 import type { Metadata } from 'next';
 import { TablePageView } from '@/components/table-page-view';
-import { loadCurrentSeason, loadFixtures, loadSeasons, loadStandings, loadTeams } from '@/lib/football-load';
+import {
+  loadCurrentSeason,
+  loadFixtures,
+  loadSeasons,
+  loadStandings,
+  loadTeams,
+} from '@/lib/football-load';
 import { resolveSeason } from '@/lib/public-id';
 import type { VenueFilter } from '@/lib/season';
 
@@ -25,7 +31,13 @@ export default async function TablePage({
   ]);
   return (
     <main className="shell home-page page table-page">
-      <TablePageView fixtures={fixtures} items={items} season={season} teams={teams} venue={venue} />
+      <TablePageView
+        fixtures={fixtures}
+        items={items}
+        season={season}
+        teams={teams}
+        venue={venue}
+      />
     </main>
   );
 }

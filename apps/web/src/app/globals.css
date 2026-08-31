@@ -1468,7 +1468,9 @@ button:focus-visible {
   gap: 0;
   border-radius: 999px;
   background: transparent;
-  transition: gap 220ms ease, background-color 220ms ease;
+  transition:
+    gap 220ms ease,
+    background-color 220ms ease;
 }
 
 .compare-expand-group.is-open {

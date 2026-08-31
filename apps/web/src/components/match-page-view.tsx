@@ -67,12 +67,7 @@ export function MatchPageView({
         seasonName={season?.name}
         teams={directory}
       >
-        <MatchTabs
-          fixtureId={match.id}
-          hasPreview={hasPreview}
-          onSelect={setTab}
-          value={tab}
-        />
+        <MatchTabs fixtureId={match.id} hasPreview={hasPreview} onSelect={setTab} value={tab} />
       </MatchHero>
       {tab === 'table' ? (
         <section

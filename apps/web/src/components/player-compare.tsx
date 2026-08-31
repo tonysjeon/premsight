@@ -68,14 +68,17 @@ export function PlayerCompare({ initialCatalog = [] }: { initialCatalog?: Player
     open?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
   }, [expandedFamily]);
 
-  const removePlayer = useCallback((playerId: string) => {
-    const next = removeComparePlayer(players, playerId);
-    setPlayers(next);
-    if (next.length === 0) {
-      setExpandedFamily(null);
-      setPosition(null);
-    }
-  }, [players]);
+  const removePlayer = useCallback(
+    (playerId: string) => {
+      const next = removeComparePlayer(players, playerId);
+      setPlayers(next);
+      if (next.length === 0) {
+        setExpandedFamily(null);
+        setPosition(null);
+      }
+    },
+    [players],
+  );
 
   const setComparePosition = useCallback(
     (next: ComparePosition) => {
@@ -115,111 +118,101 @@ export function PlayerCompare({ initialCatalog = [] }: { initialCatalog?: Player
 
   return (
     <>
-      <nav
-        aria-label="Filter compare by position"
-        className="chips view-filters"
-        ref={filtersRef}
-      >
-          {COMPARE_POSITIONS.map((item) => {
-            if (item === 'DEF') {
-              const open = expandedFamily === 'DEF';
-              const familyActive = position !== null && defFamilyExpanded(position);
-              return (
-                <div
-                  className={`compare-expand-group${open ? ' is-open' : ''}`}
-                  key="def-group"
-                >
-                  <button
-                    aria-current={familyActive ? 'true' : undefined}
-                    aria-expanded={open}
-                    className="chip compare-expand-parent"
-                    onClick={() => setComparePosition('DEF')}
-                    type="button"
-                  >
-                    DEF
-                  </button>
-                  <div className="compare-expand-slots-clip">
-                    <div
-                      aria-hidden={!open}
-                      aria-label="Defender positions"
-                      className="compare-expand-slots"
-                      inert={!open}
-                      role="group"
-                    >
-                      {DEF_SLOTS.map((slot) => (
-                        <button
-                          aria-current={slot === position ? 'true' : undefined}
-                          className={`chip${slot === 'FB' ? ' compare-expand-slot-wide' : ''}`}
-                          key={slot}
-                          onClick={() => setComparePosition(slot)}
-                          tabIndex={open ? 0 : -1}
-                          type="button"
-                        >
-                          {DEF_SLOT_LABELS[slot]}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              );
-            }
-
-            if (item === 'ATT') {
-              const open = expandedFamily === 'ATT';
-              const familyActive = position !== null && attFamilyExpanded(position);
-              return (
-                <div
-                  className={`compare-expand-group${open ? ' is-open' : ''}`}
-                  key="att-group"
-                >
-                  <button
-                    aria-current={familyActive ? 'true' : undefined}
-                    aria-expanded={open}
-                    className="chip compare-expand-parent"
-                    onClick={() => setComparePosition('ATT')}
-                    type="button"
-                  >
-                    ATT
-                  </button>
-                  <div className="compare-expand-slots-clip">
-                    <div
-                      aria-hidden={!open}
-                      aria-label="Attacker positions"
-                      className="compare-expand-slots"
-                      inert={!open}
-                      role="group"
-                    >
-                      {ATT_SLOTS.map((slot) => (
-                        <button
-                          aria-current={slot === position ? 'true' : undefined}
-                          className={`chip${slot === 'WG' ? ' compare-expand-slot-wide' : ''}`}
-                          key={slot}
-                          onClick={() => setComparePosition(slot)}
-                          tabIndex={open ? 0 : -1}
-                          type="button"
-                        >
-                          {ATT_SLOT_LABELS[slot]}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              );
-            }
-
+      <nav aria-label="Filter compare by position" className="chips view-filters" ref={filtersRef}>
+        {COMPARE_POSITIONS.map((item) => {
+          if (item === 'DEF') {
+            const open = expandedFamily === 'DEF';
+            const familyActive = position !== null && defFamilyExpanded(position);
             return (
-              <button
-                aria-current={item === position ? 'true' : undefined}
-                className="chip"
-                key={item}
-                onClick={() => setComparePosition(item)}
-                type="button"
-              >
-                {item}
-              </button>
+              <div className={`compare-expand-group${open ? ' is-open' : ''}`} key="def-group">
+                <button
+                  aria-current={familyActive ? 'true' : undefined}
+                  aria-expanded={open}
+                  className="chip compare-expand-parent"
+                  onClick={() => setComparePosition('DEF')}
+                  type="button"
+                >
+                  DEF
+                </button>
+                <div className="compare-expand-slots-clip">
+                  <div
+                    aria-hidden={!open}
+                    aria-label="Defender positions"
+                    className="compare-expand-slots"
+                    inert={!open}
+                    role="group"
+                  >
+                    {DEF_SLOTS.map((slot) => (
+                      <button
+                        aria-current={slot === position ? 'true' : undefined}
+                        className={`chip${slot === 'FB' ? ' compare-expand-slot-wide' : ''}`}
+                        key={slot}
+                        onClick={() => setComparePosition(slot)}
+                        tabIndex={open ? 0 : -1}
+                        type="button"
+                      >
+                        {DEF_SLOT_LABELS[slot]}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
             );
-          })}
-        </nav>
+          }
+
+          if (item === 'ATT') {
+            const open = expandedFamily === 'ATT';
+            const familyActive = position !== null && attFamilyExpanded(position);
+            return (
+              <div className={`compare-expand-group${open ? ' is-open' : ''}`} key="att-group">
+                <button
+                  aria-current={familyActive ? 'true' : undefined}
+                  aria-expanded={open}
+                  className="chip compare-expand-parent"
+                  onClick={() => setComparePosition('ATT')}
+                  type="button"
+                >
+                  ATT
+                </button>
+                <div className="compare-expand-slots-clip">
+                  <div
+                    aria-hidden={!open}
+                    aria-label="Attacker positions"
+                    className="compare-expand-slots"
+                    inert={!open}
+                    role="group"
+                  >
+                    {ATT_SLOTS.map((slot) => (
+                      <button
+                        aria-current={slot === position ? 'true' : undefined}
+                        className={`chip${slot === 'WG' ? ' compare-expand-slot-wide' : ''}`}
+                        key={slot}
+                        onClick={() => setComparePosition(slot)}
+                        tabIndex={open ? 0 : -1}
+                        type="button"
+                      >
+                        {ATT_SLOT_LABELS[slot]}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            );
+          }
+
+          return (
+            <button
+              aria-current={item === position ? 'true' : undefined}
+              className="chip"
+              key={item}
+              onClick={() => setComparePosition(item)}
+              type="button"
+            >
+              {item}
+            </button>
+          );
+        })}
+      </nav>
 
       {canAdd ? (
         <div className="compare-add">

@@ -1,9 +1,4 @@
-import {
-  radarAxisAngle,
-  radarGridCircles,
-  radarPoint,
-  radarPolygonPoints,
-} from '@/lib/radar';
+import { radarAxisAngle, radarGridCircles, radarPoint, radarPolygonPoints } from '@/lib/radar';
 
 export type RadarSeries = {
   name: string;
@@ -65,13 +60,7 @@ export function PlayerRadar({ axes, series }: PlayerRadarProps) {
 
         <g className="radar-grid-rings">
           {rings.map((ringRadius) => (
-            <circle
-              className="radar-grid-circle"
-              cx={cx}
-              cy={cy}
-              key={ringRadius}
-              r={ringRadius}
-            />
+            <circle className="radar-grid-circle" cx={cx} cy={cy} key={ringRadius} r={ringRadius} />
           ))}
         </g>
 

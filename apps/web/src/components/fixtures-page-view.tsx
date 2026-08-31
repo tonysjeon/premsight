@@ -8,11 +8,7 @@ import { SelectionNavigation } from '@/components/selection-navigation';
 import type { Fixture, Season, Team } from '@/lib/api';
 import { replacePath, shouldSoftNavigate } from '@/lib/client-nav';
 import { seasonPublicId, teamPublicId, withSeasonQuery } from '@/lib/public-id';
-import {
-  fixturesInMatchday,
-  groupByTwoMonthPeriod,
-  matchdays,
-} from '@/lib/season';
+import { fixturesInMatchday, groupByTwoMonthPeriod, matchdays } from '@/lib/season';
 import { buildTeamDirectory, matchdayTeamLabel, teamVisual } from '@/lib/teams';
 
 export function FixturesPageView({
@@ -53,8 +49,7 @@ export function FixturesPageView({
         .sort((a, b) => a.label.localeCompare(b.label)),
     [directory, teams],
   );
-  const selectedTeam =
-    teamOptions.find((team) => team.slug === teamSlug) ?? teamOptions[0] ?? null;
+  const selectedTeam = teamOptions.find((team) => team.slug === teamSlug) ?? teamOptions[0] ?? null;
   const allMatchdays = matchdays(fixtures);
   const teamFixtures =
     selectedTeam === null
@@ -64,8 +59,7 @@ export function FixturesPageView({
             fixture.home_team_id === selectedTeam.id || fixture.away_team_id === selectedTeam.id,
         );
   const fixturePeriods = groupByTwoMonthPeriod(teamFixtures);
-  const safePeriod =
-    periodIndex >= 0 && periodIndex < fixturePeriods.length ? periodIndex : 0;
+  const safePeriod = periodIndex >= 0 && periodIndex < fixturePeriods.length ? periodIndex : 0;
   const selectedPeriod = fixturePeriods[safePeriod] ?? null;
   const selectedFixtures =
     view === 'team'

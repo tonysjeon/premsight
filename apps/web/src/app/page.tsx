@@ -1,5 +1,11 @@
 import { HomeOverview } from '@/components/home-overview';
-import { loadCurrentSeason, loadFixtures, loadSeasons, loadStandings, loadTeams } from '@/lib/football-load';
+import {
+  loadCurrentSeason,
+  loadFixtures,
+  loadSeasons,
+  loadStandings,
+  loadTeams,
+} from '@/lib/football-load';
 import { resolveSeason } from '@/lib/public-id';
 import { resolveMatchday } from '@/lib/season';
 

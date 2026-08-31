@@ -9,11 +9,7 @@ import {
   loadTeams,
 } from '@/lib/football-load';
 import { teamPublicId } from '@/lib/public-id';
-import {
-  TEAM_FIXTURE_PAGE_SIZE,
-  groupByTwoMonthPeriod,
-  resolvePeriodIndex,
-} from '@/lib/season';
+import { TEAM_FIXTURE_PAGE_SIZE, groupByTwoMonthPeriod, resolvePeriodIndex } from '@/lib/season';
 import { resolveTeamTab } from '@/lib/team-page';
 import { buildTeamDirectory, tableTeamLabel, teamVisual } from '@/lib/teams';
 

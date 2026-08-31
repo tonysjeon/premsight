@@ -35,8 +35,7 @@ export function TablePageView({
     () => (season.is_current ? nextFixtures(fixtures) : undefined),
     [fixtures, season.is_current],
   );
-  const displayedItems =
-    venue === 'all' ? items : standingsByVenue(items, fixtures, venue);
+  const displayedItems = venue === 'all' ? items : standingsByVenue(items, fixtures, venue);
 
   return (
     <div className="table-page-overview">

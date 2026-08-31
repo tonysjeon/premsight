@@ -1,7 +1,13 @@
 import type { Metadata } from 'next';
 import { MatchPageView } from '@/components/match-page-view';
 import { api } from '@/lib/api';
-import { loadFixture, loadFixtures, loadSeasons, loadStandings, loadTeams } from '@/lib/football-load';
+import {
+  loadFixture,
+  loadFixtures,
+  loadSeasons,
+  loadStandings,
+  loadTeams,
+} from '@/lib/football-load';
 import { isCurrentWeekMatch, resolveH2hScope, resolveMatchTab } from '@/lib/match';
 import { buildTeamDirectory, matchDocumentTitle } from '@/lib/teams';
 
