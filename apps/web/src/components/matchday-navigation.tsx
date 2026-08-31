@@ -8,6 +8,7 @@ export function MatchdayNavigation({
   isCurrentSeason = true,
   value,
   basePath = '/',
+  onSelect,
 }: {
   matchdays: readonly number[];
   seasonId: string;
@@ -15,12 +16,14 @@ export function MatchdayNavigation({
   isCurrentSeason?: boolean;
   value: number | null;
   basePath?: string;
+  onSelect?: (matchday: number, href: string) => void;
 }) {
   return (
     <SelectionNavigation
       ariaLabel="Select round"
       emptyLabel="Matches"
       itemLabel="round"
+      onSelect={onSelect ? (option) => onSelect(Number(option.value), option.href) : undefined}
       options={matchdays.map((matchday) => ({
         value: String(matchday),
         label: roundOptionLabel(matchday, seasonName, isCurrentSeason),

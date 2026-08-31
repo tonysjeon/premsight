@@ -118,6 +118,7 @@ class ProviderPlayer(NormalizedModel):
     total_points: int
     ownership: float
     price: int
+    squad_number: int | None = None
     ea_rating: int | None = None
     rating_model_version: str | None = None
 
@@ -153,3 +154,10 @@ class PlayerSnapshotResult(NormalizedModel):
     season_id: str
     teams_processed: int
     players_processed: int
+
+
+class PlayerSyncResult(NormalizedModel):
+    season_id: str
+    teams_processed: int
+    players_processed: int
+

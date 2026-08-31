@@ -181,3 +181,192 @@ def test_fixture_prediction_coordinates_history(client: TestClient) -> None:
     assert response.json()["model_version"] == "poisson-v1"
     assert len(calls) == 1
     assert len(calls[0][2]) == 1
+
+
+def test_players_and_team_roster_endpoints(client: TestClient) -> None:
+    ids = app.state.ids
+    with psycopg.connect(os.environ["DATABASE_URL"]) as conn:
+        player_id = conn.execute(
+            """INSERT INTO players (
+                 first_name, last_name, display_name,
+                 nationality_code, photo_url, slug
+               )
+               VALUES (
+                 'Bukayo', 'Saka', 'Saka', 'EN',
+                 'https://resources.premierleague.com/saka.png', 'bukayo-saka'
+               )
+               RETURNING id"""
+        ).fetchone()[0]
+        conn.execute(
+            """INSERT INTO squad_memberships (
+                 season_id, player_id, team_id, position, positions, squad_number
+               )
+               VALUES (%s, %s, %s, 'FWD', ARRAY['FWD', 'RW']::TEXT[], 7)""",
+            (ids["season"], player_id, ids["home"]),
+        )
+        conn.commit()
+
+    # List players
+    players_res = client.get("/v1/players").json()
+    assert players_res["count"] >= 1
+    saka = next(p for p in players_res["items"] if p["slug"] == "bukayo-saka")
+    assert saka["display_name"] == "Saka"
+    assert saka["team_name"] == "Arsenal"
+    assert saka["squad_number"] == 7
+
+    # Filter by search q
+    search_res = client.get("/v1/players", params={"q": "saka"}).json()
+    assert search_res["count"] == 1
+    assert search_res["items"][0]["slug"] == "bukayo-saka"
+
+    # Player by slug / id
+    player_res = client.get("/v1/players/bukayo-saka").json()
+    assert player_res["display_name"] == "Saka"
+    assert player_res["team_name"] == "Arsenal"
+
+    # Team roster
+    roster_res = client.get(f"/v1/teams/{ids['home']}/roster").json()
+    assert roster_res["count"] == 1
+    assert roster_res["items"][0]["display_name"] == "Saka"
+
+    with psycopg.connect(os.environ["DATABASE_URL"]) as conn:
+        kepa_id = conn.execute(
+            """INSERT INTO players (first_name, last_name, display_name, slug)
+               VALUES ('Kepa', 'Arrizabalaga', 'Kepa', 'kepa') RETURNING id"""
+        ).fetchone()[0]
+        raya_id = conn.execute(
+            """INSERT INTO players (first_name, last_name, display_name, slug)
+               VALUES ('David', 'Raya', 'Raya', 'david-raya') RETURNING id"""
+        ).fetchone()[0]
+        conn.execute(
+            """INSERT INTO squad_memberships (
+                 season_id, player_id, team_id, position, positions
+               ) VALUES (%s, %s, %s, 'GK', ARRAY['GK']::TEXT[]),
+                        (%s, %s, %s, 'GK', ARRAY['GK']::TEXT[])""",
+            (ids["season"], kepa_id, ids["home"], ids["season"], raya_id, ids["home"]),
+        )
+        conn.commit()
+
+    scout_keepers = client.get(
+        "/v1/players", params={"position": "GK", "has_stats": True}
+    ).json()
+    assert [item["slug"] for item in scout_keepers["items"]] == ["david-raya"]
+    assert scout_keepers["items"][0]["season_stats"]["provider"] == "scout-csv"
+    assert scout_keepers["items"][0]["season_stats"]["stats"]["save_pct"] == 67.5
+    all_scout = client.get("/v1/players", params={"has_stats": True}).json()
+    assert any(item["slug"] == "david-raya" for item in all_scout["items"])
+    raya = client.get("/v1/players/david-raya").json()
+    assert raya["season_stats"]["provider"] == "scout-csv"
+    assert raya["season_stats"]["stats"]["int_padj"] == 54.5
+    all_keepers = client.get("/v1/players", params={"position": "GK"}).json()
+    assert {item["slug"] for item in all_keepers["items"]} == {"kepa", "david-raya"}
+
+
+def test_cb_has_stats_filters_scout_centre_backs(client: TestClient) -> None:
+    ids = app.state.ids
+    with psycopg.connect(os.environ["DATABASE_URL"]) as conn:
+        gabriel_id = conn.execute(
+            """INSERT INTO players (first_name, last_name, display_name, slug)
+               VALUES ('Gabriel', 'Magalhaes', 'Gabriel', 'gabriel') RETURNING id"""
+        ).fetchone()[0]
+        other_id = conn.execute(
+            """INSERT INTO players (first_name, last_name, display_name, slug)
+               VALUES ('Not', 'Listed', 'Random CB', 'random-cb') RETURNING id"""
+        ).fetchone()[0]
+        conn.execute(
+            """INSERT INTO squad_memberships (
+                 season_id, player_id, team_id, position, positions
+               ) VALUES (%s, %s, %s, 'DEF', ARRAY['CB']::TEXT[]),
+                        (%s, %s, %s, 'DEF', ARRAY['CB']::TEXT[])""",
+            (ids["season"], gabriel_id, ids["home"], ids["season"], other_id, ids["home"]),
+        )
+        conn.commit()
+
+    scout_cbs = client.get("/v1/players", params={"position": "CB", "has_stats": True}).json()
+    assert [item["slug"] for item in scout_cbs["items"]] == ["gabriel"]
+    assert scout_cbs["items"][0]["season_stats"]["provider"] == "scout-csv"
+    assert scout_cbs["items"][0]["season_stats"]["stats"]["fwd_pass_pct"] == 47.6
+
+
+def test_fb_has_stats_filters_scout_fullbacks(client: TestClient) -> None:
+    ids = app.state.ids
+    with psycopg.connect(os.environ["DATABASE_URL"]) as conn:
+        timber_id = conn.execute(
+            """INSERT INTO players (first_name, last_name, display_name, slug)
+               VALUES ('Jurrien', 'Timber', 'Timber', 'jurrien-timber') RETURNING id"""
+        ).fetchone()[0]
+        other_id = conn.execute(
+            """INSERT INTO players (first_name, last_name, display_name, slug)
+               VALUES ('Not', 'Listed', 'Random FB', 'random-fb') RETURNING id"""
+        ).fetchone()[0]
+        conn.execute(
+            """INSERT INTO squad_memberships (
+                 season_id, player_id, team_id, position, positions
+               ) VALUES (%s, %s, %s, 'DEF', ARRAY['RB']::TEXT[]),
+                        (%s, %s, %s, 'DEF', ARRAY['LB']::TEXT[])""",
+            (ids["season"], timber_id, ids["home"], ids["season"], other_id, ids["home"]),
+        )
+        conn.commit()
+
+    scout_fbs = client.get("/v1/players", params={"position": "FB", "has_stats": True}).json()
+    assert [item["slug"] for item in scout_fbs["items"]] == ["jurrien-timber"]
+    assert scout_fbs["items"][0]["scout_position"] == "RB"
+    assert scout_fbs["items"][0]["season_stats"]["provider"] == "scout-csv"
+    assert scout_fbs["items"][0]["season_stats"]["stats"]["crosses_cmp"] == 6.5
+
+
+def test_mid_has_stats_filters_scout_midfielders(client: TestClient) -> None:
+    ids = app.state.ids
+    with psycopg.connect(os.environ["DATABASE_URL"]) as conn:
+        rice_id = conn.execute(
+            """INSERT INTO players (first_name, last_name, display_name, slug)
+               VALUES ('Declan', 'Rice', 'Rice', 'declan-rice') RETURNING id"""
+        ).fetchone()[0]
+        other_id = conn.execute(
+            """INSERT INTO players (first_name, last_name, display_name, slug)
+               VALUES ('Not', 'Listed', 'Random MID', 'random-mid') RETURNING id"""
+        ).fetchone()[0]
+        conn.execute(
+            """INSERT INTO squad_memberships (
+                 season_id, player_id, team_id, position, positions
+               ) VALUES (%s, %s, %s, 'MID', ARRAY['CM']::TEXT[]),
+                        (%s, %s, %s, 'MID', ARRAY['CM']::TEXT[])""",
+            (ids["season"], rice_id, ids["home"], ids["season"], other_id, ids["home"]),
+        )
+        conn.commit()
+
+    scout_mids = client.get("/v1/players", params={"position": "MID", "has_stats": True}).json()
+    assert [item["slug"] for item in scout_mids["items"]] == ["declan-rice"]
+    assert scout_mids["items"][0]["scout_position"] == "CM"
+    assert scout_mids["items"][0]["season_stats"]["provider"] == "scout-csv"
+    assert scout_mids["items"][0]["season_stats"]["stats"]["key_passes"] == 74.3
+
+
+def test_wg_has_stats_filters_scout_wingers(client: TestClient) -> None:
+    ids = app.state.ids
+    with psycopg.connect(os.environ["DATABASE_URL"]) as conn:
+        saka_id = conn.execute(
+            """INSERT INTO players (first_name, last_name, display_name, slug)
+               VALUES ('Bukayo', 'Saka', 'Saka', 'saka-wg') RETURNING id"""
+        ).fetchone()[0]
+        other_id = conn.execute(
+            """INSERT INTO players (first_name, last_name, display_name, slug)
+               VALUES ('Not', 'Listed', 'Random Winger', 'random-wg') RETURNING id"""
+        ).fetchone()[0]
+        conn.execute(
+            """INSERT INTO squad_memberships (
+                 season_id, player_id, team_id, position, positions
+               ) VALUES (%s, %s, %s, 'FWD', ARRAY['RW']::TEXT[]),
+                        (%s, %s, %s, 'FWD', ARRAY['LW']::TEXT[])""",
+            (ids["season"], saka_id, ids["home"], ids["season"], other_id, ids["home"]),
+        )
+        conn.commit()
+
+    scout_wgs = client.get("/v1/players", params={"position": "WG", "has_stats": True}).json()
+    assert [item["slug"] for item in scout_wgs["items"]] == ["saka-wg"]
+    assert scout_wgs["items"][0]["season_stats"]["provider"] == "scout-csv"
+    assert scout_wgs["items"][0]["season_stats"]["stats"]["prog_carries"] == 83.1
+    assert scout_wgs["items"][0]["season_stats"]["stats"]["dribbles_cmp"] == 94.1
+    assert scout_wgs["items"][0]["scout_position"] == "RW"
+
+

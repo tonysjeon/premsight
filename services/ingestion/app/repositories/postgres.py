@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import datetime
 from uuid import UUID
 
 import psycopg
@@ -13,6 +14,7 @@ from app.domain.models import (
     ProviderTeam,
     SyncResult,
 )
+from app.services.match_window import FixtureClock
 
 
 class PostgresHistoricalRepository:
@@ -42,6 +44,91 @@ class PostgresHistoricalRepository:
             teams_processed=len(snapshot.teams),
             fixtures_processed=len(snapshot.fixtures),
         )
+
+    def list_fixture_clocks(self, competition_code: str) -> tuple[FixtureClock, ...]:
+        with psycopg.connect(self._database_url) as conn:
+            rows = conn.execute(
+                """
+                SELECT f.status, f.kickoff_at
+                FROM fixtures f
+                JOIN seasons s ON s.id = f.season_id
+                JOIN competitions c ON c.id = f.competition_id
+                WHERE c.code = %s AND s.is_current
+                """,
+                (competition_code,),
+            ).fetchall()
+        return tuple(FixtureClock(status=row[0], kickoff_at=row[1]) for row in rows)
+
+    def last_fixture_write(self, competition_code: str) -> datetime | None:
+        with psycopg.connect(self._database_url) as conn:
+            row = conn.execute(
+                """
+                SELECT MAX(f.updated_at)
+                FROM fixtures f
+                JOIN seasons s ON s.id = f.season_id
+                JOIN competitions c ON c.id = f.competition_id
+                WHERE c.code = %s AND s.is_current
+                """,
+                (competition_code,),
+            ).fetchone()
+        if row is None or row[0] is None:
+            return None
+        return row[0]
+
+    def apply_match_results(self, provider: str, fixtures: tuple[ProviderFixture, ...]) -> int:
+        updated = 0
+        with psycopg.connect(self._database_url) as conn:
+            for fixture in fixtures:
+                row = conn.execute(
+                    """
+                    SELECT f.id, f.status, f.home_score, f.away_score
+                    FROM fixtures f
+                    JOIN provider_references r
+                      ON r.entity_id = f.id
+                     AND r.entity_type = 'fixture'
+                     AND r.provider = %s
+                    WHERE r.provider_entity_id = %s
+                    """,
+                    (provider, fixture.provider_id),
+                ).fetchone()
+                if row is None:
+                    continue
+                fixture_id, status, home_score, away_score = row
+                if status == "completed" and home_score is not None and away_score is not None:
+                    continue
+                conn.execute(
+                    """
+                    UPDATE fixtures
+                    SET status = %s, kickoff_at = %s, matchday = %s,
+                        home_score = %s, away_score = %s, updated_at = now()
+                    WHERE id = %s
+                    """,
+                    (
+                        fixture.status,
+                        fixture.kickoff_at,
+                        fixture.matchday,
+                        fixture.home_score,
+                        fixture.away_score,
+                        fixture_id,
+                    ),
+                )
+                team_ids = self._team_ids(conn, provider, fixture)
+                self._replace_events(conn, fixture_id, fixture, team_ids)
+                updated += 1
+        return updated
+
+    def _team_ids(
+        self,
+        conn: Connection,
+        provider: str,
+        fixture: ProviderFixture,
+    ) -> dict[str, UUID]:
+        ids: dict[str, UUID] = {}
+        for provider_id in (fixture.home_team_provider_id, fixture.away_team_provider_id):
+            entity_id = self._reference_id(conn, provider, "team", provider_id)
+            if entity_id is not None:
+                ids[provider_id] = entity_id
+        return ids
 
     def _upsert_competition(self, conn: Connection, snapshot: HistoricalSnapshot) -> UUID:
         item = snapshot.competition

@@ -40,6 +40,10 @@ def test_runtime_package_contains_sql_assets() -> None:
         "0011_users.up.sql",
         "0012_user_avatar.down.sql",
         "0012_user_avatar.up.sql",
+        "0013_players_and_rosters.down.sql",
+        "0013_players_and_rosters.up.sql",
+        "0014_stats_position_family.down.sql",
+        "0014_stats_position_family.up.sql",
     ]
     assert [path.name for path in SEEDS_DIR.glob("*.sql")] == ["001_premier_league.sql"]
 
@@ -49,7 +53,7 @@ def test_migrations_apply_on_empty_database(database_url: str) -> None:
     applied = migrate_up(database_url)
     assert applied == [
         "0001", "0002", "0003", "0004", "0005", "0006", "0007", "0008", "0009", "0010", "0011",
-        "0012",
+        "0012", "0013", "0014",
     ]
 
     with psycopg.connect(database_url) as conn:
@@ -66,6 +70,8 @@ def test_migrations_apply_on_empty_database(database_url: str) -> None:
             "0010",
             "0011",
             "0012",
+            "0013",
+            "0014",
         ]
         tables = {
             row[0]
@@ -88,6 +94,10 @@ def test_migrations_apply_on_empty_database(database_url: str) -> None:
                         "player_snapshot_entries",
                         "users",
                         "oauth_identities",
+                        "players",
+                        "squad_memberships",
+                        "player_season_stats",
+                        "player_archetypes",
                         "schema_meta",
                         "schema_migrations",
                     ],
@@ -105,6 +115,10 @@ def test_migrations_apply_on_empty_database(database_url: str) -> None:
         "player_snapshot_entries",
         "users",
         "oauth_identities",
+        "players",
+        "squad_memberships",
+        "player_season_stats",
+        "player_archetypes",
         "schema_meta",
         "schema_migrations",
     }
@@ -113,6 +127,31 @@ def test_migrations_apply_on_empty_database(database_url: str) -> None:
 def test_migrations_roll_back_safely(database_url: str) -> None:
     migrate_down_all(database_url)
     migrate_up(database_url)
+
+    assert migrate_down(database_url, steps=1) == ["0014"]
+    with psycopg.connect(database_url) as conn:
+        columns = {
+            row[0]
+            for row in conn.execute(
+                """SELECT column_name FROM information_schema.columns
+                   WHERE table_schema='public' AND table_name='player_season_stats'"""
+            ).fetchall()
+        }
+        assert "position_family" not in columns
+        assert "minutes" in columns
+
+    assert migrate_down(database_url, steps=1) == ["0013"]
+    with psycopg.connect(database_url) as conn:
+        assert conn.execute("SELECT to_regclass('public.players')").fetchone() == (None,)
+        assert conn.execute(
+            "SELECT to_regclass('public.squad_memberships')"
+        ).fetchone() == (None,)
+        assert conn.execute(
+            "SELECT to_regclass('public.player_season_stats')"
+        ).fetchone() == (None,)
+        assert conn.execute(
+            "SELECT to_regclass('public.player_archetypes')"
+        ).fetchone() == (None,)
 
     assert migrate_down(database_url, steps=1) == ["0012"]
     with psycopg.connect(database_url) as conn:
@@ -552,3 +591,84 @@ def test_users_email_is_unique_and_lowercase(migrated_db: str) -> None:
                 """,
                 ("http://insecure.example/photo", user_id),
             )
+
+
+def test_players_and_squad_memberships_constraints(migrated_db: str) -> None:
+    seed(migrated_db)
+
+    with psycopg.connect(migrated_db) as conn:
+        season_id = conn.execute(
+            """
+            SELECT s.id
+            FROM seasons s
+            JOIN competitions c ON c.id = s.competition_id
+            WHERE c.code = 'PL' AND s.is_current
+            """
+        ).fetchone()[0]
+
+        team_id = conn.execute(
+            """
+            INSERT INTO teams (name, short_name, tla)
+            VALUES ('Arsenal', 'Arsenal', 'ARS')
+            RETURNING id
+            """
+        ).fetchone()[0]
+
+        player_id = conn.execute(
+            """
+            INSERT INTO players (first_name, last_name, display_name, nationality_code, photo_url)
+            VALUES (
+                'Bukayo', 'Saka', 'Bukayo Saka', 'EN',
+                'https://resources.premierleague.com/premierleague/photos/players/250x250/p223340.png'
+            )
+            RETURNING id
+            """
+        ).fetchone()[0]
+
+        membership_id = conn.execute(
+            """
+            INSERT INTO squad_memberships (
+                season_id, player_id, team_id, position, positions, squad_number
+            )
+            VALUES (%s, %s, %s, 'FWD', ARRAY['FWD', 'RW']::TEXT[], 7)
+            RETURNING id
+            """,
+            (season_id, player_id, team_id),
+        ).fetchone()[0]
+        assert membership_id is not None
+        conn.commit()
+
+        # Duplicate membership for same season + player must fail
+        with pytest.raises(UniqueViolation):
+            conn.execute(
+                """
+                INSERT INTO squad_memberships (
+                    season_id, player_id, team_id, position, positions, squad_number
+                )
+                VALUES (%s, %s, %s, 'MID', ARRAY['MID']::TEXT[], 8)
+                """,
+                (season_id, player_id, team_id),
+            )
+        conn.rollback()
+
+        # Provider reference with entity_type='player' succeeds
+        conn.execute(
+            """
+            INSERT INTO provider_references (provider, entity_type, entity_id, provider_entity_id)
+            VALUES ('fpl', 'player', %s, 'fpl-saka-1')
+            """,
+            (player_id,),
+        )
+        conn.commit()
+
+        # Invalid position check
+        with pytest.raises(CheckViolation):
+            conn.execute(
+                """
+                INSERT INTO squad_memberships (season_id, player_id, team_id, position, positions)
+                VALUES (%s, %s, %s, 'INVALID', ARRAY['FWD']::TEXT[])
+                """,
+                (season_id, player_id, team_id),
+            )
+        conn.rollback()
+

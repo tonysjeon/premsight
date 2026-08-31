@@ -1,0 +1,41 @@
+name: Fixture refresh
+
+on:
+  schedule:
+    # Hourly. GitHub can delay cron jobs by several minutes.
+    - cron: '17 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: fixture-refresh
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  refresh:
+    name: Refresh Premier League fixtures
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: services/ingestion
+    env:
+      DATABASE_URL: ${{ secrets.INGEST_DATABASE_URL }}
+      FOOTBALL_DATA_API_TOKEN: ${{ secrets.FOOTBALL_DATA_API_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: uv sync --frozen --no-dev
+
+      - name: Refresh fixtures
+        run: uv run premsight-ingest refresh

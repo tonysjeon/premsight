@@ -8,3 +8,4 @@ uv.lock
 pnpm-lock.yaml
 *.min.js
 apps/web/out
+services/ingestion/app/data/*.json

@@ -1,11 +1,14 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { Card } from '@/components/card';
-import { Table, TableLegend } from '@/components/table';
-import { api } from '@/lib/api';
-import { resolveSeason, withSeasonQuery } from '@/lib/public-id';
-import { formTable, nextFixtures, standingsByVenue, type VenueFilter } from '@/lib/season';
-import { buildTeamDirectory } from '@/lib/teams';
+import { TablePageView } from '@/components/table-page-view';
+import {
+  loadCurrentSeason,
+  loadFixtures,
+  loadSeasons,
+  loadStandings,
+  loadTeams,
+} from '@/lib/football-load';
+import { resolveSeason } from '@/lib/public-id';
+import type { VenueFilter } from '@/lib/season';
 
 export const metadata: Metadata = { title: 'League table' };
 export const dynamic = 'force-dynamic';
@@ -16,59 +19,25 @@ export default async function TablePage({
   searchParams: Promise<{ season?: string | string[]; venue?: string | string[] }>;
 }) {
   const { season: requestedSeason, venue: requestedVenue } = await searchParams;
-  const [currentSeason, seasons] = await Promise.all([api.currentSeason(), api.seasons()]);
+  const [currentSeason, seasons] = await Promise.all([loadCurrentSeason(), loadSeasons()]);
   const requestedSeasonId = Array.isArray(requestedSeason) ? requestedSeason[0] : requestedSeason;
   const season = resolveSeason(seasons, requestedSeasonId, currentSeason);
   const rawVenue = Array.isArray(requestedVenue) ? requestedVenue[0] : requestedVenue;
   const venue: VenueFilter = rawVenue === 'home' || rawVenue === 'away' ? rawVenue : 'all';
   const [items, fixtures, teams] = await Promise.all([
-    api.standings(season.id),
-    api.fixtures(`season_id=${season.id}`),
-    api.teams(`season_id=${season.id}`),
+    loadStandings(season.id),
+    loadFixtures(`season_id=${season.id}`),
+    loadTeams(`season_id=${season.id}`),
   ]);
-  const displayedItems = venue === 'all' ? items : standingsByVenue(items, fixtures, venue);
-  const venueFilters: readonly { label: string; value: VenueFilter }[] = [
-    { label: 'All', value: 'all' },
-    { label: 'Home', value: 'home' },
-    { label: 'Away', value: 'away' },
-  ];
   return (
     <main className="shell home-page page table-page">
-      <div className="table-page-overview">
-        <Card flush>
-          <nav aria-label="Filter table by venue" className="chips view-filters">
-            {venueFilters.map((filter) => (
-              <Link
-                aria-current={filter.value === venue ? 'true' : undefined}
-                className="chip"
-                href={withSeasonQuery(
-                  '/table',
-                  season,
-                  filter.value === 'all' ? {} : { venue: filter.value },
-                )}
-                key={filter.value}
-              >
-                {filter.label}
-              </Link>
-            ))}
-          </nav>
-          {displayedItems.length ? (
-            <>
-              <Table
-                form={formTable(fixtures, 5)}
-                items={displayedItems}
-                leagueSize={displayedItems.length}
-                nextByTeam={season.is_current ? nextFixtures(fixtures) : undefined}
-                overview
-                teams={buildTeamDirectory(teams)}
-              />
-              <TableLegend />
-            </>
-          ) : (
-            <p className="empty">The table appears once matches are played.</p>
-          )}
-        </Card>
-      </div>
+      <TablePageView
+        fixtures={fixtures}
+        items={items}
+        season={season}
+        teams={teams}
+        venue={venue}
+      />
     </main>
   );
 }

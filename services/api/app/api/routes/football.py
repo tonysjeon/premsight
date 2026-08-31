@@ -68,6 +68,38 @@ def team(team_id: str, repo: Repo) -> dict:
     return item
 
 
+@router.get("/teams/{team_id}/roster")
+def team_roster(team_id: str, repo: Repo, season_id: str | None = None) -> dict:
+    resolved_team_id = _team_id(repo, team_id)
+    resolved_season_id = None if season_id is None else _season_id(repo, season_id)
+    items = repo.team_roster(resolved_team_id, resolved_season_id)
+    return {"items": items, "count": len(items)}
+
+
+@router.get("/players")
+def players(
+    repo: Repo,
+    season_id: str | None = None,
+    team_id: str | None = None,
+    q: str | None = None,
+    position: str | None = None,
+    has_stats: bool = False,
+) -> dict:
+    resolved_season = None if season_id is None else _season_id(repo, season_id)
+    resolved_team = None if team_id is None else _team_id(repo, team_id)
+    items = repo.players(resolved_season, resolved_team, q, position, has_stats)
+    return {"items": items, "count": len(items)}
+
+
+@router.get("/players/{player_id}")
+def player(player_id: str, repo: Repo, season_id: str | None = None) -> dict:
+    resolved_season = None if season_id is None else _season_id(repo, season_id)
+    item = repo.player(player_id, resolved_season)
+    if item is None:
+        raise HTTPException(404, "Player not found")
+    return item
+
+
 @router.get("/fixtures")
 def fixtures(
     repo: Repo,

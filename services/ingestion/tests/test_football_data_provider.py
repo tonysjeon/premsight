@@ -1,4 +1,5 @@
 import json
+from datetime import date
 
 import httpx
 import pytest
@@ -168,3 +169,27 @@ def test_provider_retries_rate_limit_response() -> None:
 
     assert attempts == 3
     assert sleeps == [0.0]
+
+
+def test_provider_fetches_matches_for_a_date_window() -> None:
+    responses = _responses()
+    requested: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requested.append(request)
+        return httpx.Response(200, json=responses[request.url.path])
+
+    client = httpx.Client(
+        base_url="https://api.football-data.org/v4",
+        transport=httpx.MockTransport(handler),
+    )
+    provider = FootballDataProvider(api_token="secret", client=client)
+    fixtures = provider.fetch_matches("PL", 2025, date(2025, 8, 16), date(2025, 8, 16))
+
+    assert len(requested) == 1
+    assert requested[0].url.params["season"] == "2025"
+    assert requested[0].url.params["dateFrom"] == "2025-08-16"
+    assert requested[0].url.params["dateTo"] == "2025-08-16"
+    assert fixtures[0].status == "completed"
+    assert fixtures[0].home_score == 2
+    assert fixtures[0].venue is None

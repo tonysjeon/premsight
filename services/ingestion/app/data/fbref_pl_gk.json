@@ -1,0 +1,338 @@
+[
+  {
+    "name": "Alisson",
+    "team": "Liverpool",
+    "position": "GK",
+    "minutes": 2639,
+    "stats": {
+      "save_pct": 18.2,
+      "aerials": 9.7,
+      "int_padj": 89.6,
+      "passes_cmp": 66.2,
+      "long_pct": 55.2,
+      "short_pct": 14.9,
+      "psxg_ga": 38.3
+    },
+    "features": [
+      14.9,
+      38.3,
+      18.2,
+      9.7,
+      89.6,
+      66.2,
+      55.2
+    ]
+  },
+  {
+    "name": "E. Mart\u00ednez",
+    "team": "Aston Villa",
+    "position": "GK",
+    "minutes": 3153,
+    "stats": {
+      "save_pct": 75.3,
+      "aerials": 94.2,
+      "int_padj": 50.6,
+      "passes_cmp": 84.4,
+      "long_pct": 42.2,
+      "short_pct": 66.9,
+      "psxg_ga": 88.3
+    },
+    "features": [
+      66.9,
+      88.3,
+      75.3,
+      94.2,
+      50.6,
+      84.4,
+      42.2
+    ]
+  },
+  {
+    "name": "David Raya",
+    "team": "Arsenal",
+    "position": "GK",
+    "minutes": 3729,
+    "stats": {
+      "save_pct": 67.5,
+      "aerials": 48.1,
+      "int_padj": 54.5,
+      "passes_cmp": 50.6,
+      "long_pct": 83.1,
+      "short_pct": 22.1,
+      "psxg_ga": 67.5
+    },
+    "features": [
+      22.1,
+      67.5,
+      67.5,
+      48.1,
+      54.5,
+      50.6,
+      83.1
+    ]
+  },
+  {
+    "name": "D. Petrovi\u0107",
+    "team": "Bournemouth",
+    "position": "GK",
+    "minutes": 3828,
+    "stats": {
+      "save_pct": 41.6,
+      "aerials": 87.0,
+      "int_padj": 41.6,
+      "passes_cmp": 10.4,
+      "long_pct": 12.3,
+      "short_pct": 32.5,
+      "psxg_ga": 42.2
+    },
+    "features": [
+      32.5,
+      42.2,
+      41.6,
+      87.0,
+      41.6,
+      10.4,
+      12.3
+    ]
+  },
+  {
+    "name": "C. Kelleher",
+    "team": "Brentford",
+    "position": "GK",
+    "minutes": 3718,
+    "stats": {
+      "save_pct": 63.6,
+      "aerials": 20.8,
+      "int_padj": 46.8,
+      "passes_cmp": 59.7,
+      "long_pct": 81.8,
+      "short_pct": 59.1,
+      "psxg_ga": 59.1
+    },
+    "features": [
+      59.1,
+      59.1,
+      63.6,
+      20.8,
+      46.8,
+      59.7,
+      81.8
+    ]
+  },
+  {
+    "name": "B. Verbruggen",
+    "team": "Brighton",
+    "position": "GK",
+    "minutes": 3819,
+    "stats": {
+      "save_pct": 59.7,
+      "aerials": 61.7,
+      "int_padj": 46.8,
+      "passes_cmp": 90.3,
+      "long_pct": 5.2,
+      "short_pct": 80.5,
+      "psxg_ga": 55.2
+    },
+    "features": [
+      80.5,
+      55.2,
+      59.7,
+      61.7,
+      46.8,
+      90.3,
+      5.2
+    ]
+  },
+  {
+    "name": "Robert S\u00e1nchez",
+    "team": "Chelsea",
+    "position": "GK",
+    "minutes": 3416,
+    "stats": {
+      "save_pct": 42.9,
+      "aerials": 80.5,
+      "int_padj": 66.9,
+      "passes_cmp": 78.6,
+      "long_pct": 8.4,
+      "short_pct": 16.2,
+      "psxg_ga": 87.0
+    },
+    "features": [
+      16.2,
+      87.0,
+      42.9,
+      80.5,
+      66.9,
+      78.6,
+      8.4
+    ]
+  },
+  {
+    "name": "D. Henderson",
+    "team": "Crystal Palace",
+    "position": "GK",
+    "minutes": 3707,
+    "stats": {
+      "save_pct": 40.9,
+      "aerials": 87.0,
+      "int_padj": 36.4,
+      "passes_cmp": 15.6,
+      "long_pct": 31.8,
+      "short_pct": 53.9,
+      "psxg_ga": 73.4
+    },
+    "features": [
+      53.9,
+      73.4,
+      40.9,
+      87.0,
+      36.4,
+      15.6,
+      31.8
+    ]
+  },
+  {
+    "name": "B. Leno",
+    "team": "Fulham",
+    "position": "GK",
+    "minutes": 3816,
+    "stats": {
+      "save_pct": 25.3,
+      "aerials": 98.1,
+      "int_padj": 43.5,
+      "passes_cmp": 80.5,
+      "long_pct": 73.4,
+      "short_pct": 70.1,
+      "psxg_ga": 16.2
+    },
+    "features": [
+      70.1,
+      16.2,
+      25.3,
+      98.1,
+      43.5,
+      80.5,
+      73.4
+    ]
+  },
+  {
+    "name": "J. Pickford",
+    "team": "Everton",
+    "position": "GK",
+    "minutes": 3787,
+    "stats": {
+      "save_pct": 56.5,
+      "aerials": 55.2,
+      "int_padj": 53.9,
+      "passes_cmp": 42.2,
+      "long_pct": 37.0,
+      "short_pct": 75.3,
+      "psxg_ga": 60.4
+    },
+    "features": [
+      75.3,
+      60.4,
+      56.5,
+      55.2,
+      53.9,
+      42.2,
+      37.0
+    ]
+  },
+  {
+    "name": "G. Donnarumma",
+    "team": "Man City",
+    "position": "GK",
+    "minutes": 3389,
+    "stats": {
+      "save_pct": 87.7,
+      "aerials": 94.2,
+      "int_padj": 29.9,
+      "passes_cmp": 29.9,
+      "long_pct": 31.2,
+      "short_pct": 53.9,
+      "psxg_ga": 92.9
+    },
+    "features": [
+      53.9,
+      92.9,
+      87.7,
+      94.2,
+      29.9,
+      29.9,
+      31.2
+    ]
+  },
+  {
+    "name": "S. Lammens",
+    "team": "Man United",
+    "position": "GK",
+    "minutes": 3205,
+    "stats": {
+      "save_pct": 30.5,
+      "aerials": 34.4,
+      "int_padj": 11.0,
+      "passes_cmp": 16.9,
+      "long_pct": 43.5,
+      "short_pct": 16.9,
+      "psxg_ga": 62.3
+    },
+    "features": [
+      16.9,
+      62.3,
+      30.5,
+      34.4,
+      11.0,
+      16.9,
+      43.5
+    ]
+  },
+  {
+    "name": "M. Sels",
+    "team": "Nott'm Forest",
+    "position": "GK",
+    "minutes": 2977,
+    "stats": {
+      "save_pct": 75.3,
+      "aerials": 20.8,
+      "int_padj": 3.9,
+      "passes_cmp": 9.1,
+      "long_pct": 89.6,
+      "short_pct": 65.6,
+      "psxg_ga": 46.1
+    },
+    "features": [
+      65.6,
+      46.1,
+      75.3,
+      20.8,
+      3.9,
+      9.1,
+      89.6
+    ]
+  },
+  {
+    "name": "R. Roefs",
+    "team": "Sunderland",
+    "position": "GK",
+    "minutes": 3527,
+    "stats": {
+      "save_pct": 69.5,
+      "aerials": 92.9,
+      "int_padj": 37.7,
+      "passes_cmp": 58.4,
+      "long_pct": 23.4,
+      "short_pct": 84.4,
+      "psxg_ga": 70.8
+    },
+    "features": [
+      84.4,
+      70.8,
+      69.5,
+      92.9,
+      37.7,
+      58.4,
+      23.4
+    ]
+  }
+]

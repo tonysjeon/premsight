@@ -1,5 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import { SlidingTabs } from '@/components/sliding-tabs';
+import { replacePath, shouldSoftNavigate } from '@/lib/client-nav';
 import type { MatchTab } from '@/lib/match';
 
 const ALL_TABS: readonly { id: MatchTab; label: string }[] = [
@@ -12,10 +15,12 @@ export function MatchTabs({
   fixtureId,
   value,
   hasPreview = true,
+  onSelect,
 }: {
   fixtureId: string;
   value: MatchTab;
   hasPreview?: boolean;
+  onSelect?: (tab: MatchTab) => void;
 }) {
   const tabs = hasPreview ? ALL_TABS : ALL_TABS.filter((tab) => tab.id !== 'preview');
   return (
@@ -28,6 +33,12 @@ export function MatchTabs({
             aria-current={tab.id === value ? 'page' : undefined}
             href={href}
             key={tab.id}
+            onClick={(event) => {
+              if (!onSelect || !shouldSoftNavigate(event)) return;
+              event.preventDefault();
+              onSelect(tab.id);
+              replacePath(href);
+            }}
             replace
           >
             {tab.label}

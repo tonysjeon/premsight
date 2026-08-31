@@ -52,6 +52,14 @@ export function seasonYearLabel(name: string): string {
   return `${start}/${end}`;
 }
 
+/** Two-digit campaign, e.g. `2025/2026` → `25/26`. */
+export function seasonShortLabel(name: string): string {
+  const compact = seasonYearLabel(name);
+  const matched = compact.match(/^(\d{4})\/(\d{2})$/);
+  if (!matched || matched[1] === undefined || matched[2] === undefined) return compact;
+  return `${matched[1].slice(-2)}/${matched[2]}`;
+}
+
 /** Compact earliest stored season for Head-to-Head coverage, e.g. `2021/22`. */
 export function headToHeadCoverageLabel(
   seasons: readonly { name: string; start_date: string }[],

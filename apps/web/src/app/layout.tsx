@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import '@fontsource-variable/manrope';
 import { SiteHeader } from '@/components/site-header';
-import { api } from '@/lib/api';
+import { loadCurrentSeason, loadSeasons } from '@/lib/football-load';
 import { seasonPublicId } from '@/lib/public-id';
 import './globals.css';
 
@@ -15,7 +15,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const seasonNavigation = await Promise.all([api.currentSeason(), api.seasons()])
+  const seasonNavigation = await Promise.all([loadCurrentSeason(), loadSeasons()])
     .then(([currentSeason, seasons]) => ({
       currentSeasonId: seasonPublicId(currentSeason),
       seasons,
@@ -38,8 +38,9 @@ export default async function RootLayout({
           <div className="shell">
             PremSight · Premier League intelligence ·{' '}
             <a href="https://www.football-data.org/" rel="noreferrer" target="_blank">
-              Football data provided by the Football-Data.org API
+              Football data provided by Football-Data.org
             </a>
+            {' · Stats from FBref & FPL'}
           </div>
         </footer>
       </body>
