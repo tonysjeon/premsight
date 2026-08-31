@@ -81,6 +81,14 @@ class FplProvider:
             raise ValueError(f"Player references unknown FPL region: {region_value}")
         chance = item.get("chance_of_playing_next_round")
         availability = 100 if chance is None else _integer(item, "chance_of_playing_next_round")
+        raw_squad_number = item.get("squad_number")
+        squad_number = (
+            raw_squad_number
+            if isinstance(raw_squad_number, int)
+            and not isinstance(raw_squad_number, bool)
+            and 1 <= raw_squad_number <= 99
+            else None
+        )
         return ProviderPlayer(
             provider_id=str(_integer(item, "id")),
             team_provider_id=team_provider_id,
@@ -98,6 +106,7 @@ class FplProvider:
             total_points=_integer(item, "total_points"),
             ownership=_decimal_string(item, "selected_by_percent"),
             price=_integer(item, "now_cost"),
+            squad_number=squad_number,
         )
 
 

@@ -60,3 +60,21 @@ def test_snapshot_replay_is_idempotent(database_url: str) -> None:
     assert counts == (1, 1, 2, 1, 5, 2)
     assert fixture == ("completed", 2, 1, "Emirates Stadium")
     assert events == [("goal", 12, "Bukayo Saka"), ("card", 34, "Moises Caicedo")]
+
+
+def test_last_fixture_write_is_none_without_current_season_rows(database_url: str) -> None:
+    repository = PostgresHistoricalRepository(database_url)
+    repository.sync_snapshot(historical_snapshot())
+    assert repository.last_fixture_write("PL") is None
+
+
+def test_last_fixture_write_returns_current_season_timestamp(database_url: str) -> None:
+    repository = PostgresHistoricalRepository(database_url)
+    repository.sync_snapshot(historical_snapshot())
+    with psycopg.connect(database_url) as conn:
+        conn.execute("UPDATE seasons SET is_current = TRUE")
+        conn.commit()
+
+    written = repository.last_fixture_write("PL")
+    assert written is not None
+    assert repository.last_fixture_write("XX") is None

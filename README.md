@@ -91,7 +91,7 @@ docker compose up --build
 | PostgreSQL               | localhost:5433               |
 | Redis                    | localhost:6379               |
 
-Compose starts a fixture refresh job in the ingestion service: one sync at startup, then every 15 minutes for the current Premier League season. Manual backfill remains available via `premsight-ingest`.
+Compose starts a fixture refresh job in the ingestion service: a daily-style schedule sync plus result pulls only while matches are in their kickoff window. Manual backfill remains available via `premsight-ingest`.
 
 ### 3. Native development (optional)
 

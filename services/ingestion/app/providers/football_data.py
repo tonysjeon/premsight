@@ -270,6 +270,48 @@ class FootballDataProvider:
             events=FootballDataProvider._normalize_events(match),
         )
 
+    def fetch_matches(
+        self,
+        competition_code: str,
+        season_start_year: int,
+        date_from: date,
+        date_to: date,
+    ) -> tuple[ProviderFixture, ...]:
+        matches_payload = MatchesResponse.model_validate(
+            self._get(
+                f"/competitions/{competition_code}/matches",
+                params={
+                    "season": str(season_start_year),
+                    "dateFrom": date_from.isoformat(),
+                    "dateTo": date_to.isoformat(),
+                },
+                headers=UNFOLD_HEADERS,
+            )
+        )
+        return tuple(self._normalize_match_result(match) for match in matches_payload.matches)
+
+    @staticmethod
+    def _normalize_match_result(match: MatchPayload) -> ProviderFixture:
+        try:
+            normalized_status = STATUS_MAP[match.status]
+        except KeyError as error:
+            raise ValueError(f"unsupported football-data status: {match.status}") from error
+        score = match.score.full_time
+        if normalized_status == "completed" and (score.home is None or score.away is None):
+            raise ValueError(f"completed match {match.id} has no final score")
+        return ProviderFixture(
+            provider_id=str(match.id),
+            home_team_provider_id=str(match.home_team.id),
+            away_team_provider_id=str(match.away_team.id),
+            status=normalized_status,
+            kickoff_at=match.utc_date,
+            matchday=match.matchday,
+            home_score=score.home,
+            away_score=score.away,
+            venue=None,
+            events=FootballDataProvider._normalize_events(match),
+        )
+
     @staticmethod
     def _normalize_events(match: MatchPayload) -> tuple[ProviderMatchEvent, ...]:
         events: list[ProviderMatchEvent] = []
