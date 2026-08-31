@@ -14,9 +14,9 @@ Implemented:
 
 - Monorepo, Docker Compose, GitHub Actions CI
 - PostgreSQL core football schema, reversible migrations, PL seed
-- Ingestion from football-data.org, openfootball backfill, FPL player snapshots
-- Product API for seasons, teams, fixtures, standings, predictions, draft catalog, Google sign-in
-- Next.js surfaces: home overview, table, fixtures, match hub, team hub, Draft XI
+- Ingestion from football-data.org, openfootball backfill, FPL player snapshots, rosters & FBref stats
+- Product API for seasons, teams, fixtures, standings, predictions, players, rosters, scout percentiles & compare, draft catalog, Google sign-in
+- Next.js surfaces: home overview, table, fixtures, match hub, team hub (with full squad roster), Draft XI, Compare page
 - Isolated `poisson-v1` prediction service
 - Vercel config for `apps/web` (frontend only; API/Postgres are not on Vercel)
 
@@ -43,7 +43,7 @@ services/ingestion            -->  PostgreSQL
 Rules:
 
 - Keep UI, HTTP API, ingestion, and prediction **loosely coupled**.
-- **Never** put Poisson / rating math in `services/api` or `apps/web`. The API only loads completed results and calls the prediction engine.
+- **Never** put Poisson / rating math in `services/api` or `apps/web`. The API only loads vectors/results and calls the prediction engine.
 - Share contracts (types, SQL schema), not copied business logic.
 - Ingestion owns provider adapters and writes; the API owns reads for the product.
 
@@ -59,6 +59,7 @@ Rules:
 | `packages/shared-types`      | Intended shared TS contracts; currently `HealthResponse` only |
 | `infrastructure/`            | Future IaC — unused                                           |
 | `.github/workflows/ci.yml`   | Frontend, backend, database, and Postgres integration jobs    |
+| `.github/workflows/ingest-fixtures.yml` | Hourly Premier League fixture/result ingest (Actions secrets) |
 | `docker-compose.yml`         | Full local stack                                              |
 | `.cursor/rules.md`           | Short engineering principles (same intent as this file)       |
 
@@ -127,6 +128,9 @@ Prefix `/v1`. Persistence via `FootballRepository` (psycopg, dict rows). CORS fr
 | GET    | `/v1/fixtures/{id}`            | includes `events`                                                 |
 | GET    | `/v1/fixtures/{id}/prediction` | proxies prediction engine; 422/503 on insufficient history / down |
 | GET    | `/v1/standings?season_id=`     | computed                                                          |
+| GET    | `/v1/players`                  | list/search; `has_stats` with no `position` is all scout CSVs; GK/CB/FB/MID/ST/WG `has_stats` uses those CSVs (not FBref) |
+| GET    | `/v1/players/{id}`             | player identity, stats, archetype                                 |
+| GET    | `/v1/teams/{id}/roster`        | squad members grouped by position                                 |
 | GET    | `/v1/player-snapshots/latest`  | Draft XI catalog                                                  |
 | POST   | `/v1/auth/logout`              | clear session cookie                                              |
 | GET    | `/v1/auth/me`                  | current user or 401                                               |
@@ -163,9 +167,10 @@ CLI (`premsight-ingest`):
 uv run premsight-ingest historical-season --competition PL --season 2026
 uv run premsight-ingest openfootball-season --season 2023
 uv run premsight-ingest player-snapshot
+uv run premsight-ingest refresh
 ```
 
-Scheduler: current PL season, once at startup then every `SCHEDULE_INTERVAL_SECONDS` (default 900) when token + `SCHEDULE_ENABLED` are set.
+Scheduler: current PL season. Full schedule sync at startup when idle (and about daily). Result pulls only in a match window (15 minutes before kickoff until the fixture is completed/cancelled/postponed). Idle otherwise. Requires token + `SCHEDULE_ENABLED`. Production without a paid ingest instance can run `refresh` from GitHub Actions (`.github/workflows/ingest-fixtures.yml`) against the same Postgres the API uses.
 
 Player snapshot: one projected XI per club from EA FC ratings and valid formations; `global_rank` orders the captain pool. Position overrides live in `services/ingestion/app/data/`.
 
@@ -181,8 +186,9 @@ Routes:
 | `/table`        | Full table                                    |
 | `/fixtures`     | Fixtures / results                            |
 | `/matches/[id]` | Match hub (hero, H2H, form, prediction)       |
-| `/teams/[id]`   | Team hub                                      |
+| `/teams/[id]`   | Team hub (fixtures, form, squad roster)       |
 | `/draft`        | Draft XI simulator                            |
+| `/compare`      | Player similarity & radar comparison          |
 | `/profile`      | Signed-in account: photo, collections, delete |
 
 Season is a `?season=` query on Overview / Table / Fixtures. Match and team pages, Draft, and Profile hide that season chrome. Preserve `season` when linking those list routes.

@@ -1,5 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import { SlidingTabs } from '@/components/sliding-tabs';
+import { replacePath, shouldSoftNavigate } from '@/lib/client-nav';
 import type { TeamTab } from '@/lib/team-page';
 
 const TABS: readonly { id: TeamTab; label: string }[] = [
@@ -8,7 +11,15 @@ const TABS: readonly { id: TeamTab; label: string }[] = [
   { id: 'roster', label: 'Roster' },
 ];
 
-export function TeamTabs({ teamId, value }: { teamId: string; value: TeamTab }) {
+export function TeamTabs({
+  teamId,
+  value,
+  onSelect,
+}: {
+  teamId: string;
+  value: TeamTab;
+  onSelect?: (tab: TeamTab) => void;
+}) {
   return (
     <SlidingTabs className="match-tabs" label="Team sections" selected={value}>
       {TABS.map((tab) => {
@@ -18,6 +29,12 @@ export function TeamTabs({ teamId, value }: { teamId: string; value: TeamTab }) 
             aria-current={tab.id === value ? 'page' : undefined}
             href={href}
             key={tab.id}
+            onClick={(event) => {
+              if (!onSelect || !shouldSoftNavigate(event)) return;
+              event.preventDefault();
+              onSelect(tab.id);
+              replacePath(href);
+            }}
             replace
           >
             {tab.label}

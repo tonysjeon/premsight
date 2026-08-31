@@ -38,8 +38,9 @@ export default async function RootLayout({
           <div className="shell">
             PremSight · Premier League intelligence ·{' '}
             <a href="https://www.football-data.org/" rel="noreferrer" target="_blank">
-              Football data provided by the Football-Data.org API
+              Football data provided by Football-Data.org
             </a>
+            {' · Stats from FBref & FPL'}
           </div>
         </footer>
       </body>

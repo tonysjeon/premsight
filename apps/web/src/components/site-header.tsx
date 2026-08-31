@@ -46,10 +46,11 @@ function SiteHeaderContent({
     seasonId ? `${path}?season=${encodeURIComponent(seasonId)}` : path;
   const hideSeasonNav =
     pathname === '/draft' ||
+    pathname === '/compare' ||
+    pathname.startsWith('/compare/') ||
     pathname === '/profile' ||
     pathname.startsWith('/matches/') ||
     pathname.startsWith('/teams/');
-  const isHome = SEASON_ROUTES.includes(pathname);
   const leagueName = selectedSeason?.competition_name ?? 'Premier League';
 
   return (
@@ -60,11 +61,11 @@ function SiteHeaderContent({
             <BrandLink href={href('/')} />
             <div className="site-header-actions">
               <Link
-                aria-current={isHome ? 'page' : undefined}
+                aria-current={pathname === '/compare' ? 'page' : undefined}
                 className="header-nav-link"
-                href={href('/')}
+                href="/compare"
               >
-                Home
+                Compare
               </Link>
               <Link
                 aria-current={pathname === '/draft' ? 'page' : undefined}
@@ -139,8 +140,8 @@ function SiteHeaderFallback({
           <div className="shell home-page site-brand-row">
             <BrandLink href={href('/')} />
             <div className="site-header-actions">
-              <Link className="header-nav-link" href={href('/')}>
-                Home
+              <Link className="header-nav-link" href="/compare">
+                Compare
               </Link>
               <Link className="header-nav-link" href="/draft">
                 Draft
