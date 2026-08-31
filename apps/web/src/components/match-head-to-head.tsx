@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { LocalListDate } from '@/components/local-kickoff';
 import { TeamBadge } from '@/components/team-badge';
 import type { Fixture } from '@/lib/api';
+import { replacePath } from '@/lib/client-nav';
 import { headToHeadRecord, type H2hScope } from '@/lib/match';
 import { matchdayTeamLabel, teamVisual, type TeamDirectory, type TeamVisual } from '@/lib/teams';
 
@@ -42,7 +43,7 @@ export function MatchHeadToHead({
     const nextUrl = next
       ? `/matches/${fixtureId}?tab=h2h&h2h=home`
       : `/matches/${fixtureId}?tab=h2h`;
-    window.history.replaceState(null, '', nextUrl);
+    replacePath(nextUrl);
   };
 
   const tournamentHref = `/matches/${fixtureId}?tab=h2h`;

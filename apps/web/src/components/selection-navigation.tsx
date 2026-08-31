@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import { TeamBadge } from '@/components/team-badge';
+import { shouldSoftNavigate } from '@/lib/client-nav';
 import { syncPickerAlignment } from '@/lib/picker-menu';
 import type { TeamVisual } from '@/lib/teams';
 
@@ -24,6 +25,7 @@ export function SelectionNavigation({
   showArrows = true,
   showPicker = true,
   value,
+  onSelect,
 }: {
   ariaLabel: string;
   emptyLabel: string;
@@ -34,6 +36,7 @@ export function SelectionNavigation({
   showArrows?: boolean;
   showPicker?: boolean;
   value: string | null;
+  onSelect?: (option: SelectionOption) => void;
 }) {
   const router = useRouter();
   const pickerRef = useRef<HTMLDetailsElement>(null);
@@ -41,6 +44,17 @@ export function SelectionNavigation({
   const index = value === null ? -1 : options.findIndex((option) => option.value === value);
   const selected = index < 0 ? null : options[index];
   const label = heading ?? selected?.label ?? emptyLabel;
+
+  const go = (option: SelectionOption | undefined) => {
+    if (!option) return;
+    const picker = pickerRef.current;
+    if (picker) picker.open = false;
+    if (onSelect) {
+      onSelect(option);
+      return;
+    }
+    router.push(option.href);
+  };
 
   useEffect(() => {
     const picker = pickerRef.current;
@@ -81,7 +95,7 @@ export function SelectionNavigation({
         <button
           aria-label={`Previous ${itemLabel}`}
           disabled={index <= 0}
-          onClick={() => router.push(options[index - 1]!.href)}
+          onClick={() => go(options[index - 1])}
           type="button"
         >
           <svg aria-hidden="true" viewBox="0 0 16 16">
@@ -108,6 +122,11 @@ export function SelectionNavigation({
                   aria-current={current ? 'page' : undefined}
                   href={option.href}
                   key={option.value}
+                  onClick={(event) => {
+                    if (!shouldSoftNavigate(event)) return;
+                    event.preventDefault();
+                    go(option);
+                  }}
                 >
                   <span aria-hidden="true" className="selection-check">
                     {current ? (
@@ -134,7 +153,7 @@ export function SelectionNavigation({
         <button
           aria-label={`Next ${itemLabel}`}
           disabled={index < 0 || index >= options.length - 1}
-          onClick={() => router.push(options[index + 1]!.href)}
+          onClick={() => go(options[index + 1])}
           type="button"
         >
           <svg aria-hidden="true" viewBox="0 0 16 16">

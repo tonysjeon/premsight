@@ -13,6 +13,7 @@ import {
   resolvePeriodIndex,
   roundOptionLabel,
   seasonYearLabel,
+  seasonShortLabel,
 } from './season.ts';
 
 function match(overrides = {}) {
@@ -246,4 +247,9 @@ test('headToHeadCoverageLabel uses the earliest stored season', () => {
     ]),
     '2021/22',
   );
+});
+
+test('seasonShortLabel uses two-digit campaign years', () => {
+  assert.equal(seasonShortLabel('2025/2026'), '25/26');
+  assert.equal(seasonShortLabel('2026/27'), '26/27');
 });

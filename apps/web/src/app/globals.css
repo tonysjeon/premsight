@@ -160,6 +160,28 @@ button:focus-visible {
   margin: 0 auto;
 }
 
+.page-loading {
+  min-height: 42vh;
+  display: grid;
+  place-items: center;
+}
+
+.page-loading::before {
+  content: '';
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: page-loading-spin 0.65s linear infinite;
+}
+
+@keyframes page-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .site-header {
   position: sticky;
   top: 0;
