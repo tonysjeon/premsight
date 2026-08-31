@@ -11,6 +11,13 @@ from app.core.public_ids import (
     with_season_slug,
     with_team_slug,
 )
+from app.scout import (
+    SCOUT_FAMILIES,
+    SCOUT_SLOTS,
+    match_scout_rows,
+    scout_slot,
+    scout_stats_for_player,
+)
 
 
 class FootballRepository:
@@ -189,6 +196,271 @@ class FootballRepository:
         )
         snapshot["count"] = len(snapshot["players"])
         return snapshot
+
+    def resolve_player_id(self, key: str) -> UUID | None:
+        parsed = parse_uuid(key)
+        if parsed is not None:
+            item = self._one("SELECT id FROM players WHERE id=%s", (parsed,))
+            return None if item is None else item["id"]
+        item = self._one("SELECT id FROM players WHERE slug=%s", (key.lower(),))
+        return None if item is None else item["id"]
+
+    def _squad_players(
+        self,
+        season_id: UUID | None = None,
+        team_id: UUID | None = None,
+        family: str | None = None,
+    ) -> list[dict[str, Any]]:
+        clauses: list[str] = []
+        params: list[object] = []
+        if season_id:
+            clauses.append("sm.season_id = %s")
+            params.append(season_id)
+        if team_id:
+            clauses.append("sm.team_id = %s")
+            params.append(team_id)
+        if family:
+            clauses.append("sm.position = %s")
+            params.append(family)
+        where = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+        return self._all(
+            f"""SELECT p.id, p.first_name, p.last_name, p.display_name,
+                       p.nationality_code, p.photo_url, p.slug,
+                       sm.position, sm.positions, sm.squad_number, sm.season_id,
+                       t.id AS team_id, t.name AS team_name, t.short_name AS team_short_name,
+                       t.tla AS team_tla, t.crest_url AS team_crest_url
+                FROM players p
+                JOIN squad_memberships sm ON sm.player_id = p.id
+                JOIN teams t ON t.id = sm.team_id
+                {where}
+                ORDER BY t.name, sm.squad_number NULLS LAST, p.display_name""",
+            tuple(params),
+        )
+
+    def _target_season(
+        self, season_id: UUID | None, team_id: UUID | None
+    ) -> UUID | None:
+        if season_id is not None:
+            return season_id
+        if team_id is None:
+            curr = self.current_season()
+            if curr is not None:
+                return curr["id"]
+        return None
+
+    def _scout_candidates(
+        self,
+        season_id: UUID | None,
+        team_id: UUID | None,
+        family: str | None,
+        squad: list[dict[str, Any]] | None = None,
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        all_rows = (
+            squad
+            if squad is not None
+            else self._squad_players(self._target_season(season_id, team_id), team_id, None)
+        )
+        if not family:
+            return all_rows, all_rows
+        family_rows = [row for row in all_rows if row.get("position") == family]
+        return family_rows, all_rows
+
+    def scout_players(
+        self,
+        slot: str,
+        season_id: UUID | None = None,
+        team_id: UUID | None = None,
+        q: str | None = None,
+        squad: list[dict[str, Any]] | None = None,
+    ) -> list[dict[str, Any]]:
+        family_rows, extra = self._scout_candidates(
+            season_id, team_id, SCOUT_FAMILIES.get(slot), squad
+        )
+        return match_scout_rows(slot, family_rows, extra, q)
+
+    def _merge_scout_players(
+        self,
+        slots: tuple[str, ...],
+        season_id: UUID | None = None,
+        team_id: UUID | None = None,
+        q: str | None = None,
+    ) -> list[dict[str, Any]]:
+        target_season = self._target_season(season_id, team_id)
+        squad = self._squad_players(target_season, team_id, None)
+        seen_ids: set[str] = set()
+        combined: list[dict[str, Any]] = []
+        for slot in slots:
+            for item in self.scout_players(slot, season_id, team_id, q, squad=squad):
+                pid = str(item.get("id"))
+                if pid not in seen_ids:
+                    seen_ids.add(pid)
+                    combined.append(item)
+        return combined
+
+    def players(
+        self,
+        season_id: UUID | None = None,
+        team_id: UUID | None = None,
+        q: str | None = None,
+        position: str | None = None,
+        has_stats: bool = False,
+    ) -> list[dict[str, Any]]:
+        if has_stats:
+            slot = scout_slot(position)
+            if slot:
+                return self.scout_players(slot, season_id, team_id, q)
+            family = (position or "").upper()
+            if family == "DEF":
+                return self._merge_scout_players(("CB", "FB"), season_id, team_id, q)
+            if family in {"ATT", "FWD"}:
+                return self._merge_scout_players(("ST", "WG"), season_id, team_id, q)
+            if not position:
+                return self._merge_scout_players(tuple(SCOUT_SLOTS), season_id, team_id, q)
+        clauses: list[str] = []
+        params: list[object] = []
+        target_season = self._target_season(season_id, team_id)
+        if target_season:
+            clauses.append("sm.season_id = %s")
+            params.append(target_season)
+        if team_id:
+            clauses.append("sm.team_id = %s")
+            params.append(team_id)
+        if q and q.strip():
+            clauses.append(
+                "(p.display_name ILIKE %s OR p.first_name ILIKE %s OR p.last_name ILIKE %s)"
+            )
+            pattern = f"%{q.strip()}%"
+            params.extend([pattern, pattern, pattern])
+        if position:
+            raw = position.upper()
+            family = "FWD" if raw in {"ATT", "FWD"} else raw
+            if family in {"GK", "DEF", "MID", "FWD"}:
+                clauses.append("sm.position = %s")
+                params.append(family)
+        stats_join = ""
+        if has_stats:
+            stats_join = """
+                JOIN player_season_stats pss
+                  ON pss.player_id = p.id AND pss.season_id = sm.season_id
+                 AND cardinality(pss.features) > 0"""
+        where = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+        return self._all(
+            f"""SELECT p.id, p.first_name, p.last_name, p.display_name,
+                       p.nationality_code, p.photo_url, p.slug,
+                       sm.position, sm.positions, sm.squad_number, sm.season_id,
+                       t.id AS team_id, t.name AS team_name, t.short_name AS team_short_name,
+                       t.tla AS team_tla, t.crest_url AS team_crest_url
+                FROM players p
+                JOIN squad_memberships sm ON sm.player_id = p.id
+                JOIN teams t ON t.id = sm.team_id
+                {stats_join}
+                {where}
+                ORDER BY t.name, sm.squad_number NULLS LAST, p.display_name""",
+            tuple(params),
+        )
+
+    def player(
+        self, player_id: str | UUID, season_id: UUID | None = None
+    ) -> dict[str, Any] | None:
+        key = str(player_id)
+        parsed = parse_uuid(key)
+        p = (
+            self._one(
+                """SELECT id, first_name, last_name, display_name, nationality_code, photo_url, slug
+                   FROM players WHERE id = %s""",
+                (parsed,),
+            )
+            if parsed is not None
+            else self._one(
+                """SELECT id, first_name, last_name, display_name, nationality_code, photo_url, slug
+                   FROM players WHERE slug = %s""",
+                (key.lower(),),
+            )
+        )
+        if p is None:
+            return None
+        target_player_id = p["id"]
+        membership_sql = (
+            """SELECT sm.position, sm.positions, sm.squad_number, sm.season_id,
+                      t.id AS team_id, t.name AS team_name, t.short_name AS team_short_name,
+                      t.tla AS team_tla, t.crest_url AS team_crest_url
+               FROM squad_memberships sm
+               JOIN teams t ON t.id = sm.team_id
+               WHERE sm.player_id = %s AND sm.season_id = %s"""
+            if season_id
+            else """SELECT sm.position, sm.positions, sm.squad_number, sm.season_id,
+                           t.id AS team_id, t.name AS team_name, t.short_name AS team_short_name,
+                           t.tla AS team_tla, t.crest_url AS team_crest_url
+                    FROM squad_memberships sm
+                    JOIN teams t ON t.id = sm.team_id
+                    JOIN seasons s ON s.id = sm.season_id
+                    WHERE sm.player_id = %s
+                    ORDER BY s.is_current DESC, s.start_date DESC LIMIT 1"""
+        )
+        params = (target_player_id, season_id) if season_id else (target_player_id,)
+        membership = self._one(membership_sql, params)
+        if membership:
+            p.update(membership)
+        stats = self._one(
+            """SELECT minutes, stats, features, provider, model_version
+               FROM player_season_stats
+               WHERE player_id = %s
+               ORDER BY created_at DESC LIMIT 1""",
+            (target_player_id,),
+        )
+        overlay = scout_stats_for_player(p)
+        if overlay:
+            p["season_stats"] = overlay["season_stats"]
+            if overlay.get("scout_position"):
+                p["scout_position"] = overlay["scout_position"]
+        else:
+            p["season_stats"] = stats
+            if stats and isinstance(stats.get("stats"), dict):
+                scout = stats["stats"].get("scout_position")
+                if isinstance(scout, str) and scout.strip():
+                    p["scout_position"] = scout.strip().upper()
+        archetype = self._one(
+            """SELECT position_family, cluster_id, cluster_label, model_version
+               FROM player_archetypes
+               WHERE player_id = %s
+               ORDER BY created_at DESC LIMIT 1""",
+            (target_player_id,),
+        )
+        p["archetype"] = archetype
+        return p
+
+    def team_roster(
+        self, team_id: UUID, season_id: UUID | None = None
+    ) -> list[dict[str, Any]]:
+        target_season = season_id
+        if target_season is None:
+            curr = self.current_season()
+            if curr is not None:
+                target_season = curr["id"]
+        if target_season is None:
+            return []
+        return self._all(
+            """SELECT p.id, p.first_name, p.last_name, p.display_name,
+                      p.nationality_code, p.photo_url, p.slug,
+                      sm.position, sm.positions, sm.squad_number, sm.season_id,
+                      t.id AS team_id, t.name AS team_name, t.short_name AS team_short_name,
+                      t.tla AS team_tla, t.crest_url AS team_crest_url
+               FROM squad_memberships sm
+               JOIN players p ON p.id = sm.player_id
+               JOIN teams t ON t.id = sm.team_id
+               WHERE sm.team_id = %s AND sm.season_id = %s
+               ORDER BY
+                 CASE sm.position
+                   WHEN 'GK' THEN 1
+                   WHEN 'DEF' THEN 2
+                   WHEN 'MID' THEN 3
+                   WHEN 'FWD' THEN 4
+                   ELSE 5
+                 END,
+                 sm.squad_number NULLS LAST,
+                 p.display_name""",
+            (team_id, target_season),
+        )
 
     @staticmethod
     def _fixture_select() -> str:
