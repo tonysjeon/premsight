@@ -35,8 +35,9 @@ export function PlayerCompare({ initialCatalog = [] }: { initialCatalog?: Player
   const [position, setPosition] = useState<ComparePosition | null>(null);
   const [expandedFamily, setExpandedFamily] = useState<ExpandedCompareFamily>(null);
   const [players, setPlayers] = useState<Player[]>([]);
-  const [catalog, setCatalog] = useState<Player[]>(initialCatalog);
-  const [catalogLoading, setCatalogLoading] = useState(initialCatalog.length === 0);
+  const [fetchedCatalog, setFetchedCatalog] = useState<Player[] | null>(null);
+  const catalog = initialCatalog.length > 0 ? initialCatalog : (fetchedCatalog ?? []);
+  const catalogLoading = initialCatalog.length === 0 && fetchedCatalog === null;
 
   useEffect(() => {
     if (window.location.search) {
@@ -45,11 +46,7 @@ export function PlayerCompare({ initialCatalog = [] }: { initialCatalog?: Player
   }, [router]);
 
   useEffect(() => {
-    if (initialCatalog.length > 0) {
-      setCatalog(initialCatalog);
-      setCatalogLoading(false);
-      return;
-    }
+    if (initialCatalog.length > 0) return;
     let active = true;
     fetch('/api/scout-players', { cache: 'no-store' })
       .then((response) => {
@@ -57,18 +54,15 @@ export function PlayerCompare({ initialCatalog = [] }: { initialCatalog?: Player
         return response.json() as Promise<{ items?: Player[] }>;
       })
       .then((body) => {
-        if (active) setCatalog(body.items ?? []);
+        if (active) setFetchedCatalog(body.items ?? []);
       })
       .catch(() => {
-        if (active) setCatalog([]);
-      })
-      .finally(() => {
-        if (active) setCatalogLoading(false);
+        if (active) setFetchedCatalog([]);
       });
     return () => {
       active = false;
     };
-  }, [initialCatalog]);
+  }, [initialCatalog.length]);
 
   useEffect(() => {
     const open = filtersRef.current?.querySelector<HTMLElement>('.compare-expand-group.is-open');
