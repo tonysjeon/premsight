@@ -112,8 +112,11 @@ export type Player = {
 const PLAYER_LIST_TTL_MS = 60_000;
 const playerListCache = new Map<string, { expires: number; items: Player[] }>();
 
-async function get<T>(path: string, revalidate = 15): Promise<T> {
-  const response = await fetch(`${BASE}${path}`, { next: { revalidate } });
+async function get<T>(path: string, revalidate: number | false = 15): Promise<T> {
+  const response = await fetch(
+    `${BASE}${path}`,
+    revalidate === false ? { cache: 'no-store' } : { next: { revalidate } },
+  );
   if (!response.ok) {
     throw new Error(`API request failed: GET ${BASE}${path} returned ${response.status}`);
   }
@@ -151,7 +154,7 @@ export const api = {
       const hit = playerListCache.get(path);
       if (hit && hit.expires > Date.now()) return hit.items;
     }
-    const items = (await get<{ items: Player[] }>(path, 30)).items;
+    const items = (await get<{ items: Player[] }>(path, false)).items;
     if (typeof window !== 'undefined') {
       playerListCache.set(path, { expires: Date.now() + PLAYER_LIST_TTL_MS, items });
     }

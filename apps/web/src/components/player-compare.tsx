@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { CompareStatTable } from '@/components/compare-stat-table';
 import { PlayerRadar } from '@/components/player-radar';
 import { PlayerSearch } from '@/components/player-search';
-import { api, type Player } from '@/lib/api';
+import type { Player } from '@/lib/api';
 import {
   ATT_SLOTS,
   ATT_SLOT_LABELS,
@@ -45,12 +45,19 @@ export function PlayerCompare({ initialCatalog = [] }: { initialCatalog?: Player
   }, [router]);
 
   useEffect(() => {
-    if (initialCatalog.length > 0) return;
+    if (initialCatalog.length > 0) {
+      setCatalog(initialCatalog);
+      setCatalogLoading(false);
+      return;
+    }
     let active = true;
-    api
-      .players('has_stats=true')
-      .then((items) => {
-        if (active) setCatalog(items);
+    fetch('/api/scout-players', { cache: 'no-store' })
+      .then((response) => {
+        if (!response.ok) throw new Error(`scout catalog failed: ${response.status}`);
+        return response.json() as Promise<{ items?: Player[] }>;
+      })
+      .then((body) => {
+        if (active) setCatalog(body.items ?? []);
       })
       .catch(() => {
         if (active) setCatalog([]);
@@ -61,7 +68,7 @@ export function PlayerCompare({ initialCatalog = [] }: { initialCatalog?: Player
     return () => {
       active = false;
     };
-  }, [initialCatalog.length]);
+  }, [initialCatalog]);
 
   useEffect(() => {
     const open = filtersRef.current?.querySelector<HTMLElement>('.compare-expand-group.is-open');

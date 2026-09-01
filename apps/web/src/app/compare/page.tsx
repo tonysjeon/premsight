@@ -4,6 +4,7 @@ import { PlayerCompare } from '@/components/player-compare';
 import { loadScoutPlayers } from '@/lib/football-load';
 
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
 
 export const metadata: Metadata = {
   title: 'Player Comparison · PremSight',
