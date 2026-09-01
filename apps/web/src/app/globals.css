@@ -6237,7 +6237,7 @@ button.draft-slot {
 
 .compare-page-overview > .card {
   border: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .compare-page .view-filters {

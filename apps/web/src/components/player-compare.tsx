@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { CompareStatTable } from '@/components/compare-stat-table';
 import { PlayerRadar } from '@/components/player-radar';
 import { PlayerSearch } from '@/components/player-search';
-import { api, type Player } from '@/lib/api';
+import type { Player } from '@/lib/api';
 import {
   ATT_SLOTS,
   ATT_SLOT_LABELS,
@@ -35,8 +35,9 @@ export function PlayerCompare({ initialCatalog = [] }: { initialCatalog?: Player
   const [position, setPosition] = useState<ComparePosition | null>(null);
   const [expandedFamily, setExpandedFamily] = useState<ExpandedCompareFamily>(null);
   const [players, setPlayers] = useState<Player[]>([]);
-  const [catalog, setCatalog] = useState<Player[]>(initialCatalog);
-  const [catalogLoading, setCatalogLoading] = useState(initialCatalog.length === 0);
+  const [fetchedCatalog, setFetchedCatalog] = useState<Player[] | null>(null);
+  const catalog = initialCatalog.length > 0 ? initialCatalog : (fetchedCatalog ?? []);
+  const catalogLoading = initialCatalog.length === 0 && fetchedCatalog === null;
 
   useEffect(() => {
     if (window.location.search) {
@@ -47,16 +48,16 @@ export function PlayerCompare({ initialCatalog = [] }: { initialCatalog?: Player
   useEffect(() => {
     if (initialCatalog.length > 0) return;
     let active = true;
-    api
-      .players('has_stats=true')
-      .then((items) => {
-        if (active) setCatalog(items);
+    fetch('/api/scout-players', { cache: 'no-store' })
+      .then((response) => {
+        if (!response.ok) throw new Error(`scout catalog failed: ${response.status}`);
+        return response.json() as Promise<{ items?: Player[] }>;
+      })
+      .then((body) => {
+        if (active) setFetchedCatalog(body.items ?? []);
       })
       .catch(() => {
-        if (active) setCatalog([]);
-      })
-      .finally(() => {
-        if (active) setCatalogLoading(false);
+        if (active) setFetchedCatalog([]);
       });
     return () => {
       active = false;
