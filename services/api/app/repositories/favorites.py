@@ -15,7 +15,8 @@ class FavoritesRepository:
         with psycopg.connect(self.database_url, row_factory=dict_row) as conn:
             rows = conn.execute(
                 """SELECT p.*, sm.position, sm.positions, sm.squad_number,
-                          t.tla AS team_tla, t.name AS team_name
+                          t.tla AS team_tla, t.name AS team_name,
+                          t.crest_url AS team_crest_url
                    FROM player_favorites f JOIN players p ON p.id=f.player_id
                    LEFT JOIN LATERAL (
                        SELECT m.* FROM squad_memberships m

@@ -5,9 +5,8 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { IoLogOutOutline, IoTrashOutline } from 'react-icons/io5';
 import { SlidingTabs } from '@/components/sliding-tabs';
-import { TeamRoster } from '@/components/team-roster';
+import { SignInModal } from '@/components/sign-in-modal';
 import { usePlayerFavorites, useTeamFavorites } from '@/lib/use-player-favorites';
-import { TeamFollow } from '@/components/team-follow';
 import {
   deleteAccountToHome,
   fetchCurrentUser,
@@ -82,6 +81,13 @@ export function ProfilePage() {
 
   return (
     <main className="profile-page">
+      <SignInModal
+        open={favorites.signIn || followed.signIn}
+        onClose={() => {
+          favorites.setSignIn(false);
+          followed.setSignIn(false);
+        }}
+      />
       <header className="profile-heading">
         {user.avatar_url ? (
           <Image
@@ -142,15 +148,37 @@ export function ProfilePage() {
               <p className="profile-save-feedback" role="status">
                 {favorites.error} <button onClick={() => void favorites.reload()}>Retry</button>
               </p>
-            ) : favorites.players.length ? (
-              <div className="team-roster-panel">
-                <TeamRoster players={favorites.players} />
-              </div>
-            ) : (
-              <p className="empty">
-                No favorite players yet. Save players using the bookmark in a team roster.
-              </p>
-            )
+            ) : favorites.visibleItems.length ? (
+              <ul className="profile-team-list">
+                {favorites.visibleItems.map((player) => (
+                  <li key={player.id}>
+                    <div className="profile-player-copy">
+                      {player.team_crest_url ? (
+                        <Image
+                          src={player.team_crest_url}
+                          alt=""
+                          width={24}
+                          height={24}
+                          unoptimized
+                        />
+                      ) : null}
+                      <span>{player.display_name}</span>
+                    </div>
+                    <button
+                      className="team-follow-button"
+                      type="button"
+                      aria-pressed={favorites.players.some((saved) => saved.id === player.id)}
+                      aria-label={`${favorites.players.some((saved) => saved.id === player.id) ? 'Unfollow' : 'Follow'} ${player.display_name}`}
+                      onClick={() => void favorites.toggle(player)}
+                    >
+                      {favorites.players.some((saved) => saved.id === player.id)
+                        ? 'Following'
+                        : 'Follow'}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : null
           ) : followed.loading ? (
             <p className="empty">Loading followed teams…</p>
           ) : followed.error ? (
@@ -160,26 +188,32 @@ export function ProfilePage() {
                 Retry
               </button>
             </p>
-          ) : followed.teams.length ? (
+          ) : followed.visibleItems.length ? (
             <ul className="profile-team-list">
-              {followed.teams.map((team) => (
+              {followed.visibleItems.map((team) => (
                 <li key={team.id}>
                   <Link
                     href={`/teams/${team.tla?.toLowerCase() || team.id}`}
                     className="profile-team-link"
                   >
                     {team.crest_url ? (
-                      <Image src={team.crest_url} alt="" width={32} height={32} unoptimized />
+                      <Image src={team.crest_url} alt="" width={24} height={24} unoptimized />
                     ) : null}
                     <span>{team.name}</span>
                   </Link>
-                  <TeamFollow team={team} />
+                  <button
+                    className="team-follow-button"
+                    type="button"
+                    aria-pressed={followed.teams.some((saved) => saved.id === team.id)}
+                    aria-label={`${followed.teams.some((saved) => saved.id === team.id) ? 'Unfollow' : 'Follow'} ${team.name}`}
+                    onClick={() => void followed.toggle(team)}
+                  >
+                    {followed.teams.some((saved) => saved.id === team.id) ? 'Following' : 'Follow'}
+                  </button>
                 </li>
               ))}
             </ul>
-          ) : (
-            <p className="empty">No followed teams yet. Follow a team from its team page.</p>
-          )}
+          ) : null}
         </div>
       </section>
 
