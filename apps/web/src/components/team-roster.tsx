@@ -101,7 +101,6 @@ export function TeamRoster({ players }: { players: Player[] }) {
                     type="button"
                     className="player-favorite"
                     disabled={favorites.loading}
-                    aria-disabled={favorites.pending.has(player.id)}
                     aria-pressed={
                       favorites.loadError
                         ? undefined

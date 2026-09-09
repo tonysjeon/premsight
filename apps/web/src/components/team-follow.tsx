@@ -20,7 +20,6 @@ export function TeamFollow({ team }: { team: Team }) {
         }
         title={favorites.loadError ? 'Follow status unavailable. Click to retry.' : undefined}
         disabled={favorites.loading}
-        aria-disabled={favorites.pending.has(team.id)}
         onClick={() => void favorites.toggle(team)}
       >
         {favorites.loadError ? 'Retry' : following ? 'Following' : 'Follow'}
