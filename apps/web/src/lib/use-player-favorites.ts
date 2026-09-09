@@ -86,7 +86,7 @@ function useFavorites<T extends Player | Team>(kind: 'players' | 'teams') {
       setLoadError(false);
     } catch (e) {
       if (started !== revision.current) return;
-      const signedOut = e instanceof AuthError && e.status === 401;
+      const signedOut = (e instanceof AuthError && e.status === 401) || !peekCurrentUser();
       if (signedOut) {
         setPlayers([]);
         setVisibleItems([]);
@@ -122,6 +122,12 @@ function useFavorites<T extends Player | Team>(kind: 'players' | 'teams') {
   }, [load, kind]);
 
   async function toggle(player: T) {
+    if (!peekCurrentUser()) {
+      setError('');
+      setLoadError(false);
+      setSignIn(true);
+      return;
+    }
     if (loadError) {
       await load();
       return;

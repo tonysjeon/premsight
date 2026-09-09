@@ -4,7 +4,7 @@ import jwt
 import pytest
 
 from app.clients.oauth import decode_oauth_state, encode_oauth_state, safe_return_to
-from app.core.config import get_settings
+from app.core.config import Settings, get_settings
 from app.core.security import create_session_token, decode_session_token
 
 
@@ -29,3 +29,18 @@ def test_oauth_state_roundtrip_and_rejects_foreign_origins() -> None:
     assert provider == "google"
     assert return_to == "http://localhost:3000/table"
     assert safe_return_to("https://evil.example") == get_settings().cors_origin_list[0]
+
+
+def test_documented_api_cors_origins_environment_variable(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("CORS_ORIGINS", raising=False)
+    monkeypatch.setenv(
+        "API_CORS_ORIGINS",
+        "https://premsight.example, https://preview.premsight.example",
+    )
+
+    settings = Settings(_env_file=None)
+
+    assert settings.cors_origin_list == [
+        "https://premsight.example",
+        "https://preview.premsight.example",
+    ]
