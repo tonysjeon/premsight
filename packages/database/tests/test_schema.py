@@ -44,6 +44,10 @@ def test_runtime_package_contains_sql_assets() -> None:
         "0013_players_and_rosters.up.sql",
         "0014_stats_position_family.down.sql",
         "0014_stats_position_family.up.sql",
+        "0015_player_favorites.down.sql",
+        "0015_player_favorites.up.sql",
+        "0016_team_favorites.down.sql",
+        "0016_team_favorites.up.sql",
     ]
     assert [path.name for path in SEEDS_DIR.glob("*.sql")] == ["001_premier_league.sql"]
 
@@ -53,7 +57,7 @@ def test_migrations_apply_on_empty_database(database_url: str) -> None:
     applied = migrate_up(database_url)
     assert applied == [
         "0001", "0002", "0003", "0004", "0005", "0006", "0007", "0008", "0009", "0010", "0011",
-        "0012", "0013", "0014",
+        "0012", "0013", "0014", "0015", "0016",
     ]
 
     with psycopg.connect(database_url) as conn:
@@ -72,6 +76,8 @@ def test_migrations_apply_on_empty_database(database_url: str) -> None:
             "0012",
             "0013",
             "0014",
+            "0015",
+            "0016",
         ]
         tables = {
             row[0]
@@ -98,6 +104,8 @@ def test_migrations_apply_on_empty_database(database_url: str) -> None:
                         "squad_memberships",
                         "player_season_stats",
                         "player_archetypes",
+                        "player_favorites",
+                        "team_favorites",
                         "schema_meta",
                         "schema_migrations",
                     ],
@@ -119,6 +127,8 @@ def test_migrations_apply_on_empty_database(database_url: str) -> None:
         "squad_memberships",
         "player_season_stats",
         "player_archetypes",
+        "player_favorites",
+        "team_favorites",
         "schema_meta",
         "schema_migrations",
     }
@@ -127,6 +137,17 @@ def test_migrations_apply_on_empty_database(database_url: str) -> None:
 def test_migrations_roll_back_safely(database_url: str) -> None:
     migrate_down_all(database_url)
     migrate_up(database_url)
+
+    assert migrate_down(database_url, steps=1) == ["0016"]
+    with psycopg.connect(database_url) as conn:
+        assert conn.execute("SELECT to_regclass('public.team_favorites')").fetchone() == (None,)
+        assert conn.execute("SELECT to_regclass('public.player_favorites')").fetchone() == (
+            "player_favorites",
+        )
+
+    assert migrate_down(database_url, steps=1) == ["0015"]
+    with psycopg.connect(database_url) as conn:
+        assert conn.execute("SELECT to_regclass('public.player_favorites')").fetchone() == (None,)
 
     assert migrate_down(database_url, steps=1) == ["0014"]
     with psycopg.connect(database_url) as conn:
@@ -671,4 +692,3 @@ def test_players_and_squad_memberships_constraints(migrated_db: str) -> None:
                 (season_id, player_id, team_id),
             )
         conn.rollback()
-

@@ -227,7 +227,7 @@ def test_players_and_team_roster_endpoints(client: TestClient) -> None:
     # Team roster
     roster_res = client.get(f"/v1/teams/{ids['home']}/roster").json()
     assert roster_res["count"] == 1
-    assert roster_res["items"][0]["display_name"] == "Saka"
+    assert roster_res["items"][0]["display_name"] == "Bukayo Saka"
 
     with psycopg.connect(os.environ["DATABASE_URL"]) as conn:
         kepa_id = conn.execute(
