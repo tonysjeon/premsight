@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID
 
@@ -11,6 +11,7 @@ from app.core.public_ids import (
     with_season_slug,
     with_team_slug,
 )
+from app.core.roster import enrich_team_roster, filter_team_roster
 from app.scout import (
     SCOUT_FAMILIES,
     SCOUT_SLOTS,
@@ -439,7 +440,7 @@ class FootballRepository:
                 target_season = curr["id"]
         if target_season is None:
             return []
-        return self._all(
+        players = self._all(
             """SELECT p.id, p.first_name, p.last_name, p.display_name,
                       p.nationality_code, p.photo_url, p.slug,
                       sm.position, sm.positions, sm.squad_number, sm.season_id,
@@ -460,6 +461,18 @@ class FootballRepository:
                  sm.squad_number NULLS LAST,
                  p.display_name""",
             (team_id, target_season),
+        )
+
+        season = self._one(
+            """SELECT c.code, s.name FROM seasons s
+               JOIN competitions c ON c.id = s.competition_id WHERE s.id = %s""",
+            (target_season,),
+        )
+        if season is None:
+            return players
+        return enrich_team_roster(
+            filter_team_roster(players, season["code"], season["name"]),
+            season["code"], season["name"], datetime.now(UTC).date(),
         )
 
     @staticmethod

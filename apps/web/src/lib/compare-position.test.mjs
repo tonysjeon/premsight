@@ -176,21 +176,21 @@ test('emptyRadarAxes follows the position family', () => {
     emptyRadarAxes('CB').map((axis) => axis.label),
     [
       'Passes cmp',
-      'Fwd pass%',
+      'Fwd pass %',
       'Prog passes',
       'Poss won',
-      'Def duel%',
-      'Aerial duel%',
+      'Def duel %',
+      'Aerial duel %',
       'Prog carries',
     ],
   );
   assert.deepEqual(
     emptyRadarAxes('FB').map((axis) => axis.label),
-    ['Aerial%', 'Carrying', 'Crosses', 'xAssist', 'Prog passes', 'Poss won', 'Def duel%'],
+    ['Aerial %', 'Carrying', 'Crosses', 'xAssist', 'Prog passes', 'Poss won', 'Def duel %'],
   );
   assert.deepEqual(
     emptyRadarAxes('MID').map((axis) => axis.label),
-    ['Key passes', 'Prog passes', 'Duels%', 'Poss won', 'Carrying', 'Fwd passes', 'Fwd pass%'],
+    ['Key passes', 'Prog passes', 'Duels %', 'Poss won', 'Carrying', 'Fwd passes', 'Fwd pass %'],
   );
 });
 
@@ -202,11 +202,11 @@ test('compareTableAxes uses FBref GK column order', () => {
   );
   assert.deepEqual(
     compareTableAxes('FB', emptyRadarAxes('FB')).map((axis) => axis.label),
-    ['Crosses cmp', 'xA', 'Prog passes', 'Poss won', 'Def duel%', 'Aerial duel%', 'Prog carries'],
+    ['Crosses cmp', 'xA', 'Prog passes', 'Poss won', 'Def duel %', 'Aerial duel %', 'Prog carries'],
   );
   assert.deepEqual(
     compareTableAxes('MID', emptyRadarAxes('MID')).map((axis) => axis.label),
-    ['Duel%', 'Poss won', 'Prog carries', 'Fwd passes', 'Fwd pass%', 'Key passes', 'Prog passes'],
+    ['Duel %', 'Poss won', 'Prog carries', 'Fwd passes', 'Fwd pass %', 'Key passes', 'Prog passes'],
   );
 });
 

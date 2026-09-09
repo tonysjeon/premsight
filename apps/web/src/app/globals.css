@@ -415,10 +415,11 @@ button:focus-visible {
 .settings-menu {
   position: absolute;
   z-index: 25;
-  top: calc(100% + 8px);
-  right: 0;
-  left: auto;
-  width: 228px;
+  top: calc(100% + 4px);
+  right: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 212px;
   padding: 16px;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
@@ -4275,7 +4276,7 @@ button.draft-slot {
 /* ---------- Match hub ---------- */
 
 .match-page {
-  padding: 8px 0 24px;
+  padding: 16px 0 24px;
   min-height: 60vh;
 }
 
@@ -4615,7 +4616,7 @@ button.draft-slot {
 }
 
 .match-panel {
-  margin-top: 14px;
+  margin-top: 16px;
   padding: 18px 18px 20px;
   background: var(--surface);
   border: 0;
@@ -5245,6 +5246,7 @@ button.draft-slot {
     top: 100%;
     right: 0;
     left: 0;
+    transform: none;
     width: auto;
     padding: 18px;
     border: 0;
@@ -5875,7 +5877,7 @@ button.draft-slot {
 
   .shell.match-page {
     width: 100%;
-    padding-top: 14px;
+    padding-top: 16px;
   }
 
   .match-page .match-hero {
@@ -6065,170 +6067,286 @@ button.draft-slot {
    Roster & Compare styles
    ========================================================================== */
 
-.team-roster-sections {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  padding: 8px 0 16px;
+.roster-scroll {
+  overflow-x: auto;
+  padding-inline: 20px;
 }
 
-.roster-group {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+.roster-list {
+  min-width: 760px;
+  table-layout: fixed;
 }
 
-.roster-group-heading {
-  font-size: 1.1rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--text);
+.team-roster-panel .roster-list thead th {
+  font-size: 0.75rem;
+  text-transform: none;
+  letter-spacing: normal;
+  border-bottom: 1px solid var(--line);
+}
+
+.team-roster-panel .roster-list tbody tr:not(:last-child) > td {
+  position: relative;
+  border-bottom: 1px solid transparent;
+}
+
+.team-roster-panel .roster-list tbody tr:not(:last-child) > td::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 1px;
+  background: var(--line);
+  pointer-events: none;
+}
+
+.roster-list th,
+.roster-list td {
+  padding-inline: 20px !important;
+}
+
+.roster-list .roster-name-column {
+  width: 28%;
+  text-align: left;
+}
+
+.roster-list .roster-positions {
+  width: 20%;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.team-roster-panel .roster-list .roster-country-column {
+  width: 18%;
+  text-align: center;
+}
+
+.roster-list .roster-number {
+  width: 8%;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.roster-list .roster-age {
+  width: 8%;
+  font-variant-numeric: tabular-nums;
+}
+
+.roster-list .roster-height {
+  width: 10%;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.roster-list .roster-favorite-column {
+  width: 8%;
+  text-align: right;
+}
+
+.team-follow-control {
+  margin-left: auto;
+}
+
+.save-feedback {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 50;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  max-width: calc(100vw - 48px);
+  padding: 10px 16px;
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 0.8rem;
+  box-shadow: 0 4px 16px #0002;
+}
+
+.profile-save-feedback {
+  padding: 24px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+.save-feedback button,
+.profile-save-feedback button {
+  border: 0;
+  padding: 4px 8px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.team-follow-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 6px 20px;
+  border: 1px solid color-mix(in srgb, var(--text) 20%, var(--surface));
+  border-radius: 999px;
+  background: #fff;
+  color: #242424;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.team-follow-button[aria-pressed='true'] {
+  background: transparent;
+  color: var(--text);
+}
+
+.team-follow-button:hover {
+  background: #eeeeee;
+}
+
+.team-follow-button[aria-pressed='true']:hover {
+  background: var(--surface-hover);
+}
+
+.team-follow-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.team-follow-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.profile-team-list {
+  list-style: none;
+  padding: 0 20px;
   margin: 0;
 }
 
-.roster-group-count {
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: var(--chip);
-  color: var(--muted);
-}
-
-.roster-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 12px;
-}
-
-.roster-card {
+.profile-team-list li {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 12px 14px;
-  border-radius: var(--radius-sm);
-  background: var(--surface-sunken);
-  border: 1px solid var(--line);
-  transition:
-    border-color 0.15s ease,
-    background 0.15s ease;
+  gap: 20px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line);
 }
 
-.roster-card:hover {
-  background: var(--surface-hover);
-  border-color: var(--line-strong);
+.profile-team-list li:last-child {
+  border-bottom: 0;
 }
 
-.roster-card-photo-wrap {
-  position: relative;
-  width: 56px;
-  height: 56px;
+.profile-team-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.profile-player-copy {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.profile-player-copy img {
   flex-shrink: 0;
-  border-radius: 12px;
+  object-fit: contain;
+}
+
+.profile-player-copy span {
   overflow: hidden;
-  background: var(--surface);
-  border: 1px solid var(--line);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-team-list .team-follow-button {
+  margin-left: auto;
+  flex-shrink: 0;
+  width: 88px;
+  min-height: 32px;
+  padding: 5px 12px;
+  font-size: 0.8rem;
+}
+
+.roster-country {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 12px;
+  color: color-mix(in srgb, var(--text) 86%, var(--muted));
+  font-size: 0.82rem;
+  font-weight: 700;
 }
 
-.roster-card-photo {
-  width: 100%;
-  height: 100%;
+.roster-flag {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  border-radius: 50%;
   object-fit: cover;
 }
 
-.roster-card-photo-fallback {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--muted);
-}
-
-.roster-squad-number {
-  position: absolute;
-  bottom: 2px;
-  right: 2px;
-  font-size: 0.65rem;
-  font-weight: 800;
-  padding: 1px 4px;
-  border-radius: 4px;
-  background: #000c;
-  color: #fff;
-  line-height: 1.1;
-}
-
-.roster-card-body {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.roster-card-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-}
-
 .roster-player-name {
-  font-size: 0.95rem;
-  font-weight: 700;
   color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.roster-player-flag {
-  border-radius: 2px;
-  flex-shrink: 0;
-}
-
-.roster-card-meta {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.75rem;
-  color: var(--muted);
-}
-
-.roster-pos-badge {
-  font-weight: 700;
-  padding: 1px 5px;
-  border-radius: 4px;
-  background: var(--chip);
-  color: var(--chip-ink);
-  font-size: 0.7rem;
-}
-
-.roster-detailed-positions {
-  color: var(--muted-dim);
-  font-weight: 500;
-}
-
-.roster-card-actions {
-  margin-top: 4px;
-  display: flex;
-  align-items: center;
-}
-
-.roster-compare-btn {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--accent);
   text-decoration: none;
-  transition: opacity 0.15s ease;
 }
 
-.roster-compare-btn:hover {
-  opacity: 0.8;
-  text-decoration: underline;
+.player-favorite {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 28px;
+  width: 28px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.player-favorite[aria-pressed='true'],
+.player-favorite:hover {
+  color: var(--accent);
+}
+
+.player-favorite:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.player-favorite:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.roster-player-name:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+@media (max-width: 600px) {
+  .roster-scroll {
+    padding-inline: 8px;
+  }
+
+  .roster-list th,
+  .roster-list td {
+    padding-inline: 12px !important;
+  }
 }
 
 /* ==========================================================================
@@ -7004,5 +7122,55 @@ button.draft-slot {
 
   .compare-page .compare-expand-slots .compare-expand-slot-wide {
     min-width: 66px;
+  }
+}
+
+/* Keep the three team sections aligned with the roster's horizontal insets. */
+.team-page {
+  --team-list-inset: 20px;
+  --team-cell-inset: 20px;
+}
+
+.team-page .roster-scroll,
+.team-page .team-fixtures .round-list {
+  padding-inline: var(--team-list-inset);
+}
+
+.team-page .match-panel--table .table-scroll {
+  padding-inline: 0;
+}
+
+.team-page .match-panel--table .league-table .col-pos .zone {
+  left: 0;
+}
+
+.team-page .match-panel--table .league-table .col-pos {
+  text-align: left !important;
+  padding-left: calc(var(--team-list-inset) + var(--team-cell-inset) - 12px) !important;
+}
+
+.team-page .team-fixtures .matchday-navigation {
+  padding-inline: calc(var(--team-list-inset) + var(--team-cell-inset));
+}
+
+.team-page .team-fixtures .round-day,
+.team-page .team-fixtures .round-match {
+  padding-inline: var(--team-cell-inset);
+}
+
+.team-page .match-panel--table .league-table thead th:first-child,
+.team-page .match-panel--table .league-table tbody td:first-child {
+  padding-left: calc(var(--team-list-inset) + var(--team-cell-inset));
+}
+
+.team-page .match-panel--table .league-table thead th:last-child,
+.team-page .match-panel--table .league-table tbody td:last-child {
+  padding-right: calc(var(--team-list-inset) + var(--team-cell-inset));
+}
+
+@media (max-width: 600px) {
+  .team-page {
+    --team-list-inset: 8px;
+    --team-cell-inset: 12px;
   }
 }

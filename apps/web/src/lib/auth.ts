@@ -33,7 +33,7 @@ export function notifyAuthChanged() {
   listeners.forEach((listener) => listener());
 }
 
-async function authRequest<T>(path: string, init: RequestInit = {}): Promise<T> {
+export async function authRequest<T>(path: string, init: RequestInit = {}): Promise<T> {
   const response = await fetch(`${getApiBase()}${path}`, {
     ...init,
     credentials: 'include',

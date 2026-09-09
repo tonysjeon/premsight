@@ -5,6 +5,7 @@ import { MatchdaySnapshot } from '@/components/matchday-snapshot';
 import { SelectionNavigation } from '@/components/selection-navigation';
 import { Table, TableLegend } from '@/components/table';
 import { TeamHero } from '@/components/team-hero';
+import { TeamFollow } from '@/components/team-follow';
 import { TeamRoster } from '@/components/team-roster';
 import { TeamTabs } from '@/components/team-tabs';
 import type { Fixture, Player, Season, Standing, Team } from '@/lib/api';
@@ -61,6 +62,7 @@ export function TeamPageView({
         competitionName={season.competition_name}
         name={tableTeamLabel(visual)}
         visual={visual}
+        action={<TeamFollow team={team} />}
       >
         <TeamTabs onSelect={setTab} teamId={publicId} value={tab} />
       </TeamHero>
@@ -118,7 +120,10 @@ export function TeamPageView({
         </section>
       ) : null}
       {tab === 'roster' ? (
-        <section aria-labelledby="team-roster-heading" className="match-panel team-roster-panel">
+        <section
+          aria-labelledby="team-roster-heading"
+          className="match-panel match-panel--table table-page-overview team-roster-panel"
+        >
           <h2 className="sr-only" id="team-roster-heading">
             Roster
           </h2>
