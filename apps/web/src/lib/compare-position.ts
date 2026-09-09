@@ -255,22 +255,22 @@ const GK_TABLE_AXES = [
 
 const CB_RADAR_AXES = [
   { axis: 'passes_cmp', label: 'Passes cmp', fullName: 'Passes completed' },
-  { axis: 'fwd_pass_pct', label: 'Fwd pass%', fullName: 'Forward pass percentage' },
+  { axis: 'fwd_pass_pct', label: 'Fwd pass %', fullName: 'Forward pass percentage' },
   { axis: 'prog_passes', label: 'Prog passes', fullName: 'Progressive passes' },
   { axis: 'poss_won', label: 'Poss won', fullName: 'Possession won' },
-  { axis: 'def_duel_pct', label: 'Def duel%', fullName: 'Defensive duel win percentage' },
-  { axis: 'aerial_duel_pct', label: 'Aerial duel%', fullName: 'Aerial duel win percentage' },
+  { axis: 'def_duel_pct', label: 'Def duel %', fullName: 'Defensive duel win percentage' },
+  { axis: 'aerial_duel_pct', label: 'Aerial duel %', fullName: 'Aerial duel win percentage' },
   { axis: 'prog_carries', label: 'Prog carries', fullName: 'Progressive carries' },
 ] as const;
 
 const FB_RADAR_AXES = [
-  { axis: 'aerial_duel_pct', label: 'Aerial%', fullName: 'Aerial duel win percentage' },
+  { axis: 'aerial_duel_pct', label: 'Aerial %', fullName: 'Aerial duel win percentage' },
   { axis: 'prog_carries', label: 'Carrying', fullName: 'Progressive carries' },
   { axis: 'crosses_cmp', label: 'Crosses', fullName: 'Crosses completed' },
   { axis: 'xa', label: 'xAssist', fullName: 'Expected assists' },
   { axis: 'prog_passes', label: 'Prog passes', fullName: 'Progressive passes' },
   { axis: 'poss_won', label: 'Poss won', fullName: 'Possession won' },
-  { axis: 'def_duel_pct', label: 'Def duel%', fullName: 'Defensive duel win percentage' },
+  { axis: 'def_duel_pct', label: 'Def duel %', fullName: 'Defensive duel win percentage' },
 ] as const;
 
 const FB_TABLE_AXES = [
@@ -278,27 +278,27 @@ const FB_TABLE_AXES = [
   { axis: 'xa', label: 'xA', fullName: 'Expected assists' },
   { axis: 'prog_passes', label: 'Prog passes', fullName: 'Progressive passes' },
   { axis: 'poss_won', label: 'Poss won', fullName: 'Possession won' },
-  { axis: 'def_duel_pct', label: 'Def duel%', fullName: 'Defensive duel win percentage' },
-  { axis: 'aerial_duel_pct', label: 'Aerial duel%', fullName: 'Aerial duel win percentage' },
+  { axis: 'def_duel_pct', label: 'Def duel %', fullName: 'Defensive duel win percentage' },
+  { axis: 'aerial_duel_pct', label: 'Aerial duel %', fullName: 'Aerial duel win percentage' },
   { axis: 'prog_carries', label: 'Prog carries', fullName: 'Progressive carries' },
 ] as const;
 
 const MID_RADAR_AXES = [
   { axis: 'key_passes', label: 'Key passes', fullName: 'Key passes' },
   { axis: 'prog_passes', label: 'Prog passes', fullName: 'Progressive passes' },
-  { axis: 'duel_pct', label: 'Duels%', fullName: 'Duel win percentage' },
+  { axis: 'duel_pct', label: 'Duels %', fullName: 'Duel win percentage' },
   { axis: 'poss_won', label: 'Poss won', fullName: 'Possession won' },
   { axis: 'prog_carries', label: 'Carrying', fullName: 'Progressive carries' },
   { axis: 'fwd_passes', label: 'Fwd passes', fullName: 'Forward passes' },
-  { axis: 'fwd_pass_pct', label: 'Fwd pass%', fullName: 'Forward pass percentage' },
+  { axis: 'fwd_pass_pct', label: 'Fwd pass %', fullName: 'Forward pass percentage' },
 ] as const;
 
 const MID_TABLE_AXES = [
-  { axis: 'duel_pct', label: 'Duel%', fullName: 'Duel win percentage' },
+  { axis: 'duel_pct', label: 'Duel %', fullName: 'Duel win percentage' },
   { axis: 'poss_won', label: 'Poss won', fullName: 'Possession won' },
   { axis: 'prog_carries', label: 'Prog carries', fullName: 'Progressive carries' },
   { axis: 'fwd_passes', label: 'Fwd passes', fullName: 'Forward passes' },
-  { axis: 'fwd_pass_pct', label: 'Fwd pass%', fullName: 'Forward pass percentage' },
+  { axis: 'fwd_pass_pct', label: 'Fwd pass %', fullName: 'Forward pass percentage' },
   { axis: 'key_passes', label: 'Key passes', fullName: 'Key passes' },
   { axis: 'prog_passes', label: 'Prog passes', fullName: 'Progressive passes' },
 ] as const;
@@ -308,16 +308,16 @@ const ST_RADAR_AXES = [
   { axis: 'off_duels', label: 'Off duels', fullName: 'Offensive duels won' },
   { axis: 'npg', label: 'NPG', fullName: 'Non-penalty goals' },
   { axis: 'npxg', label: 'npxG', fullName: 'Non-penalty expected goals' },
-  { axis: 'conv_pct', label: 'Conversion%', fullName: 'Goal conversion percentage' },
-  { axis: 'aerial_pct', label: 'Aerial%', fullName: 'Aerial duels won percentage' },
+  { axis: 'conv_pct', label: 'Conversion %', fullName: 'Goal conversion percentage' },
+  { axis: 'aerial_pct', label: 'Aerial %', fullName: 'Aerial duels won percentage' },
   { axis: 'touches_box', label: 'Touches in box', fullName: 'Touches in penalty box' },
 ] as const;
 
 const ST_TABLE_AXES = [
   { axis: 'npg', label: 'NPG', fullName: 'Non-penalty goals' },
   { axis: 'npxg', label: 'npxG', fullName: 'Non-penalty expected goals' },
-  { axis: 'conv_pct', label: 'Goal conv%', fullName: 'Goal conversion percentage' },
-  { axis: 'aerial_pct', label: 'Aerial%', fullName: 'Aerial duels won percentage' },
+  { axis: 'conv_pct', label: 'Goal conv %', fullName: 'Goal conversion percentage' },
+  { axis: 'aerial_pct', label: 'Aerial %', fullName: 'Aerial duels won percentage' },
   { axis: 'touches_box', label: 'Touches in box', fullName: 'Touches in penalty box' },
   { axis: 'xa', label: 'xA', fullName: 'Expected assists' },
   { axis: 'off_duels', label: 'Off duels won', fullName: 'Offensive duels won' },
