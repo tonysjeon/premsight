@@ -1,0 +1,248 @@
+{
+  "competition": "PL",
+  "season": "2026-27",
+  "reviewed_on": "2026-09-08",
+  "teams": [
+    {
+      "team_tla": "MCI",
+      "source_url": "https://www.fotmob.com/teams/8456/squad/manchester-city",
+      "excluded_player_slugs": [
+        "claudio-echeverri",
+        "divine-mukasa",
+        "jack-grealish",
+        "jeremy-monga",
+        "kaden-braithwaite",
+        "kalvin-phillips",
+        "max-alleyne",
+        "rodrigo-rodri-hernandez-cascante",
+        "tijjani-reijnders"
+      ]
+    },
+    {
+      "team_tla": "ARS",
+      "source_url": "https://www.fotmob.com/teams/9825/squad/arsenal",
+      "excluded_player_slugs": [
+        "ethan-nwaneri",
+        "fabio-ferreira-vieira",
+        "gabriel-fernando-de-jesus",
+        "gabriel-martinelli-silva",
+        "reiss-nelson"
+      ]
+    },
+    {
+      "team_tla": "EVE",
+      "source_url": "https://www.fotmob.com/teams/8668/squad/everton",
+      "excluded_player_slugs": [
+        "adam-aznou",
+        "iliman-ndiaye",
+        "nathan-patterson",
+        "norberto-bercique-gomes-betuncal",
+        "tim-iroegbunam"
+      ]
+    },
+    {
+      "team_tla": "LIV",
+      "source_url": "https://www.fotmob.com/teams/8650/squad/liverpool",
+      "excluded_player_slugs": [
+        "armin-pecsi",
+        "calvin-ramsay",
+        "curtis-jones",
+        "harvey-elliott",
+        "james-mcconnell",
+        "jayden-danns",
+        "stefan-bajcetic-maquieira",
+        "wellity-lucky"
+      ]
+    },
+    {
+      "team_tla": "BRE",
+      "source_url": "https://www.fotmob.com/teams/9937/squad/brentford",
+      "excluded_player_slugs": ["kaye-furo"]
+    },
+    {
+      "team_tla": "CHE",
+      "source_url": "https://www.fotmob.com/teams/8455/squad/chelsea",
+      "excluded_player_slugs": [
+        "benoit-badiashile-mukinayi",
+        "dario-luis-essugo",
+        "enzo-fernandez",
+        "filip-jorgensen",
+        "mamadou-sarr",
+        "marc-guiu-paz",
+        "mykhailo-mudryk",
+        "robert-lynch-sanchez",
+        "shumaira-mheuka",
+        "tosin-adarabioyo",
+        "trevoh-chalobah"
+      ]
+    },
+    {
+      "team_tla": "HUL",
+      "source_url": "https://www.fotmob.com/teams/8667/squad/hull-city",
+      "excluded_player_slugs": [
+        "abu-kamara",
+        "cathal-mccarthy",
+        "cody-drameh",
+        "enis-destan",
+        "harvey-cartwright",
+        "liam-millar",
+        "mason-burstow",
+        "matty-jacob",
+        "thimothee-lo-tutala"
+      ]
+    },
+    {
+      "team_tla": "LEE",
+      "source_url": "https://www.fotmob.com/teams/8463/squad/leeds-united",
+      "excluded_player_slugs": [
+        "alfie-cresswell",
+        "jack-harrison",
+        "jayden-lienou",
+        "joel-piroe",
+        "lucas-estella-perri",
+        "sebastiaan-bornauw",
+        "wilfried-gnonto"
+      ]
+    },
+    {
+      "team_tla": "NEW",
+      "source_url": "https://www.fotmob.com/teams/10261/squad/newcastle-united",
+      "excluded_player_slugs": ["alex-murphy", "leo-shahar", "nick-woltemade", "sean-neave"]
+    },
+    {
+      "team_tla": "MUN",
+      "source_url": "https://www.fotmob.com/teams/10260/squad/manchester-united",
+      "excluded_player_slugs": [
+        "altay-bayndr",
+        "bendito-mantato",
+        "chido-obi",
+        "toby-collyer",
+        "tyler-fredricson"
+      ]
+    },
+    {
+      "team_tla": "SUN",
+      "source_url": "https://www.fotmob.com/teams/8472/squad/sunderland",
+      "excluded_player_slugs": [
+        "anthony-patterson",
+        "arthur-masuaku",
+        "jenson-seelt",
+        "leo-fuhr-hjelde",
+        "simon-adingra"
+      ]
+    },
+    {
+      "team_tla": "BOU",
+      "source_url": "https://www.fotmob.com/teams/8678/squad/afc-bournemouth",
+      "excluded_player_slugs": ["enes-unal", "will-dennis"]
+    },
+    {
+      "team_tla": "BHA",
+      "source_url": "https://www.fotmob.com/teams/10204/squad/brighton-hove-albion",
+      "excluded_player_slugs": [
+        "amario-cozier-duberry",
+        "diego-coppola",
+        "facundo-buonanotte",
+        "harry-howell",
+        "igor-julio-dos-santos-de-paulo",
+        "nehemiah-oriola",
+        "tom-watson"
+      ]
+    },
+    {
+      "team_tla": "NOT",
+      "source_url": "https://www.fotmob.com/teams/10203/squad/nottingham-forest",
+      "excluded_player_slugs": [
+        "dilane-bakwa",
+        "felipe-rodrigues-da-silva",
+        "omar-richards",
+        "omari-hutchinson",
+        "tyler-bindon",
+        "zach-abbott"
+      ]
+    },
+    {
+      "team_tla": "IPS",
+      "source_url": "https://www.fotmob.com/teams/9902/squad/ipswich-town",
+      "excluded_player_slugs": [
+        "ali-al-hamadi",
+        "ben-johnson",
+        "cameron-humphreys",
+        "chiedozie-ogbene",
+        "george-hirst",
+        "kayne-van-oevelen",
+        "sam-szmodics",
+        "wes-burns"
+      ]
+    },
+    {
+      "team_tla": "CRY",
+      "source_url": "https://www.fotmob.com/teams/9826/squad/crystal-palace",
+      "excluded_player_slugs": [
+        "borna-sosa",
+        "christantus-uche",
+        "daniel-munoz-mejia",
+        "jesurun-rak-sakyi",
+        "joel-drakes-thomas",
+        "justin-devenny",
+        "matheus-franca-de-oliveira",
+        "rio-cardines",
+        "romain-esse"
+      ]
+    },
+    {
+      "team_tla": "FUL",
+      "source_url": "https://www.fotmob.com/teams/9879/squad/fulham",
+      "excluded_player_slugs": ["alfie-mcnally", "luc-de-fougerolles", "macauley-zepa"]
+    },
+    {
+      "team_tla": "TOT",
+      "source_url": "https://www.fotmob.com/teams/8586/squad/tottenham-hotspur",
+      "excluded_player_slugs": [
+        "ashley-phillips",
+        "callum-olusesi",
+        "cristian-romero",
+        "dane-scarlett",
+        "djed-spence",
+        "guglielmo-vicario",
+        "james-rowswell",
+        "joao-victor-de-souza-menezes",
+        "jun-ai-byfield",
+        "kevin-danso",
+        "luca-williams-barnett",
+        "mikey-moore",
+        "pape-matar-sarr"
+      ]
+    },
+    {
+      "team_tla": "COV",
+      "source_url": "https://www.fotmob.com/teams/8669/squad/coventry-city",
+      "excluded_player_slugs": [
+        "george-shepherd",
+        "jahnoah-markelo",
+        "kai-andrews",
+        "liam-kitching",
+        "miguel-brau",
+        "norman-bassette",
+        "oliver-dovin",
+        "raphael-borges-rodrigues"
+      ]
+    },
+    {
+      "team_tla": "AVL",
+      "source_url": "https://www.fotmob.com/teams/10252/squad/aston-villa",
+      "excluded_player_slugs": [
+        "alysson-edward-franco-da-rocha-dos-santos",
+        "andres-garcia",
+        "bradley-burrowes",
+        "kosta-nedeljkovic",
+        "leon-bailey",
+        "lucas-digne",
+        "luka-lynch",
+        "ollie-watkins",
+        "samuel-iling-junior",
+        "triston-rowe"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,4056 @@
+{
+  "competition": "PL",
+  "season": "2026-27",
+  "reviewed_on": "2026-09-08",
+  "height_unit": "inches",
+  "teams": [
+    {
+      "team_tla": "MCI",
+      "source_url": "https://www.fotmob.com/teams/8456/squad/manchester-city",
+      "players": {
+        "elliot-anderson": {
+          "source_name": "Elliot Anderson",
+          "positions": ["DM", "CM"],
+          "roster_order": 13,
+          "squad_number": 5,
+          "date_of_birth": "2002-11-05",
+          "height_inches": 70
+        },
+        "rayan-ait-nouri": {
+          "source_name": "Rayan Aït-Nouri",
+          "positions": ["LB", "LW"],
+          "roster_order": 10,
+          "squad_number": 21,
+          "date_of_birth": "2001-06-05",
+          "height_inches": 71
+        },
+        "marcus-bettinelli": {
+          "source_name": "Marcus Bettinelli",
+          "positions": ["GK"],
+          "roster_order": 1,
+          "squad_number": 13,
+          "date_of_birth": "1992-05-23",
+          "height_inches": 76
+        },
+        "ayyoub-bouaddi": {
+          "source_name": "Ayyoub Bouaddi",
+          "positions": ["DM", "CM", "RB"],
+          "roster_order": 15,
+          "squad_number": 32,
+          "date_of_birth": "2007-10-01",
+          "height_inches": 73
+        },
+        "rayan-cherki": {
+          "source_name": "Rayan Cherki",
+          "positions": ["AM", "RW", "LW"],
+          "roster_order": 16,
+          "squad_number": 10,
+          "date_of_birth": "2003-08-16",
+          "height_inches": 70
+        },
+        "jeremy-doku": {
+          "source_name": "Jérémy Doku",
+          "positions": ["LW", "RW", "AM"],
+          "roster_order": 23,
+          "squad_number": 11,
+          "date_of_birth": "2002-05-26",
+          "height_inches": 67
+        },
+        "gianluigi-donnarumma": {
+          "source_name": "Gianluigi Donnarumma",
+          "positions": ["GK"],
+          "roster_order": 0,
+          "squad_number": 1,
+          "date_of_birth": "1999-02-24",
+          "height_inches": 77
+        },
+        "phil-foden": {
+          "source_name": "Phil Foden",
+          "positions": ["AM", "RW", "LW", "ST"],
+          "roster_order": 18,
+          "squad_number": 47,
+          "date_of_birth": "2000-05-27",
+          "height_inches": 67
+        },
+        "marc-guehi": {
+          "source_name": "Marc Guéhi",
+          "positions": ["CB"],
+          "roster_order": 6,
+          "squad_number": 6,
+          "date_of_birth": "2000-07-12",
+          "height_inches": 72
+        },
+        "josko-gvardiol": {
+          "source_name": "Joško Gvardiol",
+          "positions": ["CB", "LB"],
+          "roster_order": 8,
+          "squad_number": 24,
+          "date_of_birth": "2002-01-22",
+          "height_inches": 73
+        },
+        "erling-haaland": {
+          "source_name": "Erling Haaland",
+          "positions": ["ST"],
+          "roster_order": 24,
+          "squad_number": 9,
+          "date_of_birth": "2000-07-20",
+          "height_inches": 77
+        },
+        "abdukodir-khusanov": {
+          "source_name": "Abdukodir Khusanov",
+          "positions": ["CB", "RB"],
+          "roster_order": 9,
+          "squad_number": 45,
+          "date_of_birth": "2004-02-28",
+          "height_inches": 73
+        },
+        "mateo-kovacic": {
+          "source_name": "Mateo Kovačić",
+          "positions": ["DM"],
+          "roster_order": 14,
+          "squad_number": 8,
+          "date_of_birth": "1994-05-05",
+          "height_inches": 70
+        },
+        "rico-lewis": {
+          "source_name": "Rico Lewis",
+          "positions": ["RB", "LB", "CM", "DM"],
+          "roster_order": 4,
+          "squad_number": 82,
+          "date_of_birth": "2004-11-20",
+          "height_inches": 67
+        },
+        "matheus-nunes": {
+          "source_name": "Matheus Nunes",
+          "positions": ["RB"],
+          "roster_order": 3,
+          "squad_number": 27,
+          "date_of_birth": "1998-08-26",
+          "height_inches": 72
+        },
+        "ryan-mcaidoo": {
+          "source_name": "Ryan McAidoo",
+          "positions": ["RW"],
+          "roster_order": 22,
+          "squad_number": 56,
+          "date_of_birth": "2008-06-23",
+          "height_inches": 69
+        },
+        "nico-o-reilly": {
+          "source_name": "Nico O'Reilly",
+          "positions": ["LB", "DM", "LW", "AM"],
+          "roster_order": 11,
+          "squad_number": 33,
+          "date_of_birth": "2005-03-20",
+          "height_inches": 76
+        },
+        "geronimo-rulli": {
+          "source_name": "Gerónimo Rulli",
+          "positions": ["GK"],
+          "roster_order": 2,
+          "squad_number": 28,
+          "date_of_birth": "1992-05-19",
+          "height_inches": 74
+        },
+        "ruben-dos-santos-gato-alves-dias": {
+          "source_name": "Rúben Dias",
+          "positions": ["CB"],
+          "roster_order": 5,
+          "squad_number": 3,
+          "date_of_birth": "1997-05-13",
+          "height_inches": 74
+        },
+        "antoine-semenyo": {
+          "source_name": "Antoine Semenyo",
+          "positions": ["RW", "LW", "ST", "RM"],
+          "roster_order": 21,
+          "squad_number": 42,
+          "date_of_birth": "2000-01-06",
+          "height_inches": 73
+        },
+        "vitor-de-oliveira-nunes-dos-reis": {
+          "source_name": "Vitor Reis",
+          "positions": ["CB"],
+          "roster_order": 7,
+          "squad_number": 22,
+          "date_of_birth": "2006-01-11",
+          "height_inches": 73
+        }
+      }
+    },
+    {
+      "team_tla": "ARS",
+      "source_url": "https://www.fotmob.com/teams/9825/squad/arsenal",
+      "players": {
+        "kepa-arrizabalaga-revuelta": {
+          "source_name": "Kepa Arrizabalaga",
+          "positions": ["GK"],
+          "roster_order": 1,
+          "squad_number": 13,
+          "date_of_birth": "1994-10-03",
+          "height_inches": 74
+        },
+        "bruno-guimaraes-rodriguez-moura": {
+          "source_name": "Bruno Guimarães",
+          "positions": ["CM", "DM", "AM"],
+          "roster_order": 16,
+          "squad_number": 39,
+          "date_of_birth": "1997-11-16",
+          "height_inches": 72
+        },
+        "riccardo-calafiori": {
+          "source_name": "Riccardo Calafiori",
+          "positions": ["LB", "CB"],
+          "roster_order": 10,
+          "squad_number": 33,
+          "date_of_birth": "2002-05-19",
+          "height_inches": 74
+        },
+        "max-dowman": {
+          "source_name": "Max Dowman",
+          "positions": ["RW", "CM", "AM"],
+          "roster_order": 18,
+          "squad_number": 56,
+          "date_of_birth": "2009-12-31",
+          "height_inches": 72
+        },
+        "eberechi-eze": {
+          "source_name": "Eberechi Eze",
+          "positions": ["AM", "CM", "LW", "DM"],
+          "roster_order": 17,
+          "squad_number": 10,
+          "date_of_birth": "1998-06-29",
+          "height_inches": 70
+        },
+        "gabriel-dos-santos-magalhaes": {
+          "source_name": "Gabriel",
+          "positions": ["CB"],
+          "roster_order": 7,
+          "squad_number": 6,
+          "date_of_birth": "1997-12-19",
+          "height_inches": 75
+        },
+        "viktor-gyokeres": {
+          "source_name": "Viktor Gyökeres",
+          "positions": ["ST"],
+          "roster_order": 22,
+          "squad_number": 14,
+          "date_of_birth": "1998-06-04",
+          "height_inches": 74
+        },
+        "kai-havertz": {
+          "source_name": "Kai Havertz",
+          "positions": ["ST", "AM", "CM"],
+          "roster_order": 23,
+          "squad_number": 29,
+          "date_of_birth": "1999-06-11",
+          "height_inches": 76
+        },
+        "piero-hincapie": {
+          "source_name": "Piero Hincapié",
+          "positions": ["LB", "CB"],
+          "roster_order": 9,
+          "squad_number": 5,
+          "date_of_birth": "2002-01-09",
+          "height_inches": 72
+        },
+        "jurrien-timber": {
+          "source_name": "Jurriën Timber",
+          "positions": ["RB", "CB", "LB"],
+          "roster_order": 4,
+          "squad_number": 12,
+          "date_of_birth": "2001-06-17",
+          "height_inches": 70
+        },
+        "ezri-konsa-ngoyo": {
+          "source_name": "Ezri Konsa",
+          "positions": ["CB", "RB"],
+          "roster_order": 8,
+          "squad_number": 15,
+          "date_of_birth": "1997-10-23",
+          "height_inches": 72
+        },
+        "myles-lewis-skelly": {
+          "source_name": "Myles Lewis-Skelly",
+          "positions": ["LB", "DM", "CM"],
+          "roster_order": 11,
+          "squad_number": 49,
+          "date_of_birth": "2006-09-26",
+          "height_inches": 70
+        },
+        "noni-madueke": {
+          "source_name": "Noni Madueke",
+          "positions": ["RW"],
+          "roster_order": 20,
+          "squad_number": 20,
+          "date_of_birth": "2002-03-10",
+          "height_inches": 72
+        },
+        "mikel-merino-zazon": {
+          "source_name": "Mikel Merino",
+          "positions": ["CM", "ST"],
+          "roster_order": 15,
+          "squad_number": 23,
+          "date_of_birth": "1996-06-22",
+          "height_inches": 74
+        },
+        "illan-meslier": {
+          "source_name": "Illan Meslier",
+          "positions": ["GK"],
+          "roster_order": 2,
+          "squad_number": 30,
+          "date_of_birth": "2000-03-02",
+          "height_inches": 76
+        },
+        "cristhian-mosquera": {
+          "source_name": "Cristhian Mosquera",
+          "positions": ["CB", "RB"],
+          "roster_order": 6,
+          "squad_number": 3,
+          "date_of_birth": "2004-06-27",
+          "height_inches": 75
+        },
+        "david-raya-martin": {
+          "source_name": "David Raya",
+          "positions": ["GK"],
+          "roster_order": 0,
+          "squad_number": 1,
+          "date_of_birth": "1995-09-15",
+          "height_inches": 72
+        },
+        "declan-rice": {
+          "source_name": "Declan Rice",
+          "positions": ["DM", "CM"],
+          "roster_order": 13,
+          "squad_number": 41,
+          "date_of_birth": "1999-01-14",
+          "height_inches": 73
+        },
+        "bukayo-saka": {
+          "source_name": "Bukayo Saka",
+          "positions": ["RW", "AM"],
+          "roster_order": 19,
+          "squad_number": 7,
+          "date_of_birth": "2001-09-05",
+          "height_inches": 70
+        },
+        "william-saliba": {
+          "source_name": "William Saliba",
+          "positions": ["CB"],
+          "roster_order": 5,
+          "squad_number": 2,
+          "date_of_birth": "2001-03-24",
+          "height_inches": 76
+        },
+        "christos-tzolis": {
+          "source_name": "Christos Tzolis",
+          "positions": ["LW", "AM", "RW"],
+          "roster_order": 21,
+          "squad_number": 17,
+          "date_of_birth": "2002-01-30",
+          "height_inches": 69
+        },
+        "benjamin-white": {
+          "source_name": "Ben White",
+          "positions": ["RB"],
+          "roster_order": 3,
+          "squad_number": 4,
+          "date_of_birth": "1997-10-08",
+          "height_inches": 73
+        },
+        "martin-zubimendi-ibanez": {
+          "source_name": "Martín Zubimendi",
+          "positions": ["DM", "CM"],
+          "roster_order": 12,
+          "squad_number": 36,
+          "date_of_birth": "1999-02-02",
+          "height_inches": 71
+        },
+        "martin-odegaard": {
+          "source_name": "Martin Ødegaard",
+          "positions": ["CM", "AM"],
+          "roster_order": 14,
+          "squad_number": 8,
+          "date_of_birth": "1998-12-17",
+          "height_inches": 69
+        }
+      }
+    },
+    {
+      "team_tla": "EVE",
+      "source_url": "https://www.fotmob.com/teams/8668/squad/everton",
+      "players": {
+        "carlos-alcaraz-duran": {
+          "source_name": "Charly Alcaraz",
+          "positions": ["AM"],
+          "roster_order": 15,
+          "squad_number": 24,
+          "date_of_birth": "2002-11-30",
+          "height_inches": 72
+        },
+        "harrison-armstrong": {
+          "source_name": "Harrison Armstrong",
+          "positions": ["CM", "DM", "AM", "RW"],
+          "roster_order": 13,
+          "squad_number": 45,
+          "date_of_birth": "2007-01-19",
+          "height_inches": 73
+        },
+        "thierno-barry": {
+          "source_name": "Thierno Barry",
+          "positions": ["ST"],
+          "roster_order": 20,
+          "squad_number": 11,
+          "date_of_birth": "2002-10-21",
+          "height_inches": 77
+        },
+        "jarrad-branthwaite": {
+          "source_name": "Jarrad Branthwaite",
+          "positions": ["CB", "LB"],
+          "roster_order": 6,
+          "squad_number": 4,
+          "date_of_birth": "2002-06-27",
+          "height_inches": 77
+        },
+        "kiernan-dewsbury-hall": {
+          "source_name": "Kiernan Dewsbury-Hall",
+          "positions": ["AM", "DM"],
+          "roster_order": 14,
+          "squad_number": 8,
+          "date_of_birth": "1998-09-06",
+          "height_inches": 70
+        },
+        "tyler-dibling": {
+          "source_name": "Tyler Dibling",
+          "positions": ["RW"],
+          "roster_order": 16,
+          "squad_number": 20,
+          "date_of_birth": "2006-02-17",
+          "height_inches": 70
+        },
+        "james-garner": {
+          "source_name": "James Garner",
+          "positions": ["DM", "RB"],
+          "roster_order": 12,
+          "squad_number": 37,
+          "date_of_birth": "2001-03-13",
+          "height_inches": 72
+        },
+        "tyrique-george": {
+          "source_name": "Tyrique George",
+          "positions": ["LW", "ST"],
+          "roster_order": 19,
+          "squad_number": 19,
+          "date_of_birth": "2006-02-04",
+          "height_inches": 71
+        },
+        "hayden-hackney": {
+          "source_name": "Hayden Hackney",
+          "positions": ["DM", "CM", "AM", "LW"],
+          "roster_order": 11,
+          "squad_number": 30,
+          "date_of_birth": "2002-06-26",
+          "height_inches": 70
+        },
+        "brennan-johnson": {
+          "source_name": "Brennan Johnson",
+          "positions": ["RW", "AM", "LW", "RWB"],
+          "roster_order": 17,
+          "squad_number": 22,
+          "date_of_birth": "2001-05-23",
+          "height_inches": 73
+        },
+        "michael-keane": {
+          "source_name": "Michael Keane",
+          "positions": ["CB"],
+          "roster_order": 7,
+          "squad_number": 5,
+          "date_of_birth": "1993-01-11",
+          "height_inches": 75
+        },
+        "tom-king": {
+          "source_name": "Tom King",
+          "positions": ["GK"],
+          "roster_order": 2,
+          "squad_number": 31,
+          "date_of_birth": "1995-03-09",
+          "height_inches": 76
+        },
+        "vitalii-mykolenko": {
+          "source_name": "Vitaliy Mykolenko",
+          "positions": ["LB"],
+          "roster_order": 9,
+          "squad_number": 16,
+          "date_of_birth": "1999-05-29",
+          "height_inches": 71
+        },
+        "christian-norgaard": {
+          "source_name": "Christian Nørgaard",
+          "positions": ["DM", "CM", "CB"],
+          "roster_order": 10,
+          "squad_number": 23,
+          "date_of_birth": "1994-03-10",
+          "height_inches": 73
+        },
+        "jake-o-brien": {
+          "source_name": "Jake O'Brien",
+          "positions": ["RB", "CB"],
+          "roster_order": 4,
+          "squad_number": 15,
+          "date_of_birth": "2001-05-15",
+          "height_inches": 78
+        },
+        "jordan-pickford": {
+          "source_name": "Jordan Pickford",
+          "positions": ["GK"],
+          "roster_order": 0,
+          "squad_number": 1,
+          "date_of_birth": "1994-03-07",
+          "height_inches": 73
+        },
+        "merlin-rohl": {
+          "source_name": "Merlin Röhl",
+          "positions": ["RB", "RW", "DM"],
+          "roster_order": 5,
+          "squad_number": 34,
+          "date_of_birth": "2002-07-05",
+          "height_inches": 76
+        },
+        "james-tarkowski": {
+          "source_name": "James Tarkowski",
+          "positions": ["CB"],
+          "roster_order": 8,
+          "squad_number": 6,
+          "date_of_birth": "1992-11-19",
+          "height_inches": 73
+        },
+        "mark-travers": {
+          "source_name": "Mark Travers",
+          "positions": ["GK"],
+          "roster_order": 1,
+          "squad_number": 12,
+          "date_of_birth": "1999-05-18",
+          "height_inches": 75
+        }
+      }
+    },
+    {
+      "team_tla": "LIV",
+      "source_url": "https://www.fotmob.com/teams/8650/squad/liverpool",
+      "players": {
+        "alisson-becker": {
+          "source_name": "Alisson Becker",
+          "positions": ["GK"],
+          "roster_order": 0,
+          "squad_number": 1,
+          "date_of_birth": "1992-10-02",
+          "height_inches": 76
+        },
+        "ronald-araujo": {
+          "source_name": "Ronald Araujo",
+          "positions": ["CB", "RB"],
+          "roster_order": 11,
+          "squad_number": 33,
+          "date_of_birth": "1999-03-07",
+          "height_inches": 76
+        },
+        "conor-bradley": {
+          "source_name": "Conor Bradley",
+          "positions": ["RB", "RM"],
+          "roster_order": 5,
+          "squad_number": 12,
+          "date_of_birth": "2003-07-09",
+          "height_inches": 71
+        },
+        "federico-chiesa": {
+          "source_name": "Federico Chiesa",
+          "positions": ["RW", "ST"],
+          "roster_order": 20,
+          "squad_number": 14,
+          "date_of_birth": "1997-10-25",
+          "height_inches": 69
+        },
+        "harvey-davies": {
+          "source_name": "Harvey Davies",
+          "positions": ["GK"],
+          "roster_order": 4,
+          "squad_number": 95,
+          "date_of_birth": "2003-09-03",
+          "height_inches": 75
+        },
+        "hugo-ekitike": {
+          "source_name": "Hugo Ekitiké",
+          "positions": ["ST", "LW"],
+          "roster_order": 27,
+          "squad_number": 22,
+          "date_of_birth": "2002-06-20",
+          "height_inches": 75
+        },
+        "endo-wataru": {
+          "source_name": "Wataru Endo",
+          "positions": ["DM", "CB"],
+          "roster_order": 14,
+          "squad_number": 3,
+          "date_of_birth": "1993-02-09",
+          "height_inches": 70
+        },
+        "jeremie-frimpong": {
+          "source_name": "Jeremie Frimpong",
+          "positions": ["RB", "RW"],
+          "roster_order": 6,
+          "squad_number": 30,
+          "date_of_birth": "2000-12-10",
+          "height_inches": 67
+        },
+        "cody-gakpo": {
+          "source_name": "Cody Gakpo",
+          "positions": ["LW", "ST", "LM", "RW"],
+          "roster_order": 22,
+          "squad_number": 18,
+          "date_of_birth": "1999-05-07",
+          "height_inches": 76
+        },
+        "joe-gomez": {
+          "source_name": "Joseph Gomez",
+          "positions": ["CB", "RB"],
+          "roster_order": 7,
+          "squad_number": 2,
+          "date_of_birth": "1997-05-23",
+          "height_inches": 75
+        },
+        "ryan-gravenberch": {
+          "source_name": "Ryan Gravenberch",
+          "positions": ["DM", "CM"],
+          "roster_order": 17,
+          "squad_number": 38,
+          "date_of_birth": "2002-05-16",
+          "height_inches": 75
+        },
+        "alexander-isak": {
+          "source_name": "Alexander Isak",
+          "positions": ["ST"],
+          "roster_order": 26,
+          "squad_number": 9,
+          "date_of_birth": "1999-09-21",
+          "height_inches": 76
+        },
+        "jeremy-jacquet": {
+          "source_name": "Jérémy Jacquet",
+          "positions": ["CB"],
+          "roster_order": 9,
+          "squad_number": 5,
+          "date_of_birth": "2005-07-13",
+          "height_inches": 74
+        },
+        "vitezslav-jaros": {
+          "source_name": "Vítezslav Jaroš",
+          "positions": ["GK"],
+          "roster_order": 3,
+          "squad_number": 56,
+          "date_of_birth": "2001-07-23",
+          "height_inches": 74
+        },
+        "milos-kerkez": {
+          "source_name": "Miloš Kerkez",
+          "positions": ["LB"],
+          "roster_order": 12,
+          "squad_number": 6,
+          "date_of_birth": "2003-11-07",
+          "height_inches": 71
+        },
+        "lewis-koumas": {
+          "source_name": "Lewis Koumas",
+          "positions": ["LW", "ST", "AM", "RW"],
+          "roster_order": 21,
+          "squad_number": null,
+          "date_of_birth": "2005-09-19",
+          "height_inches": 72
+        },
+        "giovanni-leoni": {
+          "source_name": "Giovanni Leoni",
+          "positions": ["CB"],
+          "roster_order": 10,
+          "squad_number": 15,
+          "date_of_birth": "2006-12-21",
+          "height_inches": 77
+        },
+        "alexis-mac-allister": {
+          "source_name": "Alexis Mac Allister",
+          "positions": ["DM", "CM", "AM", "LM"],
+          "roster_order": 16,
+          "squad_number": 10,
+          "date_of_birth": "1998-12-24",
+          "height_inches": 69
+        },
+        "giorgi-mamardashvili": {
+          "source_name": "Giorgi Mamardashvili",
+          "positions": ["GK"],
+          "roster_order": 1,
+          "squad_number": 25,
+          "date_of_birth": "2000-09-29",
+          "height_inches": 78
+        },
+        "victor-munoz": {
+          "source_name": "Víctor Muñoz",
+          "positions": ["LW", "RW", "ST", "AM", "LM"],
+          "roster_order": 23,
+          "squad_number": 23,
+          "date_of_birth": "2003-07-13",
+          "height_inches": 68
+        },
+        "rio-ngumoha": {
+          "source_name": "Rio Ngumoha",
+          "positions": ["LW", "RW"],
+          "roster_order": 25,
+          "squad_number": 73,
+          "date_of_birth": "2008-08-29",
+          "height_inches": null
+        },
+        "trey-nyoni": {
+          "source_name": "Trey Nyoni",
+          "positions": ["DM", "CM"],
+          "roster_order": 18,
+          "squad_number": 42,
+          "date_of_birth": "2007-06-30",
+          "height_inches": null
+        },
+        "dominik-szoboszlai": {
+          "source_name": "Dominik Szoboszlai",
+          "positions": ["DM", "AM", "RW", "RB", "CM", "LW"],
+          "roster_order": 15,
+          "squad_number": 8,
+          "date_of_birth": "2000-10-25",
+          "height_inches": 73
+        },
+        "kostas-tsimikas": {
+          "source_name": "Konstantinos Tsimikas",
+          "positions": ["LWB", "LB", "LM"],
+          "roster_order": 13,
+          "squad_number": 21,
+          "date_of_birth": "1996-05-12",
+          "height_inches": 70
+        },
+        "virgil-van-dijk": {
+          "source_name": "Virgil van Dijk",
+          "positions": ["CB"],
+          "roster_order": 8,
+          "squad_number": 4,
+          "date_of_birth": "1991-07-08",
+          "height_inches": 76
+        },
+        "florian-wirtz": {
+          "source_name": "Florian Wirtz",
+          "positions": ["AM", "LW", "ST"],
+          "roster_order": 19,
+          "squad_number": 7,
+          "date_of_birth": "2003-05-03",
+          "height_inches": 69
+        },
+        "freddie-woodman": {
+          "source_name": "Freddie Woodman",
+          "positions": ["GK"],
+          "roster_order": 2,
+          "squad_number": 28,
+          "date_of_birth": "1997-03-04",
+          "height_inches": 74
+        }
+      }
+    },
+    {
+      "team_tla": "BRE",
+      "source_url": "https://www.fotmob.com/teams/9937/squad/brentford",
+      "players": {
+        "kristoffer-ajer": {
+          "source_name": "Kristoffer Ajer",
+          "positions": ["CB", "LB"],
+          "roster_order": 6,
+          "squad_number": 20,
+          "date_of_birth": "1998-04-17",
+          "height_inches": 77
+        },
+        "jaidon-anthony": {
+          "source_name": "Jaidon Anthony",
+          "positions": ["LW", "LM", "AM", "RW"],
+          "roster_order": 23,
+          "squad_number": 19,
+          "date_of_birth": "1999-12-01",
+          "height_inches": 72
+        },
+        "fabio-freitas-gouveia-carvalho": {
+          "source_name": "Fábio Carvalho",
+          "positions": ["ST"],
+          "roster_order": 25,
+          "squad_number": 14,
+          "date_of_birth": "2002-08-30",
+          "height_inches": 67
+        },
+        "nathan-collins": {
+          "source_name": "Nathan Collins",
+          "positions": ["CB"],
+          "roster_order": 7,
+          "squad_number": 22,
+          "date_of_birth": "2001-04-30",
+          "height_inches": 76
+        },
+        "mikkel-damsgaard": {
+          "source_name": "Mikkel Damsgaard",
+          "positions": ["AM", "LW", "CM", "LM"],
+          "roster_order": 19,
+          "squad_number": 24,
+          "date_of_birth": "2000-07-03",
+          "height_inches": 71
+        },
+        "josh-dasilva": {
+          "source_name": "Joshua Dasilva",
+          "positions": ["RW"],
+          "roster_order": 20,
+          "squad_number": 10,
+          "date_of_birth": "1998-10-23",
+          "height_inches": 72
+        },
+        "el-hadji-malick-diouf": {
+          "source_name": "Malick Diouf",
+          "positions": ["LB", "LWB", "LM"],
+          "roster_order": 13,
+          "squad_number": 25,
+          "date_of_birth": "2004-12-28",
+          "height_inches": 72
+        },
+        "rico-henry": {
+          "source_name": "Rico Henry",
+          "positions": ["LB", "LM"],
+          "roster_order": 11,
+          "squad_number": 3,
+          "date_of_birth": "1997-07-08",
+          "height_inches": 67
+        },
+        "aaron-hickey": {
+          "source_name": "Aaron Hickey",
+          "positions": ["RB", "LB"],
+          "roster_order": 3,
+          "squad_number": 2,
+          "date_of_birth": "2002-06-10",
+          "height_inches": 73
+        },
+        "vitaly-janelt": {
+          "source_name": "Vitaly Janelt",
+          "positions": ["DM", "CM"],
+          "roster_order": 16,
+          "squad_number": 27,
+          "date_of_birth": "1998-05-10",
+          "height_inches": 72
+        },
+        "mathias-jensen": {
+          "source_name": "Mathias Jensen",
+          "positions": ["CM", "AM", "DM", "RW"],
+          "roster_order": 17,
+          "squad_number": 8,
+          "date_of_birth": "1996-01-01",
+          "height_inches": 68
+        },
+        "kim-ji-soo": {
+          "source_name": "Ji-Soo Kim",
+          "positions": ["CB"],
+          "roster_order": 8,
+          "squad_number": 36,
+          "date_of_birth": "2004-12-24",
+          "height_inches": 74
+        },
+        "michael-kayode": {
+          "source_name": "Michael Kayode",
+          "positions": ["RB", "RWB"],
+          "roster_order": 4,
+          "squad_number": 33,
+          "date_of_birth": "2004-07-10",
+          "height_inches": 70
+        },
+        "caoimhin-kelleher": {
+          "source_name": "Caoimhín Kelleher",
+          "positions": ["GK"],
+          "roster_order": 0,
+          "squad_number": 1,
+          "date_of_birth": "1998-11-23",
+          "height_inches": 74
+        },
+        "keane-lewis-potter": {
+          "source_name": "Keane Lewis-Potter",
+          "positions": ["LB", "RW", "LWB", "LW"],
+          "roster_order": 12,
+          "squad_number": 23,
+          "date_of_birth": "2001-02-22",
+          "height_inches": 67
+        },
+        "mamadou-sangare": {
+          "source_name": "Mamadou Sangaré",
+          "positions": ["DM", "CM", "RW"],
+          "roster_order": 15,
+          "squad_number": 18,
+          "date_of_birth": "2002-06-26",
+          "height_inches": 70
+        },
+        "antoni-milambo": {
+          "source_name": "Antoni Milambo",
+          "positions": ["CM"],
+          "roster_order": 18,
+          "squad_number": 17,
+          "date_of_birth": "2005-04-03",
+          "height_inches": 69
+        },
+        "dango-ouattara": {
+          "source_name": "Dango Ouattara",
+          "positions": ["RW", "LW", "ST", "RM"],
+          "roster_order": 21,
+          "squad_number": 11,
+          "date_of_birth": "2002-02-11",
+          "height_inches": 70
+        },
+        "kevin-schade": {
+          "source_name": "Kevin Schade",
+          "positions": ["LW", "ST"],
+          "roster_order": 22,
+          "squad_number": 7,
+          "date_of_birth": "2001-11-27",
+          "height_inches": 72
+        },
+        "jannik-schuster": {
+          "source_name": "Jannik Schuster",
+          "positions": ["CB"],
+          "roster_order": 9,
+          "squad_number": 44,
+          "date_of_birth": "2006-05-16",
+          "height_inches": 75
+        },
+        "igor-thiago-nascimento-rodrigues": {
+          "source_name": "Igor Thiago",
+          "positions": ["ST"],
+          "roster_order": 26,
+          "squad_number": 9,
+          "date_of_birth": "2001-06-26",
+          "height_inches": 75
+        },
+        "hakon-rafn-valdimarsson": {
+          "source_name": "Hákon Rafn Valdimarsson",
+          "positions": ["GK"],
+          "roster_order": 1,
+          "squad_number": 12,
+          "date_of_birth": "2001-10-13",
+          "height_inches": 74
+        },
+        "sepp-van-den-berg": {
+          "source_name": "Sepp van den Berg",
+          "positions": ["CB"],
+          "roster_order": 5,
+          "squad_number": 4,
+          "date_of_birth": "2001-12-20",
+          "height_inches": 74
+        },
+        "callum-wilson": {
+          "source_name": "Callum Wilson",
+          "positions": ["ST"],
+          "roster_order": 27,
+          "squad_number": 13,
+          "date_of_birth": "1992-02-27",
+          "height_inches": 71
+        },
+        "yehor-yarmoliuk": {
+          "source_name": "Yehor Yarmoliuk",
+          "positions": ["DM", "CM"],
+          "roster_order": 14,
+          "squad_number": 6,
+          "date_of_birth": "2004-03-01",
+          "height_inches": 69
+        }
+      }
+    },
+    {
+      "team_tla": "CHE",
+      "source_url": "https://www.fotmob.com/teams/8455/squad/chelsea",
+      "players": {
+        "josh-acheampong": {
+          "source_name": "Josh Acheampong",
+          "positions": ["CB", "RB"],
+          "roster_order": 10,
+          "squad_number": 34,
+          "date_of_birth": "2006-05-05",
+          "height_inches": 73
+        },
+        "aaron-anselmino": {
+          "source_name": "Aaron Anselmino",
+          "positions": ["CB"],
+          "roster_order": 9,
+          "squad_number": 30,
+          "date_of_birth": "2005-04-29",
+          "height_inches": 73
+        },
+        "valentin-barco": {
+          "source_name": "Valentín Barco",
+          "positions": ["DM", "CM", "AM"],
+          "roster_order": 13,
+          "squad_number": 4,
+          "date_of_birth": "2004-07-23",
+          "height_inches": 67
+        },
+        "moises-caicedo-corozo": {
+          "source_name": "Moisés Caicedo",
+          "positions": ["DM", "CM"],
+          "roster_order": 15,
+          "squad_number": 25,
+          "date_of_birth": "2001-11-02",
+          "height_inches": 70
+        },
+        "pep-chavarria": {
+          "source_name": "Pep Chavarría",
+          "positions": ["LB"],
+          "roster_order": 12,
+          "squad_number": 29,
+          "date_of_birth": "1998-04-10",
+          "height_inches": 69
+        },
+        "levi-samuels-colwill": {
+          "source_name": "Levi Colwill",
+          "positions": ["CB"],
+          "roster_order": 8,
+          "squad_number": 6,
+          "date_of_birth": "2003-02-26",
+          "height_inches": 74
+        },
+        "emmanuel-emegha": {
+          "source_name": "Emanuel Emegha",
+          "positions": ["ST"],
+          "roster_order": 26,
+          "squad_number": 22,
+          "date_of_birth": "2003-02-03",
+          "height_inches": 77
+        },
+        "estevao-almeida-de-oliveira-goncalves": {
+          "source_name": "Estêvão",
+          "positions": ["RW", "LW"],
+          "roster_order": 22,
+          "squad_number": 41,
+          "date_of_birth": "2007-04-24",
+          "height_inches": 69
+        },
+        "wesley-fofana": {
+          "source_name": "Wesley Fofana",
+          "positions": ["CB"],
+          "roster_order": 6,
+          "squad_number": 3,
+          "date_of_birth": "2000-12-17",
+          "height_inches": 73
+        },
+        "jamie-bynoe-gittens": {
+          "source_name": "Jamie Gittens",
+          "positions": ["LW", "RW", "LM"],
+          "roster_order": 23,
+          "squad_number": 11,
+          "date_of_birth": "2004-08-08",
+          "height_inches": 69
+        },
+        "malo-gusto": {
+          "source_name": "Malo Gusto",
+          "positions": ["RB", "DM", "LB", "RWB"],
+          "roster_order": 5,
+          "squad_number": 27,
+          "date_of_birth": "2003-05-19",
+          "height_inches": 70
+        },
+        "jorrel-hato": {
+          "source_name": "Jorrel Hato",
+          "positions": ["LB", "CB", "LWB"],
+          "roster_order": 11,
+          "squad_number": 21,
+          "date_of_birth": "2006-03-07",
+          "height_inches": 72
+        },
+        "jordan-henderson": {
+          "source_name": "Jordan Henderson",
+          "positions": ["DM", "CM"],
+          "roster_order": 14,
+          "squad_number": 14,
+          "date_of_birth": "1990-06-17",
+          "height_inches": 72
+        },
+        "reece-james": {
+          "source_name": "Reece James",
+          "positions": ["RB", "DM", "CM"],
+          "roster_order": 4,
+          "squad_number": 24,
+          "date_of_birth": "1999-12-08",
+          "height_inches": 72
+        },
+        "joao-pedro-junqueira-de-jesus": {
+          "source_name": "João Pedro",
+          "positions": ["ST", "AM"],
+          "roster_order": 24,
+          "squad_number": 9,
+          "date_of_birth": "2001-09-26",
+          "height_inches": 73
+        },
+        "maxence-lacroix": {
+          "source_name": "Maxence Lacroix",
+          "positions": ["CB"],
+          "roster_order": 7,
+          "squad_number": 5,
+          "date_of_birth": "2000-04-06",
+          "height_inches": 75
+        },
+        "romeo-lavia": {
+          "source_name": "Roméo Lavia",
+          "positions": ["DM"],
+          "roster_order": 16,
+          "squad_number": 45,
+          "date_of_birth": "2004-01-06",
+          "height_inches": 71
+        },
+        "emiliano-martinez-romero": {
+          "source_name": "Emiliano Martínez",
+          "positions": ["GK"],
+          "roster_order": 0,
+          "squad_number": 1,
+          "date_of_birth": "1992-09-02",
+          "height_inches": 77
+        },
+        "pedro-lomba-neto": {
+          "source_name": "Pedro Neto",
+          "positions": ["RW", "LW", "AM", "RWB", "RM"],
+          "roster_order": 20,
+          "squad_number": 7,
+          "date_of_birth": "2000-03-09",
+          "height_inches": 68
+        },
+        "marco-palestra": {
+          "source_name": "Marco Palestra",
+          "positions": ["RM", "RB", "LM"],
+          "roster_order": 17,
+          "squad_number": 2,
+          "date_of_birth": "2005-03-03",
+          "height_inches": 73
+        },
+        "cole-palmer": {
+          "source_name": "Cole Palmer",
+          "positions": ["AM", "RW"],
+          "roster_order": 18,
+          "squad_number": 10,
+          "date_of_birth": "2002-05-06",
+          "height_inches": 73
+        },
+        "mike-penders": {
+          "source_name": "Mike Penders",
+          "positions": ["GK"],
+          "roster_order": 2,
+          "squad_number": 39,
+          "date_of_birth": "2005-07-31",
+          "height_inches": 79
+        },
+        "geovany-quenda": {
+          "source_name": "Geovany Quenda",
+          "positions": ["RW", "LW", "RM"],
+          "roster_order": 21,
+          "squad_number": 23,
+          "date_of_birth": "2007-04-30",
+          "height_inches": 68
+        },
+        "morgan-rogers": {
+          "source_name": "Morgan Rogers",
+          "positions": ["AM", "LW", "RW"],
+          "roster_order": 19,
+          "squad_number": 17,
+          "date_of_birth": "2002-07-26",
+          "height_inches": 74
+        },
+        "danny-welbeck": {
+          "source_name": "Danny Welbeck",
+          "positions": ["ST"],
+          "roster_order": 25,
+          "squad_number": 18,
+          "date_of_birth": "1990-11-26",
+          "height_inches": 73
+        }
+      }
+    },
+    {
+      "team_tla": "HUL",
+      "source_url": "https://www.fotmob.com/teams/8667/squad/hull-city",
+      "players": {
+        "semi-ajayi": {
+          "source_name": "Semi Ajayi",
+          "positions": ["CB"],
+          "roster_order": 5,
+          "squad_number": 6,
+          "date_of_birth": "1993-11-09",
+          "height_inches": 76
+        },
+        "david-akintola": {
+          "source_name": "David Akintola",
+          "positions": ["RW"],
+          "roster_order": 28,
+          "squad_number": 30,
+          "date_of_birth": "1996-01-13",
+          "height_inches": 70
+        },
+        "mohamed-belloumi": {
+          "source_name": "Mohamed Belloumi",
+          "positions": ["RW", "RM", "AM"],
+          "roster_order": 27,
+          "squad_number": 10,
+          "date_of_birth": "2002-06-01",
+          "height_inches": 70
+        },
+        "jack-butland": {
+          "source_name": "Jack Butland",
+          "positions": ["GK"],
+          "roster_order": 0,
+          "squad_number": 1,
+          "date_of_birth": "1993-03-10",
+          "height_inches": 77
+        },
+        "mohamed-ali-cho": {
+          "source_name": "Mohamed-Ali Cho",
+          "positions": ["RW", "ST", "AM", "RM"],
+          "roster_order": 30,
+          "squad_number": 50,
+          "date_of_birth": "2004-01-19",
+          "height_inches": 72
+        },
+        "lewie-coyle": {
+          "source_name": "Lewie Coyle",
+          "positions": ["RB", "RWB", "LB", "RM"],
+          "roster_order": 3,
+          "squad_number": 2,
+          "date_of_birth": "1995-10-15",
+          "height_inches": 68
+        },
+        "matt-crooks": {
+          "source_name": "Matt Crooks",
+          "positions": ["DM", "AM", "CM", "ST"],
+          "roster_order": 15,
+          "squad_number": 25,
+          "date_of_birth": "1994-01-20",
+          "height_inches": 72
+        },
+        "kieran-dowell": {
+          "source_name": "Kieran Dowell",
+          "positions": ["AM"],
+          "roster_order": 26,
+          "squad_number": 26,
+          "date_of_birth": "1997-10-10",
+          "height_inches": 69
+        },
+        "john-egan": {
+          "source_name": "John Egan",
+          "positions": ["CB"],
+          "roster_order": 6,
+          "squad_number": 15,
+          "date_of_birth": "1992-10-20",
+          "height_inches": 73
+        },
+        "joe-gelhardt": {
+          "source_name": "Joe Gelhardt",
+          "positions": ["AM", "RW", "ST"],
+          "roster_order": 24,
+          "squad_number": 11,
+          "date_of_birth": "2002-05-04",
+          "height_inches": 70
+        },
+        "ryan-giles": {
+          "source_name": "Ryan Giles",
+          "positions": ["LB", "LWB", "LM"],
+          "roster_order": 10,
+          "squad_number": 3,
+          "date_of_birth": "2000-01-26",
+          "height_inches": 70
+        },
+        "lucas-gourna-douath": {
+          "source_name": "Lucas Gourna-Douath",
+          "positions": ["DM", "CM"],
+          "roster_order": 17,
+          "squad_number": 29,
+          "date_of_birth": "2003-08-05",
+          "height_inches": 73
+        },
+        "darko-gyabi": {
+          "source_name": "Darko Gyabi",
+          "positions": ["AM", "CM", "DM"],
+          "roster_order": 25,
+          "squad_number": 24,
+          "date_of_birth": "2004-02-18",
+          "height_inches": 77
+        },
+        "lucas-herrington": {
+          "source_name": "Lucas Herrington",
+          "positions": ["CB"],
+          "roster_order": 8,
+          "squad_number": 22,
+          "date_of_birth": "2007-09-05",
+          "height_inches": 76
+        },
+        "jens-hjerto-dahl": {
+          "source_name": "Jens Hjertø-Dahl",
+          "positions": ["CM", "AM"],
+          "roster_order": 20,
+          "squad_number": 14,
+          "date_of_birth": "2005-10-31",
+          "height_inches": null
+        },
+        "charlie-hughes": {
+          "source_name": "Charlie Hughes",
+          "positions": ["CB"],
+          "roster_order": 4,
+          "squad_number": 4,
+          "date_of_birth": "2003-10-16",
+          "height_inches": 73
+        },
+        "eliot-matazo": {
+          "source_name": "Eliot Matazo",
+          "positions": ["DM"],
+          "roster_order": 13,
+          "squad_number": 8,
+          "date_of_birth": "2002-02-15",
+          "height_inches": 69
+        },
+        "oli-mcburnie": {
+          "source_name": "Oli McBurnie",
+          "positions": ["ST"],
+          "roster_order": 32,
+          "squad_number": 9,
+          "date_of_birth": "1996-06-04",
+          "height_inches": 74
+        },
+        "paddy-mcnair": {
+          "source_name": "Paddy McNair",
+          "positions": ["CB", "LB"],
+          "roster_order": 7,
+          "squad_number": 17,
+          "date_of_birth": "1995-04-27",
+          "height_inches": 74
+        },
+        "nobel-mendy": {
+          "source_name": "Nobel Mendy",
+          "positions": ["CB"],
+          "roster_order": 9,
+          "squad_number": 32,
+          "date_of_birth": "2004-08-16",
+          "height_inches": 74
+        },
+        "hidemasa-morita": {
+          "source_name": "Hidemasa Morita",
+          "positions": ["DM"],
+          "roster_order": 12,
+          "squad_number": 5,
+          "date_of_birth": "1995-05-10",
+          "height_inches": 70
+        },
+        "dillon-phillips": {
+          "source_name": "Dillon Phillips",
+          "positions": ["GK"],
+          "roster_order": 1,
+          "squad_number": 12,
+          "date_of_birth": "1995-06-11",
+          "height_inches": 74
+        },
+        "regan-slater": {
+          "source_name": "Regan Slater",
+          "positions": ["DM", "CM"],
+          "roster_order": 16,
+          "squad_number": 27,
+          "date_of_birth": "1999-09-11",
+          "height_inches": 68
+        },
+        "elliot-stroud": {
+          "source_name": "Elliot Stroud",
+          "positions": ["LM", "LW", "RW", "LWB"],
+          "roster_order": 22,
+          "squad_number": 21,
+          "date_of_birth": "2002-06-22",
+          "height_inches": null
+        },
+        "matt-targett": {
+          "source_name": "Matt Targett",
+          "positions": ["LB", "LWB", "CB", "LM"],
+          "roster_order": 11,
+          "squad_number": 23,
+          "date_of_birth": "1995-09-18",
+          "height_inches": 72
+        },
+        "konstantinos-tzolakis": {
+          "source_name": "Konstantinos Tzolakis",
+          "positions": ["GK"],
+          "roster_order": 2,
+          "squad_number": 19,
+          "date_of_birth": "2002-11-08",
+          "height_inches": 76
+        },
+        "oscar-zambrano": {
+          "source_name": "Óscar Zambrano",
+          "positions": ["DM"],
+          "roster_order": 14,
+          "squad_number": 18,
+          "date_of_birth": "2004-04-20",
+          "height_inches": 69
+        },
+        "abdulkadir-omur": {
+          "source_name": "Abdülkadir Ömür",
+          "positions": ["RW", "AM", "CM"],
+          "roster_order": 29,
+          "squad_number": 33,
+          "date_of_birth": "1999-06-25",
+          "height_inches": 66
+        }
+      }
+    },
+    {
+      "team_tla": "LEE",
+      "source_url": "https://www.fotmob.com/teams/8463/squad/leeds-united",
+      "players": {
+        "brenden-aaronson": {
+          "source_name": "Brenden Aaronson",
+          "positions": ["AM", "RW", "CM", "ST", "LM", "LW"],
+          "roster_order": 16,
+          "squad_number": 11,
+          "date_of_birth": "2000-10-22",
+          "height_inches": 70
+        },
+        "ethan-ampadu": {
+          "source_name": "Ethan Ampadu",
+          "positions": ["CM", "DM", "CB"],
+          "roster_order": 12,
+          "squad_number": 4,
+          "date_of_birth": "2000-09-14",
+          "height_inches": 72
+        },
+        "jaka-bijol": {
+          "source_name": "Jaka Bijol",
+          "positions": ["CB"],
+          "roster_order": 5,
+          "squad_number": 15,
+          "date_of_birth": "1999-02-05",
+          "height_inches": 75
+        },
+        "jayden-bogle": {
+          "source_name": "Jayden Bogle",
+          "positions": ["RWB", "RM", "RB"],
+          "roster_order": 8,
+          "squad_number": 2,
+          "date_of_birth": "2000-07-27",
+          "height_inches": 70
+        },
+        "alex-cairns": {
+          "source_name": "Alex Cairns",
+          "positions": ["GK"],
+          "roster_order": 2,
+          "squad_number": 21,
+          "date_of_birth": "1993-01-04",
+          "height_inches": 72
+        },
+        "dominic-calvert-lewin": {
+          "source_name": "Dominic Calvert-Lewin",
+          "positions": ["ST"],
+          "roster_order": 22,
+          "squad_number": 9,
+          "date_of_birth": "1997-03-16",
+          "height_inches": 74
+        },
+        "nico-elvedi": {
+          "source_name": "Nico Elvedi",
+          "positions": ["CB"],
+          "roster_order": 7,
+          "squad_number": 30,
+          "date_of_birth": "1996-09-30",
+          "height_inches": 74
+        },
+        "ilia-gruev": {
+          "source_name": "Ilia Gruev",
+          "positions": ["CM", "DM"],
+          "roster_order": 15,
+          "squad_number": 44,
+          "date_of_birth": "2000-05-06",
+          "height_inches": 73
+        },
+        "gabriel-gudmundsson": {
+          "source_name": "Gabriel Gudmundsson",
+          "positions": ["LWB", "LB", "LM", "CB"],
+          "roster_order": 10,
+          "squad_number": 3,
+          "date_of_birth": "1999-04-29",
+          "height_inches": 71
+        },
+        "daniel-james": {
+          "source_name": "Daniel James",
+          "positions": ["RW", "RWB", "AM"],
+          "roster_order": 19,
+          "squad_number": 7,
+          "date_of_birth": "1997-11-10",
+          "height_inches": 67
+        },
+        "james-justin": {
+          "source_name": "James Justin",
+          "positions": ["CB", "LWB", "RWB", "LM", "RM"],
+          "roster_order": 6,
+          "squad_number": 24,
+          "date_of_birth": "1998-02-23",
+          "height_inches": 72
+        },
+        "sean-longstaff": {
+          "source_name": "Sean Longstaff",
+          "positions": ["CM", "AM", "DM"],
+          "roster_order": 13,
+          "squad_number": 8,
+          "date_of_birth": "1997-10-30",
+          "height_inches": 71
+        },
+        "mateo-joseph-fernandez-regatillo": {
+          "source_name": "Mateo Joseph",
+          "positions": ["RW", "ST"],
+          "roster_order": 18,
+          "squad_number": null,
+          "date_of_birth": "2003-10-19",
+          "height_inches": 73
+        },
+        "tarik-muharemovic": {
+          "source_name": "Tarik Muharemović",
+          "positions": ["CB", "LB"],
+          "roster_order": 3,
+          "squad_number": 5,
+          "date_of_birth": "2003-02-28",
+          "height_inches": 74
+        },
+        "lukas-nmecha": {
+          "source_name": "Lukas Nmecha",
+          "positions": ["ST"],
+          "roster_order": 23,
+          "squad_number": 14,
+          "date_of_birth": "1998-12-14",
+          "height_inches": 73
+        },
+        "noah-okafor": {
+          "source_name": "Noah Okafor",
+          "positions": ["AM", "LW", "ST"],
+          "roster_order": 17,
+          "squad_number": 19,
+          "date_of_birth": "2000-05-24",
+          "height_inches": 73
+        },
+        "joe-rodon": {
+          "source_name": "Joe Rodon",
+          "positions": ["CB"],
+          "roster_order": 4,
+          "squad_number": 6,
+          "date_of_birth": "1997-10-22",
+          "height_inches": 76
+        },
+        "anton-stach": {
+          "source_name": "Anton Stach",
+          "positions": ["CM", "AM", "DM", "RM"],
+          "roster_order": 14,
+          "squad_number": 18,
+          "date_of_birth": "1998-11-15",
+          "height_inches": 76
+        },
+        "tanaka-ao": {
+          "source_name": "Ao Tanaka",
+          "positions": ["DM", "CM"],
+          "roster_order": 11,
+          "squad_number": 22,
+          "date_of_birth": "1998-09-10",
+          "height_inches": 71
+        },
+        "james-trafford": {
+          "source_name": "James Trafford",
+          "positions": ["GK"],
+          "roster_order": 0,
+          "squad_number": 1,
+          "date_of_birth": "2002-10-10",
+          "height_inches": 78
+        },
+        "harry-wilson": {
+          "source_name": "Harry Wilson",
+          "positions": ["RW", "AM", "LW"],
+          "roster_order": 20,
+          "squad_number": 10,
+          "date_of_birth": "1997-03-22",
+          "height_inches": 68
+        }
+      }
+    },
+    {
+      "team_tla": "NEW",
+      "source_url": "https://www.fotmob.com/teams/10261/squad/newcastle-united",
+      "players": {
+        "aladji-bamba": {
+          "source_name": "Aladji Bamba",
+          "positions": ["DM", "CM"],
+          "roster_order": 12,
+          "squad_number": 8,
+          "date_of_birth": "2006-07-14",
+          "height_inches": null
+        },
+        "harvey-barnes": {
+          "source_name": "Harvey Barnes",
+          "positions": ["LW", "RW"],
+          "roster_order": 21,
+          "squad_number": 11,
+          "date_of_birth": "1997-12-09",
+          "height_inches": 69
+        },
+        "sven-botman": {
+          "source_name": "Sven Botman",
+          "positions": ["CB"],
+          "roster_order": 6,
+          "squad_number": 4,
+          "date_of_birth": "2000-01-12",
+          "height_inches": 76
+        },
+        "dan-burn": {
+          "source_name": "Daniel Burn",
+          "positions": ["CB", "LB"],
+          "roster_order": 9,
+          "squad_number": 33,
+          "date_of_birth": "1992-05-09",
+          "height_inches": 79
+        },
+        "amar-dedic": {
+          "source_name": "Amar Dedić",
+          "positions": ["RB", "RW"],
+          "roster_order": 5,
+          "squad_number": 37,
+          "date_of_birth": "2002-08-18",
+          "height_inches": 71
+        },
+        "anthony-elanga": {
+          "source_name": "Anthony Elanga",
+          "positions": ["RW", "AM"],
+          "roster_order": 18,
+          "squad_number": 19,
+          "date_of_birth": "2002-04-27",
+          "height_inches": 70
+        },
+        "mark-gillespie": {
+          "source_name": "Mark Gillespie",
+          "positions": ["GK"],
+          "roster_order": 3,
+          "squad_number": 29,
+          "date_of_birth": "1992-03-27",
+          "height_inches": 75
+        },
+        "lewis-hall": {
+          "source_name": "Lewis Hall",
+          "positions": ["LB", "LM"],
+          "roster_order": 10,
+          "squad_number": 3,
+          "date_of_birth": "2004-09-08",
+          "height_inches": 70
+        },
+        "lukas-hornicek": {
+          "source_name": "Lukás Hornícek",
+          "positions": ["GK"],
+          "roster_order": 1,
+          "squad_number": 21,
+          "date_of_birth": "2002-07-13",
+          "height_inches": 78
+        },
+        "jacob-murphy": {
+          "source_name": "Jacob Murphy",
+          "positions": ["RW", "RM"],
+          "roster_order": 19,
+          "squad_number": 23,
+          "date_of_birth": "1995-02-24",
+          "height_inches": 70
+        },
+        "jacob-ramsey": {
+          "source_name": "Jacob Ramsey",
+          "positions": ["CM", "DM", "LW"],
+          "roster_order": 15,
+          "squad_number": 41,
+          "date_of_birth": "2001-05-28",
+          "height_inches": 71
+        },
+        "ewen-jaouen": {
+          "source_name": "Ewen Jaouen",
+          "positions": ["GK"],
+          "roster_order": 2,
+          "squad_number": 24,
+          "date_of_birth": "2005-12-29",
+          "height_inches": 78
+        },
+        "joelinton-cassio-apolinario-de-lira": {
+          "source_name": "Joelinton",
+          "positions": ["CM", "LW", "AM", "DM"],
+          "roster_order": 13,
+          "squad_number": 7,
+          "date_of_birth": "1996-08-14",
+          "height_inches": 73
+        },
+        "lewis-miley": {
+          "source_name": "Lewis Miley",
+          "positions": ["CM", "RB", "DM"],
+          "roster_order": 16,
+          "squad_number": 67,
+          "date_of_birth": "2006-05-01",
+          "height_inches": 73
+        },
+        "tino-livramento": {
+          "source_name": "Valentino Livramento",
+          "positions": ["RB", "LB"],
+          "roster_order": 4,
+          "squad_number": 2,
+          "date_of_birth": "2002-11-12",
+          "height_inches": 72
+        },
+        "nico-gonzalez-iglesias": {
+          "source_name": "Nico González",
+          "positions": ["DM", "CM"],
+          "roster_order": 11,
+          "squad_number": 6,
+          "date_of_birth": "2002-01-03",
+          "height_inches": 74
+        },
+        "william-osula": {
+          "source_name": "William Osula",
+          "positions": ["ST"],
+          "roster_order": 24,
+          "squad_number": 10,
+          "date_of_birth": "2003-08-04",
+          "height_inches": 76
+        },
+        "nick-pope": {
+          "source_name": "Nick Pope",
+          "positions": ["GK"],
+          "roster_order": 0,
+          "squad_number": 1,
+          "date_of_birth": "1992-04-19",
+          "height_inches": 75
+        },
+        "fabian-schar": {
+          "source_name": "Fabian Schär",
+          "positions": ["CB"],
+          "roster_order": 7,
+          "squad_number": 5,
+          "date_of_birth": "1991-12-20",
+          "height_inches": 74
+        },
+        "sean-steur": {
+          "source_name": "Sean Steur",
+          "positions": ["CM", "DM"],
+          "roster_order": 14,
+          "squad_number": 14,
+          "date_of_birth": "2008-01-11",
+          "height_inches": null
+        },
+        "malick-thiaw": {
+          "source_name": "Malick Thiaw",
+          "positions": ["CB"],
+          "roster_order": 8,
+          "squad_number": 12,
+          "date_of_birth": "2001-08-08",
+          "height_inches": 76
+        },
+        "bazoumana-toure": {
+          "source_name": "Bazoumana Touré",
+          "positions": ["LW", "LM", "ST", "RM"],
+          "roster_order": 22,
+          "squad_number": 17,
+          "date_of_birth": "2006-03-02",
+          "height_inches": 70
+        },
+        "joe-willock": {
+          "source_name": "Joseph Willock",
+          "positions": ["AM", "CM", "LW", "DM"],
+          "roster_order": 17,
+          "squad_number": 28,
+          "date_of_birth": "1999-08-20",
+          "height_inches": 73
+        },
+        "yoane-wissa": {
+          "source_name": "Yoane Wissa",
+          "positions": ["ST", "AM"],
+          "roster_order": 23,
+          "squad_number": 9,
+          "date_of_birth": "1996-09-03",
+          "height_inches": 69
+        }
+      }
+    },
+    {
+      "team_tla": "MUN",
+      "source_url": "https://www.fotmob.com/teams/10260/squad/manchester-united",
+      "players": {
+        "amad-diallo": {
+          "source_name": "Amad Diallo",
+          "positions": ["RW", "RWB", "AM"],
+          "roster_order": 22,
+          "squad_number": 16,
+          "date_of_birth": "2002-07-11",
+          "height_inches": 69
+        },
+        "harry-amass": {
+          "source_name": "Harry Amass",
+          "positions": ["LM", "LWB", "LB"],
+          "roster_order": 18,
+          "squad_number": 41,
+          "date_of_birth": "2007-03-16",
+          "height_inches": 71
+        },
+        "andrey-nascimento-dos-santos": {
+          "source_name": "Andrey Santos",
+          "positions": ["DM", "CM"],
+          "roster_order": 12,
+          "squad_number": 17,
+          "date_of_birth": "2004-05-03",
+          "height_inches": 71
+        },
+        "bruno-borges-fernandes": {
+          "source_name": "Bruno Fernandes",
+          "positions": ["AM", "DM"],
+          "roster_order": 20,
+          "squad_number": 8,
+          "date_of_birth": "1994-09-08",
+          "height_inches": 70
+        },
+        "carlos-baleba": {
+          "source_name": "Carlos Baleba",
+          "positions": ["DM", "CM"],
+          "roster_order": 14,
+          "squad_number": 20,
+          "date_of_birth": "2004-01-03",
+          "height_inches": 70
+        },
+        "matheus-santos-carneiro-da-cunha": {
+          "source_name": "Matheus Cunha",
+          "positions": ["ST", "LW", "AM"],
+          "roster_order": 27,
+          "squad_number": 10,
+          "date_of_birth": "1999-05-27",
+          "height_inches": 72
+        },
+        "diogo-dalot-teixeira": {
+          "source_name": "Diogo Dalot",
+          "positions": ["RB", "LWB", "RWB", "LB"],
+          "roster_order": 4,
+          "squad_number": 2,
+          "date_of_birth": "1999-03-18",
+          "height_inches": 72
+        },
+        "karl-darlow": {
+          "source_name": "Karl Darlow",
+          "positions": ["GK"],
+          "roster_order": 1,
+          "squad_number": 12,
+          "date_of_birth": "1990-10-08",
+          "height_inches": 75
+        },
+        "matthijs-de-ligt": {
+          "source_name": "Matthijs de Ligt",
+          "positions": ["CB"],
+          "roster_order": 6,
+          "squad_number": 4,
+          "date_of_birth": "1999-08-12",
+          "height_inches": 74
+        },
+        "patrick-dorgu": {
+          "source_name": "Patrick Dorgu",
+          "positions": ["LW", "LWB", "LB"],
+          "roster_order": 26,
+          "squad_number": 13,
+          "date_of_birth": "2004-10-26",
+          "height_inches": 73
+        },
+        "tyler-fletcher": {
+          "source_name": "Tyler Fletcher",
+          "positions": ["DM", "CM", "AM"],
+          "roster_order": 17,
+          "squad_number": 39,
+          "date_of_birth": "2007-03-19",
+          "height_inches": 72
+        },
+        "tom-heaton": {
+          "source_name": "Tom Heaton",
+          "positions": ["GK"],
+          "roster_order": 2,
+          "squad_number": 22,
+          "date_of_birth": "1986-04-15",
+          "height_inches": 74
+        },
+        "ayden-heaven": {
+          "source_name": "Ayden Heaven",
+          "positions": ["CB"],
+          "roster_order": 10,
+          "squad_number": 26,
+          "date_of_birth": "2006-09-22",
+          "height_inches": 74
+        },
+        "jack-fletcher": {
+          "source_name": "Jack Fletcher",
+          "positions": ["AM", "DM", "CM", "LB", "ST"],
+          "roster_order": 21,
+          "squad_number": 38,
+          "date_of_birth": "2007-03-19",
+          "height_inches": null
+        },
+        "shea-lacey": {
+          "source_name": "Shea Lacey",
+          "positions": ["RW", "AM"],
+          "roster_order": 24,
+          "squad_number": 31,
+          "date_of_birth": "2007-04-14",
+          "height_inches": 66
+        },
+        "senne-lammens": {
+          "source_name": "Senne Lammens",
+          "positions": ["GK"],
+          "roster_order": 0,
+          "squad_number": 1,
+          "date_of_birth": "2002-07-07",
+          "height_inches": 76
+        },
+        "harry-maguire": {
+          "source_name": "Harry Maguire",
+          "positions": ["CB"],
+          "roster_order": 7,
+          "squad_number": 5,
+          "date_of_birth": "1993-03-05",
+          "height_inches": 76
+        },
+        "kobbie-mainoo": {
+          "source_name": "Kobbie Mainoo",
+          "positions": ["DM"],
+          "roster_order": 16,
+          "squad_number": 37,
+          "date_of_birth": "2005-04-19",
+          "height_inches": 72
+        },
+        "lisandro-martinez": {
+          "source_name": "Lisandro Martínez",
+          "positions": ["CB"],
+          "roster_order": 8,
+          "squad_number": 6,
+          "date_of_birth": "1998-01-18",
+          "height_inches": 70
+        },
+        "noussair-mazraoui": {
+          "source_name": "Noussair Mazraoui",
+          "positions": ["RB", "LB", "RWB", "CB"],
+          "roster_order": 5,
+          "squad_number": 3,
+          "date_of_birth": "1997-11-14",
+          "height_inches": 72
+        },
+        "bryan-mbeumo": {
+          "source_name": "Bryan Mbeumo",
+          "positions": ["RW", "AM", "ST"],
+          "roster_order": 23,
+          "squad_number": 19,
+          "date_of_birth": "1999-08-07",
+          "height_inches": 67
+        },
+        "mason-mount": {
+          "source_name": "Mason Mount",
+          "positions": ["AM", "DM"],
+          "roster_order": 19,
+          "squad_number": 7,
+          "date_of_birth": "1999-01-10",
+          "height_inches": 71
+        },
+        "marcus-rashford": {
+          "source_name": "Marcus Rashford",
+          "positions": ["LW", "RW", "ST"],
+          "roster_order": 25,
+          "squad_number": 9,
+          "date_of_birth": "1997-10-31",
+          "height_inches": 73
+        },
+        "luke-shaw": {
+          "source_name": "Luke Shaw",
+          "positions": ["LB", "CB"],
+          "roster_order": 11,
+          "squad_number": 23,
+          "date_of_birth": "1995-07-12",
+          "height_inches": 70
+        },
+        "youri-tielemans": {
+          "source_name": "Youri Tielemans",
+          "positions": ["DM", "AM"],
+          "roster_order": 13,
+          "squad_number": 18,
+          "date_of_birth": "1997-05-07",
+          "height_inches": 70
+        },
+        "manuel-ugarte-ribeiro": {
+          "source_name": "Manuel Ugarte",
+          "positions": ["DM", "CM"],
+          "roster_order": 15,
+          "squad_number": 25,
+          "date_of_birth": "2001-04-11",
+          "height_inches": 72
+        },
+        "leny-yoro": {
+          "source_name": "Leny Yoro",
+          "positions": ["CB", "RB"],
+          "roster_order": 9,
+          "squad_number": 15,
+          "date_of_birth": "2005-11-13",
+          "height_inches": 75
+        },
+        "joshua-zirkzee": {
+          "source_name": "Joshua Zirkzee",
+          "positions": ["ST"],
+          "roster_order": 28,
+          "squad_number": 11,
+          "date_of_birth": "2001-05-22",
+          "height_inches": 76
+        },
+        "benjamin-sesko": {
+          "source_name": "Benjamin Šeško",
+          "positions": ["ST"],
+          "roster_order": 29,
+          "squad_number": 30,
+          "date_of_birth": "2003-05-31",
+          "height_inches": 77
+        }
+      }
+    },
+    {
+      "team_tla": "SUN",
+      "source_url": "https://www.fotmob.com/teams/8472/squad/sunderland",
+      "players": {
+        "jules-ahoka": {
+          "source_name": "Jules Ahoka",
+          "positions": ["DM"],
+          "roster_order": 14,
+          "squad_number": 29,
+          "date_of_birth": "2006-05-08",
+          "height_inches": null
+        },
+        "omar-alderete": {
+          "source_name": "Omar Alderete",
+          "positions": ["CB"],
+          "roster_order": 7,
+          "squad_number": 15,
+          "date_of_birth": "1996-12-26",
+          "height_inches": 74
+        },
+        "nilson-angulo": {
+          "source_name": "Nilson Angulo",
+          "positions": ["LW", "LM", "RW", "LWB"],
+          "roster_order": 23,
+          "squad_number": 10,
+          "date_of_birth": "2003-06-19",
+          "height_inches": 72
+        },
+        "daniel-ballard": {
+          "source_name": "Daniel Ballard",
+          "positions": ["CB"],
+          "roster_order": 5,
+          "squad_number": 5,
+          "date_of_birth": "1999-09-22",
+          "height_inches": 74
+        },
+        "brian-brobbey": {
+          "source_name": "Brian Brobbey",
+          "positions": ["ST"],
+          "roster_order": 27,
+          "squad_number": 9,
+          "date_of_birth": "2002-02-01",
+          "height_inches": 71
+        },
+        "habib-diarra": {
+          "source_name": "Habib Diarra",
+          "positions": ["AM", "CM"],
+          "roster_order": 16,
+          "squad_number": 19,
+          "date_of_birth": "2004-01-03",
+          "height_inches": 70
+        },
+        "enzo-le-fee": {
+          "source_name": "Enzo Le Fée",
+          "positions": ["AM", "LW", "LM", "CM"],
+          "roster_order": 17,
+          "squad_number": 28,
+          "date_of_birth": "2000-02-03",
+          "height_inches": 67
+        },
+        "melker-ellborg": {
+          "source_name": "Melker Ellborg",
+          "positions": ["GK"],
+          "roster_order": 2,
+          "squad_number": 31,
+          "date_of_birth": "2003-05-22",
+          "height_inches": 75
+        },
+        "trai-hume": {
+          "source_name": "Trai Hume",
+          "positions": ["RW", "RB", "LB", "CB", "RWB", "RM"],
+          "roster_order": 18,
+          "squad_number": 32,
+          "date_of_birth": "2002-03-18",
+          "height_inches": 71
+        },
+        "wilson-isidor": {
+          "source_name": "Wilson Isidor",
+          "positions": ["ST", "AM"],
+          "roster_order": 28,
+          "squad_number": 18,
+          "date_of_birth": "2000-08-27",
+          "height_inches": 71
+        },
+        "djiamgone-jocelin-ta-bi": {
+          "source_name": "Jocelin Ta Bi",
+          "positions": ["RW"],
+          "roster_order": 20,
+          "squad_number": 37,
+          "date_of_birth": "2005-02-09",
+          "height_inches": 69
+        },
+        "dayann-methalie": {
+          "source_name": "Dayann Méthalie",
+          "positions": ["LWB", "LM", "LB"],
+          "roster_order": 11,
+          "squad_number": 6,
+          "date_of_birth": "2006-02-15",
+          "height_inches": null
+        },
+        "thomas-meunier": {
+          "source_name": "Thomas Meunier",
+          "positions": ["RB"],
+          "roster_order": 3,
+          "squad_number": 12,
+          "date_of_birth": "1991-09-12",
+          "height_inches": 75
+        },
+        "nordi-mukiele": {
+          "source_name": "Nordi Mukiele",
+          "positions": ["CB", "RB"],
+          "roster_order": 8,
+          "squad_number": 20,
+          "date_of_birth": "1997-11-01",
+          "height_inches": 74
+        },
+        "romaine-mundle": {
+          "source_name": "Romaine Mundle",
+          "positions": ["LW"],
+          "roster_order": 24,
+          "squad_number": 14,
+          "date_of_birth": "2003-04-24",
+          "height_inches": 68
+        },
+        "luke-o-nien": {
+          "source_name": "Luke O'Nien",
+          "positions": ["CB"],
+          "roster_order": 6,
+          "squad_number": 13,
+          "date_of_birth": "1994-11-21",
+          "height_inches": 72
+        },
+        "reinildo-mandava": {
+          "source_name": "Reinildo",
+          "positions": ["LB", "CB", "LWB"],
+          "roster_order": 10,
+          "squad_number": 17,
+          "date_of_birth": "1994-01-21",
+          "height_inches": 70
+        },
+        "chris-rigg": {
+          "source_name": "Chris Rigg",
+          "positions": ["RW", "AM", "DM"],
+          "roster_order": 19,
+          "squad_number": 11,
+          "date_of_birth": "2007-06-18",
+          "height_inches": 69
+        },
+        "robin-roefs": {
+          "source_name": "Robin Roefs",
+          "positions": ["GK"],
+          "roster_order": 1,
+          "squad_number": 22,
+          "date_of_birth": "2003-01-17",
+          "height_inches": 76
+        },
+        "noah-sadiki": {
+          "source_name": "Noah Sadiki",
+          "positions": ["DM", "CM", "AM"],
+          "roster_order": 13,
+          "squad_number": 27,
+          "date_of_birth": "2004-12-17",
+          "height_inches": 68
+        },
+        "chemsdine-talbi": {
+          "source_name": "Chemsdine Talbi",
+          "positions": ["LW", "RW", "LM"],
+          "roster_order": 22,
+          "squad_number": 7,
+          "date_of_birth": "2005-05-09",
+          "height_inches": 69
+        },
+        "granit-xhaka": {
+          "source_name": "Granit Xhaka",
+          "positions": ["DM", "CM"],
+          "roster_order": 15,
+          "squad_number": 34,
+          "date_of_birth": "1992-09-27",
+          "height_inches": 73
+        }
+      }
+    },
+    {
+      "team_tla": "BOU",
+      "source_url": "https://www.fotmob.com/teams/8678/squad/afc-bournemouth",
+      "players": {
+        "tyler-adams": {
+          "source_name": "Tyler Adams",
+          "positions": ["DM", "CM"],
+          "roster_order": 15,
+          "squad_number": 12,
+          "date_of_birth": "1999-02-14",
+          "height_inches": 69
+        },
+        "amine-adli": {
+          "source_name": "Amine Adli",
+          "positions": ["LW", "RW"],
+          "roster_order": 25,
+          "squad_number": 21,
+          "date_of_birth": "2000-05-10",
+          "height_inches": 71
+        },
+        "david-brooks": {
+          "source_name": "David Brooks",
+          "positions": ["RW", "LW", "ST", "AM"],
+          "roster_order": 21,
+          "squad_number": 7,
+          "date_of_birth": "1997-07-08",
+          "height_inches": 68
+        },
+        "ryan-christie": {
+          "source_name": "Ryan Christie",
+          "positions": ["DM", "AM", "LM"],
+          "roster_order": 14,
+          "squad_number": 10,
+          "date_of_birth": "1995-02-22",
+          "height_inches": 70
+        },
+        "lewis-cook": {
+          "source_name": "Lewis Cook",
+          "positions": ["DM"],
+          "roster_order": 12,
+          "squad_number": 4,
+          "date_of_birth": "1997-02-03",
+          "height_inches": 69
+        },
+        "michele-di-gregorio": {
+          "source_name": "Michele Di Gregorio",
+          "positions": ["GK"],
+          "roster_order": 2,
+          "squad_number": 20,
+          "date_of_birth": "1997-07-27",
+          "height_inches": 74
+        },
+        "bafode-diakite": {
+          "source_name": "Bafodé Diakité",
+          "positions": ["CB"],
+          "roster_order": 7,
+          "squad_number": 18,
+          "date_of_birth": "2001-01-06",
+          "height_inches": 72
+        },
+        "francisco-evanilson-de-lima-barbosa": {
+          "source_name": "Evanilson",
+          "positions": ["ST"],
+          "roster_order": 26,
+          "squad_number": 9,
+          "date_of_birth": "1999-10-06",
+          "height_inches": 72
+        },
+        "fraser-forster": {
+          "source_name": "Fraser Forster",
+          "positions": ["GK"],
+          "roster_order": 1,
+          "squad_number": 17,
+          "date_of_birth": "1988-03-17",
+          "height_inches": 79
+        },
+        "ben-gannon-doak": {
+          "source_name": "Ben Gannon-Doak",
+          "positions": ["RW", "RM"],
+          "roster_order": 22,
+          "squad_number": 11,
+          "date_of_birth": "2005-11-11",
+          "height_inches": 69
+        },
+        "james-hill": {
+          "source_name": "James Hill",
+          "positions": ["CB", "RB"],
+          "roster_order": 5,
+          "squad_number": 5,
+          "date_of_birth": "2002-01-10",
+          "height_inches": 72
+        },
+        "julian-araujo-zuniga": {
+          "source_name": "Julián Araujo",
+          "positions": ["RB"],
+          "roster_order": 3,
+          "squad_number": 2,
+          "date_of_birth": "2001-08-13",
+          "height_inches": 70
+        },
+        "daniel-jebbison": {
+          "source_name": "Daniel Jebbison",
+          "positions": ["ST"],
+          "roster_order": 27,
+          "squad_number": 29,
+          "date_of_birth": "2003-08-13",
+          "height_inches": 75
+        },
+        "justin-kluivert": {
+          "source_name": "Justin Kluivert",
+          "positions": ["AM"],
+          "roster_order": 19,
+          "squad_number": 19,
+          "date_of_birth": "1999-05-05",
+          "height_inches": 69
+        },
+        "junior-kroupi": {
+          "source_name": "Junior Kroupi",
+          "positions": ["AM", "ST"],
+          "roster_order": 20,
+          "squad_number": 22,
+          "date_of_birth": "2006-06-23",
+          "height_inches": 70
+        },
+        "veljko-milosavljevic": {
+          "source_name": "Veljko Milosavljević",
+          "positions": ["CB"],
+          "roster_order": 8,
+          "squad_number": 44,
+          "date_of_birth": "2007-06-28",
+          "height_inches": 76
+        },
+        "dorde-petrovic": {
+          "source_name": "Djordje Petrović",
+          "positions": ["GK"],
+          "roster_order": 0,
+          "squad_number": 1,
+          "date_of_birth": "1999-10-08",
+          "height_inches": 76
+        },
+        "rayan-vitor-simplicio-rocha": {
+          "source_name": "Rayan",
+          "positions": ["RW", "ST", "LW"],
+          "roster_order": 23,
+          "squad_number": 37,
+          "date_of_birth": "2006-08-03",
+          "height_inches": 73
+        },
+        "alvaro-rodriguez": {
+          "source_name": "Álvaro Rodriguez",
+          "positions": ["ST"],
+          "roster_order": 28,
+          "squad_number": 30,
+          "date_of_birth": "2004-07-14",
+          "height_inches": 76
+        },
+        "juanlu-sanchez": {
+          "source_name": "Juanlu Sánchez",
+          "positions": ["RWB", "RB", "RW", "RM", "CM"],
+          "roster_order": 11,
+          "squad_number": 24,
+          "date_of_birth": "2003-08-15",
+          "height_inches": 73
+        },
+        "alex-scott": {
+          "source_name": "Alex Scott",
+          "positions": ["DM"],
+          "roster_order": 13,
+          "squad_number": 8,
+          "date_of_birth": "2003-08-21",
+          "height_inches": 70
+        },
+        "antonio-joao-pereira-de-albuquerque-tavares-da-silva": {
+          "source_name": "António Silva",
+          "positions": ["CB"],
+          "roster_order": 6,
+          "squad_number": 14,
+          "date_of_birth": "2003-10-30",
+          "height_inches": 74
+        },
+        "adam-smith": {
+          "source_name": "Adam Smith",
+          "positions": ["RB"],
+          "roster_order": 4,
+          "squad_number": 15,
+          "date_of_birth": "1991-04-29",
+          "height_inches": 71
+        },
+        "julio-soler-barreto": {
+          "source_name": "Julio Soler",
+          "positions": ["LB", "LWB", "LM"],
+          "roster_order": 10,
+          "squad_number": 6,
+          "date_of_birth": "2005-02-16",
+          "height_inches": 69
+        },
+        "marcus-tavernier": {
+          "source_name": "Marcus Tavernier",
+          "positions": ["LW", "AM", "RW", "DM"],
+          "roster_order": 24,
+          "squad_number": 16,
+          "date_of_birth": "1999-03-22",
+          "height_inches": 70
+        },
+        "adrien-truffert": {
+          "source_name": "Adrien Truffert",
+          "positions": ["LB"],
+          "roster_order": 9,
+          "squad_number": 3,
+          "date_of_birth": "2001-11-20",
+          "height_inches": 69
+        },
+        "alex-toth": {
+          "source_name": "Alex Tóth",
+          "positions": ["CM", "AM", "DM"],
+          "roster_order": 16,
+          "squad_number": 27,
+          "date_of_birth": "2005-10-23",
+          "height_inches": 71
+        }
+      }
+    },
+    {
+      "team_tla": "BHA",
+      "source_url": "https://www.fotmob.com/teams/10204/squad/brighton-hove-albion",
+      "players": {
+        "yasin-ayari": {
+          "source_name": "Yasin Ayari",
+          "positions": ["DM", "CM"],
+          "roster_order": 14,
+          "squad_number": 26,
+          "date_of_birth": "2003-10-06",
+          "height_inches": 68
+        },
+        "olivier-boscagli": {
+          "source_name": "Olivier Boscagli",
+          "positions": ["CB", "LB"],
+          "roster_order": 6,
+          "squad_number": 21,
+          "date_of_birth": "1997-11-18",
+          "height_inches": 71
+        },
+        "joao-pedro-loureiro-da-costa": {
+          "source_name": "Costinha",
+          "positions": ["RB"],
+          "roster_order": 2,
+          "squad_number": 20,
+          "date_of_birth": "2000-03-26",
+          "height_inches": 71
+        },
+        "promise-david": {
+          "source_name": "Promise David",
+          "positions": ["ST", "AM"],
+          "roster_order": 26,
+          "squad_number": 12,
+          "date_of_birth": "2001-07-03",
+          "height_inches": 77
+        },
+        "maxim-de-cuyper": {
+          "source_name": "Maxim De Cuyper",
+          "positions": ["LB", "LW", "LWB"],
+          "roster_order": 11,
+          "squad_number": 29,
+          "date_of_birth": "2000-12-22",
+          "height_inches": 72
+        },
+        "lewis-dunk": {
+          "source_name": "Lewis Dunk",
+          "positions": ["CB"],
+          "roster_order": 5,
+          "squad_number": 5,
+          "date_of_birth": "1991-11-21",
+          "height_inches": 76
+        },
+        "ferdi-kadoglu": {
+          "source_name": "Ferdi Kadıoğlu",
+          "positions": ["LB", "RB", "RW", "RWB"],
+          "roster_order": 10,
+          "squad_number": 24,
+          "date_of_birth": "1999-10-07",
+          "height_inches": 68
+        },
+        "evan-ferguson": {
+          "source_name": "Evan Ferguson",
+          "positions": ["ST"],
+          "roster_order": 28,
+          "squad_number": 28,
+          "date_of_birth": "2004-10-19",
+          "height_inches": 74
+        },
+        "georginio-rutter": {
+          "source_name": "Georginio Rutter",
+          "positions": ["ST", "AM"],
+          "roster_order": 25,
+          "squad_number": 10,
+          "date_of_birth": "2002-04-20",
+          "height_inches": 72
+        },
+        "diego-gomez-amarilla": {
+          "source_name": "Diego Gómez",
+          "positions": ["RW", "AM", "LW", "CM", "DM", "RM"],
+          "roster_order": 19,
+          "squad_number": 25,
+          "date_of_birth": "2003-03-27",
+          "height_inches": 72
+        },
+        "pascal-gross": {
+          "source_name": "Pascal Groß",
+          "positions": ["DM", "CM"],
+          "roster_order": 12,
+          "squad_number": 13,
+          "date_of_birth": "1991-06-15",
+          "height_inches": 71
+        },
+        "jaouen-hadjam": {
+          "source_name": "Jaouen Hadjam",
+          "positions": ["LB", "CB"],
+          "roster_order": 9,
+          "squad_number": 3,
+          "date_of_birth": "2003-03-26",
+          "height_inches": 72
+        },
+        "jack-hinshelwood": {
+          "source_name": "Jack Hinshelwood",
+          "positions": ["AM", "DM", "CM"],
+          "roster_order": 16,
+          "squad_number": 8,
+          "date_of_birth": "2005-04-11",
+          "height_inches": 71
+        },
+        "charalampos-kostoulas": {
+          "source_name": "Charalampos Kostoulas",
+          "positions": ["ST", "LW"],
+          "roster_order": 27,
+          "squad_number": 19,
+          "date_of_birth": "2007-05-30",
+          "height_inches": 73
+        },
+        "yankuba-minteh": {
+          "source_name": "Yankuba Minteh",
+          "positions": ["RW", "LW"],
+          "roster_order": 18,
+          "squad_number": 11,
+          "date_of_birth": "2004-07-22",
+          "height_inches": 71
+        },
+        "mitoma-kaoru": {
+          "source_name": "Kaoru Mitoma",
+          "positions": ["LW"],
+          "roster_order": 23,
+          "squad_number": 22,
+          "date_of_birth": "1997-05-20",
+          "height_inches": 70
+        },
+        "matt-o-riley": {
+          "source_name": "Matthew O'Riley",
+          "positions": ["DM", "AM", "CM"],
+          "roster_order": 15,
+          "squad_number": 33,
+          "date_of_birth": "2000-11-21",
+          "height_inches": 74
+        },
+        "ibrahim-osman": {
+          "source_name": "Ibrahim Osman",
+          "positions": ["LW", "LM"],
+          "roster_order": 22,
+          "squad_number": 15,
+          "date_of_birth": "2004-11-29",
+          "height_inches": 70
+        },
+        "jason-steele": {
+          "source_name": "Jason Steele",
+          "positions": ["GK"],
+          "roster_order": 1,
+          "squad_number": 23,
+          "date_of_birth": "1990-08-18",
+          "height_inches": 74
+        },
+        "pascal-struijk": {
+          "source_name": "Pascal Struijk",
+          "positions": ["CB"],
+          "roster_order": 4,
+          "squad_number": 4,
+          "date_of_birth": "1999-08-11",
+          "height_inches": 75
+        },
+        "michael-svoboda": {
+          "source_name": "Michael Svoboda",
+          "positions": ["CB"],
+          "roster_order": 7,
+          "squad_number": 30,
+          "date_of_birth": "1998-10-15",
+          "height_inches": 77
+        },
+        "stefanos-tzimas": {
+          "source_name": "Stefanos Tzimas",
+          "positions": ["ST"],
+          "roster_order": 24,
+          "squad_number": 9,
+          "date_of_birth": "2006-01-06",
+          "height_inches": 72
+        },
+        "bart-verbruggen": {
+          "source_name": "Bart Verbruggen",
+          "positions": ["GK"],
+          "roster_order": 0,
+          "squad_number": 1,
+          "date_of_birth": "2002-08-18",
+          "height_inches": 76
+        },
+        "luka-vuskovic": {
+          "source_name": "Luka Vušković",
+          "positions": ["CB"],
+          "roster_order": 8,
+          "squad_number": 44,
+          "date_of_birth": "2007-02-24",
+          "height_inches": 76
+        },
+        "mats-wieffer": {
+          "source_name": "Mats Wieffer",
+          "positions": ["RB"],
+          "roster_order": 3,
+          "squad_number": 27,
+          "date_of_birth": "1999-11-16",
+          "height_inches": 74
+        },
+        "malick-yalcouye": {
+          "source_name": "Malick Junior Yalcouyé",
+          "positions": ["AM", "DM"],
+          "roster_order": 17,
+          "squad_number": 35,
+          "date_of_birth": "2005-11-18",
+          "height_inches": 67
+        },
+        "zadok-yohanna": {
+          "source_name": "Zadok Yohanna",
+          "positions": ["RW"],
+          "roster_order": 20,
+          "squad_number": 36,
+          "date_of_birth": "2007-06-29",
+          "height_inches": null
+        }
+      }
+    },
+    {
+      "team_tla": "NOT",
+      "source_url": "https://www.fotmob.com/teams/10203/squad/nottingham-forest",
+      "players": {
+        "ola-aina": {
+          "source_name": "Ola Aina",
+          "positions": ["RB", "RWB", "LB", "RM"],
+          "roster_order": 3,
+          "squad_number": 34,
+          "date_of_birth": "1996-10-08",
+          "height_inches": 72
+        },
+        "steven-benda": {
+          "source_name": "Steven Benda",
+          "positions": ["GK"],
+          "roster_order": 0,
+          "squad_number": 1,
+          "date_of_birth": "1998-10-01",
+          "height_inches": 76
+        },
+        "liam-delap": {
+          "source_name": "Liam Delap",
+          "positions": ["ST"],
+          "roster_order": 24,
+          "squad_number": 19,
+          "date_of_birth": "2003-02-08",
+          "height_inches": 73
+        },
+        "ousmane-diomande": {
+          "source_name": "Ousmane Diomande",
+          "positions": ["CB"],
+          "roster_order": 5,
+          "squad_number": 2,
+          "date_of_birth": "2003-12-04",
+          "height_inches": 75
+        },
+        "nicolas-dominguez": {
+          "source_name": "Nicolás Dominguez",
+          "positions": ["DM", "LW", "CM", "AM"],
+          "roster_order": 13,
+          "squad_number": 8,
+          "date_of_birth": "1998-06-28",
+          "height_inches": 70
+        },
+        "morgan-gibbs-white": {
+          "source_name": "Morgan Gibbs-White",
+          "positions": ["AM", "LM", "ST", "CM", "RW", "LW"],
+          "roster_order": 17,
+          "squad_number": 10,
+          "date_of_birth": "2000-01-27",
+          "height_inches": 67
+        },
+        "callum-hudson-odoi": {
+          "source_name": "Callum Hudson-Odoi",
+          "positions": ["LW", "RW"],
+          "roster_order": 20,
+          "squad_number": 7,
+          "date_of_birth": "2000-11-07",
+          "height_inches": 72
+        },
+        "ibrahim-sangare": {
+          "source_name": "Ibrahim Sangaré",
+          "positions": ["DM", "CM"],
+          "roster_order": 12,
+          "squad_number": 6,
+          "date_of_birth": "1997-12-02",
+          "height_inches": 75
+        },
+        "igor-jesus-maciel-da-cruz": {
+          "source_name": "Igor Jesus",
+          "positions": ["ST", "AM"],
+          "roster_order": 22,
+          "squad_number": 11,
+          "date_of_birth": "2001-02-25",
+          "height_inches": 71
+        },
+        "jair-paula-da-cunha-filho": {
+          "source_name": "Jair Cunha",
+          "positions": ["CB", "RB"],
+          "roster_order": 7,
+          "squad_number": 23,
+          "date_of_birth": "2005-03-07",
+          "height_inches": 78
+        },
+        "john-victor-maciel-furtado": {
+          "source_name": "John Victor",
+          "positions": ["GK"],
+          "roster_order": 1,
+          "squad_number": 12,
+          "date_of_birth": "1996-02-13",
+          "height_inches": 77
+        },
+        "arnaud-kalimuendo": {
+          "source_name": "Arnaud Kalimuendo-Muinga",
+          "positions": ["ST", "RW", "LW", "AM"],
+          "roster_order": 23,
+          "squad_number": 15,
+          "date_of_birth": "2002-01-20",
+          "height_inches": 69
+        },
+        "james-mcatee": {
+          "source_name": "James McAtee",
+          "positions": ["DM", "AM", "CM", "RW", "LW"],
+          "roster_order": 15,
+          "squad_number": 24,
+          "date_of_birth": "2002-10-18",
+          "height_inches": 71
+        },
+        "nikola-milenkovic": {
+          "source_name": "Nikola Milenkovic",
+          "positions": ["CB"],
+          "roster_order": 8,
+          "squad_number": 31,
+          "date_of_birth": "1997-10-12",
+          "height_inches": 77
+        },
+        "murillo-costa-dos-santos": {
+          "source_name": "Murillo",
+          "positions": ["CB", "LB"],
+          "roster_order": 6,
+          "squad_number": 5,
+          "date_of_birth": "2002-07-04",
+          "height_inches": 72
+        },
+        "neco-williams": {
+          "source_name": "Neco Williams",
+          "positions": ["LB", "RB", "LWB", "LM", "RWB"],
+          "roster_order": 9,
+          "squad_number": 3,
+          "date_of_birth": "2001-04-13",
+          "height_inches": 74
+        },
+        "dan-ndoye": {
+          "source_name": "Dan Ndoye",
+          "positions": ["RW", "LW", "AM", "ST", "RM"],
+          "roster_order": 19,
+          "squad_number": 14,
+          "date_of_birth": "2000-10-25",
+          "height_inches": 72
+        },
+        "luca-netz": {
+          "source_name": "Luca Netz",
+          "positions": ["LWB", "LB", "LM"],
+          "roster_order": 11,
+          "squad_number": 25,
+          "date_of_birth": "2003-05-15",
+          "height_inches": 72
+        },
+        "nicolo-savona": {
+          "source_name": "Nicolò Savona",
+          "positions": ["RB"],
+          "roster_order": 4,
+          "squad_number": 37,
+          "date_of_birth": "2003-03-19",
+          "height_inches": 76
+        },
+        "xaver-schlager": {
+          "source_name": "Xaver Schlager",
+          "positions": ["CM", "DM"],
+          "roster_order": 16,
+          "squad_number": 21,
+          "date_of_birth": "1997-09-28",
+          "height_inches": 69
+        },
+        "matz-sels": {
+          "source_name": "Matz Sels",
+          "positions": ["GK"],
+          "roster_order": 2,
+          "squad_number": 26,
+          "date_of_birth": "1992-02-26",
+          "height_inches": 74
+        },
+        "chris-wood": {
+          "source_name": "Chris Wood",
+          "positions": ["ST"],
+          "roster_order": 21,
+          "squad_number": 9,
+          "date_of_birth": "1991-12-07",
+          "height_inches": 75
+        },
+        "ryan-yates": {
+          "source_name": "Ryan Yates",
+          "positions": ["DM", "CM"],
+          "roster_order": 14,
+          "squad_number": 22,
+          "date_of_birth": "1997-11-21",
+          "height_inches": 75
+        }
+      }
+    },
+    {
+      "team_tla": "IPS",
+      "source_url": "https://www.fotmob.com/teams/9902/squad/ipswich-town",
+      "players": {
+        "chuba-akpom": {
+          "source_name": "Chuba Akpom",
+          "positions": ["AM", "ST"],
+          "roster_order": 18,
+          "squad_number": 29,
+          "date_of_birth": "1995-10-09",
+          "height_inches": 72
+        },
+        "david-button": {
+          "source_name": "David Button",
+          "positions": ["GK"],
+          "roster_order": 1,
+          "squad_number": 27,
+          "date_of_birth": "1989-02-27",
+          "height_inches": 75
+        },
+        "jack-clarke": {
+          "source_name": "Jack Clarke",
+          "positions": ["LW", "AM"],
+          "roster_order": 25,
+          "squad_number": 47,
+          "date_of_birth": "2000-11-23",
+          "height_inches": 71
+        },
+        "leif-davis": {
+          "source_name": "Leif Davis",
+          "positions": ["LB"],
+          "roster_order": 10,
+          "squad_number": 3,
+          "date_of_birth": "1999-12-31",
+          "height_inches": 72
+        },
+        "issa-diop": {
+          "source_name": "Issa Diop",
+          "positions": ["CB"],
+          "roster_order": 7,
+          "squad_number": 6,
+          "date_of_birth": "1997-01-09",
+          "height_inches": 76
+        },
+        "emersonn-correia-da-silva": {
+          "source_name": "Emersonn",
+          "positions": ["ST"],
+          "roster_order": 27,
+          "squad_number": 19,
+          "date_of_birth": "2004-07-16",
+          "height_inches": 73
+        },
+        "julio-enciso": {
+          "source_name": "Julio Enciso",
+          "positions": ["AM", "ST"],
+          "roster_order": 17,
+          "squad_number": 10,
+          "date_of_birth": "2004-01-23",
+          "height_inches": 68
+        },
+        "abdul-fatawu": {
+          "source_name": "Abdul Fatawu",
+          "positions": ["RW"],
+          "roster_order": 21,
+          "squad_number": 7,
+          "date_of_birth": "2004-03-08",
+          "height_inches": 70
+        },
+        "florentino-ibrain-morris-luis": {
+          "source_name": "Florentino",
+          "positions": ["CM", "DM"],
+          "roster_order": 16,
+          "squad_number": 12,
+          "date_of_birth": "1999-08-19",
+          "height_inches": 72
+        },
+        "darnell-furlong": {
+          "source_name": "Darnell Furlong",
+          "positions": ["RB"],
+          "roster_order": 4,
+          "squad_number": 2,
+          "date_of_birth": "1995-10-31",
+          "height_inches": 72
+        },
+        "jacob-greaves": {
+          "source_name": "Jacob Greaves",
+          "positions": ["CB", "LB"],
+          "roster_order": 8,
+          "squad_number": 24,
+          "date_of_birth": "2000-09-12",
+          "height_inches": 76
+        },
+        "cedric-kipre": {
+          "source_name": "Cédric Kipré",
+          "positions": ["CB"],
+          "roster_order": 6,
+          "squad_number": 4,
+          "date_of_birth": "1996-12-09",
+          "height_inches": 77
+        },
+        "sasa-lukic": {
+          "source_name": "Saša Lukić",
+          "positions": ["DM"],
+          "roster_order": 14,
+          "squad_number": 23,
+          "date_of_birth": "1996-08-13",
+          "height_inches": 72
+        },
+        "daizen-maeda": {
+          "source_name": "Daizen Maeda",
+          "positions": ["ST", "LW", "RW", "AM", "LWB"],
+          "roster_order": 28,
+          "squad_number": 38,
+          "date_of_birth": "1997-10-20",
+          "height_inches": 68
+        },
+        "azor-matusiwa": {
+          "source_name": "Azor Matusiwa",
+          "positions": ["DM"],
+          "roster_order": 12,
+          "squad_number": 5,
+          "date_of_birth": "1998-04-28",
+          "height_inches": 68
+        },
+        "kasey-mcateer": {
+          "source_name": "Kasey McAteer",
+          "positions": ["RW"],
+          "roster_order": 23,
+          "squad_number": 20,
+          "date_of_birth": "2001-11-22",
+          "height_inches": 70
+        },
+        "anis-mehmeti": {
+          "source_name": "Anis Mehmeti",
+          "positions": ["AM", "CM", "LW", "ST"],
+          "roster_order": 20,
+          "squad_number": 33,
+          "date_of_birth": "2001-01-09",
+          "height_inches": 71
+        },
+        "marcelino-nunez": {
+          "source_name": "Marcelino Núñez",
+          "positions": ["AM", "DM"],
+          "roster_order": 19,
+          "squad_number": 32,
+          "date_of_birth": "2000-03-01",
+          "height_inches": 68
+        },
+        "dara-o-shea": {
+          "source_name": "Dara O'Shea",
+          "positions": ["CB", "RB"],
+          "roster_order": 9,
+          "squad_number": 26,
+          "date_of_birth": "1999-03-04",
+          "height_inches": 73
+        },
+        "abdoul-ouattara": {
+          "source_name": "Abdoul Ouattara",
+          "positions": ["RB", "LB", "DM", "RWB"],
+          "roster_order": 5,
+          "squad_number": 42,
+          "date_of_birth": "2005-10-22",
+          "height_inches": null
+        },
+        "exequiel-palacios": {
+          "source_name": "Exequiel Palacios",
+          "positions": ["DM", "CM"],
+          "roster_order": 15,
+          "squad_number": 25,
+          "date_of_birth": "1998-10-05",
+          "height_inches": 70
+        },
+        "alex-palmer": {
+          "source_name": "Alex Palmer",
+          "positions": ["GK"],
+          "roster_order": 0,
+          "squad_number": 1,
+          "date_of_birth": "1996-08-10",
+          "height_inches": 72
+        },
+        "jaden-philogene": {
+          "source_name": "Jaden Philogene-Bidace",
+          "positions": ["LW"],
+          "roster_order": 24,
+          "squad_number": 11,
+          "date_of_birth": "2002-02-08",
+          "height_inches": 71
+        },
+        "kjell-scherpen": {
+          "source_name": "Kjell Scherpen",
+          "positions": ["GK"],
+          "roster_order": 3,
+          "squad_number": 37,
+          "date_of_birth": "2000-01-23",
+          "height_inches": 80
+        },
+        "jack-taylor": {
+          "source_name": "Jack Taylor",
+          "positions": ["DM"],
+          "roster_order": 13,
+          "squad_number": 14,
+          "date_of_birth": "1998-06-23",
+          "height_inches": 73
+        },
+        "sindre-walle-egeli": {
+          "source_name": "Sindre Walle Egeli",
+          "positions": ["RW", "ST"],
+          "roster_order": 22,
+          "squad_number": 8,
+          "date_of_birth": "2006-06-21",
+          "height_inches": null
+        },
+        "christian-walton": {
+          "source_name": "Christian Walton",
+          "positions": ["GK"],
+          "roster_order": 2,
+          "squad_number": 28,
+          "date_of_birth": "1995-11-09",
+          "height_inches": 77
+        }
+      }
+    },
+    {
+      "team_tla": "CRY",
+      "source_url": "https://www.fotmob.com/teams/9826/squad/crystal-palace",
+      "players": {
+        "walter-benitez": {
+          "source_name": "Walter Benítez",
+          "positions": ["GK"],
+          "roster_order": 2,
+          "squad_number": 44,
+          "date_of_birth": "1993-01-19",
+          "height_inches": 75
+        },
+        "jaydee-canvot": {
+          "source_name": "Jaydee Canvot",
+          "positions": ["CB", "RB"],
+          "roster_order": 6,
+          "squad_number": 6,
+          "date_of_birth": "2006-07-29",
+          "height_inches": 74
+        },
+        "chadi-riad-dnanou": {
+          "source_name": "Chadi Riad",
+          "positions": ["CB"],
+          "roster_order": 4,
+          "squad_number": 4,
+          "date_of_birth": "2003-06-17",
+          "height_inches": 74
+        },
+        "axel-disasi": {
+          "source_name": "Axel Disasi",
+          "positions": ["CB"],
+          "roster_order": 5,
+          "squad_number": 5,
+          "date_of_birth": "1998-03-11",
+          "height_inches": 75
+        },
+        "cheick-doucoure": {
+          "source_name": "Cheick Oumar Doucouré",
+          "positions": ["DM"],
+          "roster_order": 18,
+          "squad_number": 28,
+          "date_of_birth": "2000-01-08",
+          "height_inches": 71
+        },
+        "zavier-gozo": {
+          "source_name": "Zavier Gozo",
+          "positions": ["RM", "RWB", "RW", "LW"],
+          "roster_order": 19,
+          "squad_number": 12,
+          "date_of_birth": "2007-03-22",
+          "height_inches": null
+        },
+        "evann-guessand": {
+          "source_name": "Evann Guessand",
+          "positions": ["RW", "ST", "LW", "AM"],
+          "roster_order": 25,
+          "squad_number": 29,
+          "date_of_birth": "2001-07-01",
+          "height_inches": 73
+        },
+        "dean-henderson": {
+          "source_name": "Dean Henderson",
+          "positions": ["GK"],
+          "roster_order": 0,
+          "squad_number": 1,
+          "date_of_birth": "1997-03-12",
+          "height_inches": 74
+        },
+        "will-hughes": {
+          "source_name": "Will Hughes",
+          "positions": ["DM", "CM"],
+          "roster_order": 15,
+          "squad_number": 19,
+          "date_of_birth": "1995-04-17",
+          "height_inches": 73
+        },
+        "daichi-kamada": {
+          "source_name": "Daichi Kamada",
+          "positions": ["DM", "AM", "CM"],
+          "roster_order": 14,
+          "squad_number": 18,
+          "date_of_birth": "1996-08-05",
+          "height_inches": 72
+        },
+        "anan-khalaili": {
+          "source_name": "Anan Khalaili",
+          "positions": ["RWB", "RM", "RW", "RB"],
+          "roster_order": 11,
+          "squad_number": 25,
+          "date_of_birth": "2004-09-03",
+          "height_inches": 72
+        },
+        "jefferson-lerma-solis": {
+          "source_name": "Jefferson Lerma",
+          "positions": ["DM", "CM", "CB"],
+          "roster_order": 13,
+          "squad_number": 8,
+          "date_of_birth": "1994-10-25",
+          "height_inches": 70
+        },
+        "jean-philippe-mateta": {
+          "source_name": "Jean-Philippe Mateta",
+          "positions": ["ST"],
+          "roster_order": 26,
+          "squad_number": 14,
+          "date_of_birth": "1997-06-28",
+          "height_inches": 76
+        },
+        "remi-matthews": {
+          "source_name": "Remi Matthews",
+          "positions": ["GK"],
+          "roster_order": 1,
+          "squad_number": 31,
+          "date_of_birth": "1994-02-10",
+          "height_inches": 72
+        },
+        "dwight-mcneil": {
+          "source_name": "Dwight McNeil",
+          "positions": ["RW", "LW", "AM"],
+          "roster_order": 24,
+          "squad_number": 11,
+          "date_of_birth": "1999-11-22",
+          "height_inches": 72
+        },
+        "oscar-mingueza": {
+          "source_name": "Óscar Mingueza",
+          "positions": ["RM", "LM", "LWB", "LB"],
+          "roster_order": 20,
+          "squad_number": 30,
+          "date_of_birth": "1999-05-13",
+          "height_inches": 72
+        },
+        "tyrick-mitchell": {
+          "source_name": "Tyrick Mitchell",
+          "positions": ["LWB", "LM"],
+          "roster_order": 12,
+          "squad_number": 3,
+          "date_of_birth": "1999-09-01",
+          "height_inches": 69
+        },
+        "eddie-nketiah": {
+          "source_name": "Edward Nketiah",
+          "positions": ["AM", "ST"],
+          "roster_order": 22,
+          "squad_number": 9,
+          "date_of_birth": "1999-05-30",
+          "height_inches": 69
+        },
+        "chris-richards": {
+          "source_name": "Chris Richards",
+          "positions": ["CB"],
+          "roster_order": 8,
+          "squad_number": 26,
+          "date_of_birth": "2000-03-28",
+          "height_inches": 74
+        },
+        "ismaila-sarr": {
+          "source_name": "Ismaïla Sarr",
+          "positions": ["AM", "RW", "LW", "ST"],
+          "roster_order": 21,
+          "squad_number": 7,
+          "date_of_birth": "1998-02-25",
+          "height_inches": 73
+        },
+        "jorgen-strand-larsen": {
+          "source_name": "Jørgen Strand Larsen",
+          "positions": ["ST"],
+          "roster_order": 27,
+          "squad_number": 22,
+          "date_of_birth": "2000-02-06",
+          "height_inches": 76
+        },
+        "takehiro-tomiyasu": {
+          "source_name": "Takehiro Tomiyasu",
+          "positions": ["CB", "LB"],
+          "roster_order": 7,
+          "squad_number": 17,
+          "date_of_birth": "1998-11-05",
+          "height_inches": 74
+        },
+        "adam-wharton": {
+          "source_name": "Adam Wharton",
+          "positions": ["DM", "CM"],
+          "roster_order": 16,
+          "squad_number": 20,
+          "date_of_birth": "2004-02-06",
+          "height_inches": 72
+        },
+        "yeremy-pino-santos": {
+          "source_name": "Yéremi Pino",
+          "positions": ["AM", "LW", "RW"],
+          "roster_order": 23,
+          "squad_number": 10,
+          "date_of_birth": "2002-10-20",
+          "height_inches": 68
+        }
+      }
+    },
+    {
+      "team_tla": "FUL",
+      "source_url": "https://www.fotmob.com/teams/9879/squad/fulham",
+      "players": {
+        "joachim-andersen": {
+          "source_name": "Joachim Andersen",
+          "positions": ["CB"],
+          "roster_order": 6,
+          "squad_number": 5,
+          "date_of_birth": "1996-05-31",
+          "height_inches": 74
+        },
+        "calvin-bassey": {
+          "source_name": "Calvin Bassey",
+          "positions": ["CB"],
+          "roster_order": 4,
+          "squad_number": 3,
+          "date_of_birth": "1999-12-31",
+          "height_inches": 73
+        },
+        "sander-berge": {
+          "source_name": "Sander Berge",
+          "positions": ["DM", "CM"],
+          "roster_order": 13,
+          "squad_number": 16,
+          "date_of_birth": "1998-02-14",
+          "height_inches": 76
+        },
+        "oscar-bobb": {
+          "source_name": "Oscar Bobb",
+          "positions": ["RW", "RM", "LW"],
+          "roster_order": 19,
+          "squad_number": 14,
+          "date_of_birth": "2003-07-12",
+          "height_inches": 69
+        },
+        "tom-cairney": {
+          "source_name": "Tom Cairney",
+          "positions": ["DM"],
+          "roster_order": 11,
+          "squad_number": 10,
+          "date_of_birth": "1991-01-20",
+          "height_inches": 73
+        },
+        "timothy-castagne": {
+          "source_name": "Timothy Castagne",
+          "positions": ["RB", "LB", "RWB"],
+          "roster_order": 3,
+          "squad_number": 21,
+          "date_of_birth": "1995-12-05",
+          "height_inches": 73
+        },
+        "shea-charles": {
+          "source_name": "Shea Charles",
+          "positions": ["DM", "CM"],
+          "roster_order": 15,
+          "squad_number": 19,
+          "date_of_birth": "2003-11-05",
+          "height_inches": 74
+        },
+        "gonzalo-garcia": {
+          "source_name": "Gonzalo García",
+          "positions": ["ST"],
+          "roster_order": 22,
+          "squad_number": 7,
+          "date_of_birth": "2004-03-24",
+          "height_inches": 72
+        },
+        "alex-iwobi": {
+          "source_name": "Alex Iwobi",
+          "positions": ["DM", "LW", "AM"],
+          "roster_order": 14,
+          "squad_number": 17,
+          "date_of_birth": "1996-05-03",
+          "height_inches": 71
+        },
+        "jorge-cuenca-barreno": {
+          "source_name": "Jorge Cuenca",
+          "positions": ["CB"],
+          "roster_order": 5,
+          "squad_number": 4,
+          "date_of_birth": "1999-11-17",
+          "height_inches": 75
+        },
+        "kevin-santos-lopes-de-macedo": {
+          "source_name": "Kevin",
+          "positions": ["LW"],
+          "roster_order": 21,
+          "squad_number": 11,
+          "date_of_birth": "2003-01-04",
+          "height_inches": 69
+        },
+        "josh-king": {
+          "source_name": "Joshua King",
+          "positions": ["AM"],
+          "roster_order": 17,
+          "squad_number": 24,
+          "date_of_birth": "2007-01-03",
+          "height_inches": 68
+        },
+        "jonah-kusi-asare": {
+          "source_name": "Jonah Kusi-Asare",
+          "positions": ["ST"],
+          "roster_order": 24,
+          "squad_number": 18,
+          "date_of_birth": "2007-07-04",
+          "height_inches": 77
+        },
+        "benjamin-lecomte": {
+          "source_name": "Benjamin Lecomte",
+          "positions": ["GK"],
+          "roster_order": 1,
+          "squad_number": 23,
+          "date_of_birth": "1991-04-26",
+          "height_inches": 72
+        },
+        "bernd-leno": {
+          "source_name": "Bernd Leno",
+          "positions": ["GK"],
+          "roster_order": 0,
+          "squad_number": 1,
+          "date_of_birth": "1992-03-04",
+          "height_inches": 75
+        },
+        "rodrigo-muniz-carvalho": {
+          "source_name": "Rodrigo Muniz",
+          "positions": ["ST"],
+          "roster_order": 23,
+          "squad_number": 9,
+          "date_of_birth": "2001-05-04",
+          "height_inches": 73
+        },
+        "cesar-palacios": {
+          "source_name": "César Palacios",
+          "positions": ["LW"],
+          "roster_order": 20,
+          "squad_number": 8,
+          "date_of_birth": "2004-11-11",
+          "height_inches": 72
+        },
+        "harrison-reed": {
+          "source_name": "Harrison Reed",
+          "positions": ["DM"],
+          "roster_order": 10,
+          "squad_number": 6,
+          "date_of_birth": "1995-01-27",
+          "height_inches": 71
+        },
+        "antonee-robinson": {
+          "source_name": "Antonee Robinson",
+          "positions": ["LB", "LWB", "LM"],
+          "roster_order": 9,
+          "squad_number": 33,
+          "date_of_birth": "1997-08-08",
+          "height_inches": 72
+        },
+        "ryan-sessegnon": {
+          "source_name": "Ryan Sessegnon",
+          "positions": ["LB"],
+          "roster_order": 8,
+          "squad_number": 30,
+          "date_of_birth": "2000-05-18",
+          "height_inches": 70
+        },
+        "emile-smith-rowe": {
+          "source_name": "Emile Smith Rowe",
+          "positions": ["AM"],
+          "roster_order": 18,
+          "squad_number": 32,
+          "date_of_birth": "2000-07-28",
+          "height_inches": 72
+        },
+        "kenny-tete": {
+          "source_name": "Kenny Tete",
+          "positions": ["RB"],
+          "roster_order": 2,
+          "squad_number": 2,
+          "date_of_birth": "1995-10-09",
+          "height_inches": 71
+        }
+      }
+    },
+    {
+      "team_tla": "TOT",
+      "source_url": "https://www.fotmob.com/teams/8586/squad/tottenham-hotspur",
+      "players": {
+        "brandon-austin": {
+          "source_name": "Brandon Austin",
+          "positions": ["GK"],
+          "roster_order": 2,
+          "squad_number": 40,
+          "date_of_birth": "1999-01-08",
+          "height_inches": 74
+        },
+        "rodrigo-bentancur": {
+          "source_name": "Rodrigo Bentancur",
+          "positions": ["DM", "CM", "AM"],
+          "roster_order": 12,
+          "squad_number": 30,
+          "date_of_birth": "1997-06-25",
+          "height_inches": 74
+        },
+        "lucas-bergvall": {
+          "source_name": "Lucas Bergvall",
+          "positions": ["CM", "AM", "DM", "LM", "LW"],
+          "roster_order": 14,
+          "squad_number": 15,
+          "date_of_birth": "2006-02-02",
+          "height_inches": 73
+        },
+        "ben-davies": {
+          "source_name": "Ben Davies",
+          "positions": ["CB", "LB"],
+          "roster_order": 7,
+          "squad_number": 33,
+          "date_of_birth": "1993-04-24",
+          "height_inches": 71
+        },
+        "martin-dubravka": {
+          "source_name": "Martin Dúbravka",
+          "positions": ["GK"],
+          "roster_order": 1,
+          "squad_number": 39,
+          "date_of_birth": "1989-01-15",
+          "height_inches": 75
+        },
+        "mateus-fernandes": {
+          "source_name": "Mateus Fernandes",
+          "positions": ["CM", "DM", "AM", "LW"],
+          "roster_order": 16,
+          "squad_number": 18,
+          "date_of_birth": "2004-07-10",
+          "height_inches": 70
+        },
+        "conor-gallagher": {
+          "source_name": "Conor Gallagher",
+          "positions": ["CM", "AM", "DM"],
+          "roster_order": 13,
+          "squad_number": 8,
+          "date_of_birth": "2000-02-06",
+          "height_inches": 72
+        },
+        "archie-gray": {
+          "source_name": "Archie Gray",
+          "positions": ["DM", "RB", "CM", "RWB", "LB"],
+          "roster_order": 11,
+          "squad_number": 14,
+          "date_of_birth": "2006-03-12",
+          "height_inches": 74
+        },
+        "antonin-kinsky": {
+          "source_name": "Antonín Kinský",
+          "positions": ["GK"],
+          "roster_order": 0,
+          "squad_number": 31,
+          "date_of_birth": "2003-03-13",
+          "height_inches": 75
+        },
+        "mohammed-kudus": {
+          "source_name": "Mohammed Kudus",
+          "positions": ["RW", "AM", "RM"],
+          "roster_order": 19,
+          "squad_number": 20,
+          "date_of_birth": "2000-08-02",
+          "height_inches": 69
+        },
+        "dejan-kulusevski": {
+          "source_name": "Dejan Kulusevski",
+          "positions": ["ST"],
+          "roster_order": 24,
+          "squad_number": 21,
+          "date_of_birth": "2000-04-25",
+          "height_inches": 73
+        },
+        "james-maddison": {
+          "source_name": "James Maddison",
+          "positions": ["ST"],
+          "roster_order": 23,
+          "squad_number": 10,
+          "date_of_birth": "1996-11-23",
+          "height_inches": 69
+        },
+        "omar-marmoush": {
+          "source_name": "Omar Marmoush",
+          "positions": ["ST"],
+          "roster_order": 27,
+          "squad_number": 22,
+          "date_of_birth": "1999-02-07",
+          "height_inches": 72
+        },
+        "wilson-odobert": {
+          "source_name": "Wilson Odobert",
+          "positions": ["LW", "RW", "AM"],
+          "roster_order": 22,
+          "squad_number": 28,
+          "date_of_birth": "2004-11-28",
+          "height_inches": 72
+        },
+        "pedro-porro-sauceda": {
+          "source_name": "Pedro Porro",
+          "positions": ["RB", "RM"],
+          "roster_order": 3,
+          "squad_number": 23,
+          "date_of_birth": "1999-09-13",
+          "height_inches": 69
+        },
+        "richarlison-de-andrade": {
+          "source_name": "Richarlison",
+          "positions": ["ST", "LW"],
+          "roster_order": 25,
+          "squad_number": 9,
+          "date_of_birth": "1997-05-10",
+          "height_inches": 72
+        },
+        "andrew-robertson": {
+          "source_name": "Andrew Robertson",
+          "positions": ["LB"],
+          "roster_order": 9,
+          "squad_number": 3,
+          "date_of_birth": "1994-03-11",
+          "height_inches": 70
+        },
+        "marcos-senesi-baron": {
+          "source_name": "Marcos Senesi",
+          "positions": ["CB"],
+          "roster_order": 5,
+          "squad_number": 5,
+          "date_of_birth": "1997-05-10",
+          "height_inches": 72
+        },
+        "dominic-solanke-mitchell": {
+          "source_name": "Dominic Solanke",
+          "positions": ["ST"],
+          "roster_order": 26,
+          "squad_number": 19,
+          "date_of_birth": "1997-09-14",
+          "height_inches": 74
+        },
+        "savio-moreira-de-oliveira": {
+          "source_name": "Sávio",
+          "positions": ["RW", "LW"],
+          "roster_order": 18,
+          "squad_number": 17,
+          "date_of_birth": "2004-04-10",
+          "height_inches": 69
+        },
+        "mathys-tel": {
+          "source_name": "Mathys Tel",
+          "positions": ["LW", "ST", "LM"],
+          "roster_order": 20,
+          "squad_number": 11,
+          "date_of_birth": "2005-04-27",
+          "height_inches": 72
+        },
+        "sandro-tonali": {
+          "source_name": "Sandro Tonali",
+          "positions": ["CM", "DM"],
+          "roster_order": 15,
+          "squad_number": 16,
+          "date_of_birth": "2000-05-08",
+          "height_inches": 72
+        },
+        "destiny-udogie": {
+          "source_name": "Destiny Udogie",
+          "positions": ["LB", "LWB"],
+          "roster_order": 10,
+          "squad_number": 13,
+          "date_of_birth": "2002-11-28",
+          "height_inches": 74
+        },
+        "jan-paul-van-hecke": {
+          "source_name": "Jan Paul van Hecke",
+          "positions": ["CB"],
+          "roster_order": 6,
+          "squad_number": 6,
+          "date_of_birth": "2000-06-08",
+          "height_inches": 74
+        },
+        "micky-van-de-ven": {
+          "source_name": "Micky van de Ven",
+          "positions": ["CB", "LB"],
+          "roster_order": 8,
+          "squad_number": 37,
+          "date_of_birth": "2001-04-19",
+          "height_inches": 76
+        },
+        "xavi-simons": {
+          "source_name": "Xavi Simons",
+          "positions": ["AM", "LW", "CM", "RW"],
+          "roster_order": 17,
+          "squad_number": 7,
+          "date_of_birth": "2003-04-21",
+          "height_inches": 70
+        }
+      }
+    },
+    {
+      "team_tla": "COV",
+      "source_url": "https://www.fotmob.com/teams/8669/squad/coventry-city",
+      "players": {
+        "aurele-amenda": {
+          "source_name": "Aurèle Amenda",
+          "positions": ["CB", "RB"],
+          "roster_order": 9,
+          "squad_number": 24,
+          "date_of_birth": "2003-07-31",
+          "height_inches": 76
+        },
+        "taiwo-awoniyi": {
+          "source_name": "Taiwo Awoniyi",
+          "positions": ["ST"],
+          "roster_order": 27,
+          "squad_number": 14,
+          "date_of_birth": "1997-08-12",
+          "height_inches": 72
+        },
+        "dan-bentley": {
+          "source_name": "Daniel Bentley",
+          "positions": ["GK"],
+          "roster_order": 2,
+          "squad_number": 25,
+          "date_of_birth": "1993-07-13",
+          "height_inches": 74
+        },
+        "jake-bidwell": {
+          "source_name": "Jake Bidwell",
+          "positions": ["LB"],
+          "roster_order": 12,
+          "squad_number": 21,
+          "date_of_birth": "1993-03-21",
+          "height_inches": 72
+        },
+        "sidiki-cherif": {
+          "source_name": "Sidiki Cherif",
+          "positions": ["ST"],
+          "roster_order": 28,
+          "squad_number": 49,
+          "date_of_birth": "2006-12-15",
+          "height_inches": 73
+        },
+        "jay-dasilva": {
+          "source_name": "Jay Dasilva",
+          "positions": ["LB", "LM"],
+          "roster_order": 11,
+          "squad_number": 3,
+          "date_of_birth": "1998-04-22",
+          "height_inches": 67
+        },
+        "josh-eccles": {
+          "source_name": "Josh Eccles",
+          "positions": ["AM", "DM", "CM"],
+          "roster_order": 19,
+          "squad_number": 28,
+          "date_of_birth": "2000-04-06",
+          "height_inches": 71
+        },
+        "matt-grimes": {
+          "source_name": "Matt Grimes",
+          "positions": ["DM", "CM"],
+          "roster_order": 13,
+          "squad_number": 6,
+          "date_of_birth": "1995-07-15",
+          "height_inches": 70
+        },
+        "gustavo-hamer": {
+          "source_name": "Gustavo Hamer",
+          "positions": ["LW", "AM", "LM"],
+          "roster_order": 24,
+          "squad_number": 38,
+          "date_of_birth": "1997-06-24",
+          "height_inches": 67
+        },
+        "kaine-kesler-hayden": {
+          "source_name": "Kaine Kesler-Hayden",
+          "positions": ["RB"],
+          "roster_order": 3,
+          "squad_number": 20,
+          "date_of_birth": "2002-10-23",
+          "height_inches": 69
+        },
+        "joel-latibeaudiere": {
+          "source_name": "Joel Latibeaudiere",
+          "positions": ["CB", "RB"],
+          "roster_order": 8,
+          "squad_number": 22,
+          "date_of_birth": "2000-01-06",
+          "height_inches": 71
+        },
+        "ephron-mason-clark": {
+          "source_name": "Ephron Mason-Clark",
+          "positions": ["LW", "LM"],
+          "roster_order": 22,
+          "squad_number": 10,
+          "date_of_birth": "1999-08-25",
+          "height_inches": 70
+        },
+        "frank-onyeka": {
+          "source_name": "Frank Onyeka",
+          "positions": ["DM", "CM"],
+          "roster_order": 14,
+          "squad_number": 16,
+          "date_of_birth": "1998-01-01",
+          "height_inches": 72
+        },
+        "ethan-pinnock": {
+          "source_name": "Ethan Pinnock",
+          "positions": ["CB"],
+          "roster_order": 6,
+          "squad_number": 2,
+          "date_of_birth": "1993-05-29",
+          "height_inches": 74
+        },
+        "jack-rudoni": {
+          "source_name": "Jack Rudoni",
+          "positions": ["AM", "DM", "RW"],
+          "roster_order": 18,
+          "squad_number": 5,
+          "date_of_birth": "2001-06-14",
+          "height_inches": 73
+        },
+        "carl-rushworth": {
+          "source_name": "Carl Rushworth",
+          "positions": ["GK"],
+          "roster_order": 1,
+          "squad_number": 19,
+          "date_of_birth": "2001-07-02",
+          "height_inches": 75
+        },
+        "tatsuhiro-sakamoto": {
+          "source_name": "Tatsuhiro Sakamoto",
+          "positions": ["RW", "RM"],
+          "roster_order": 20,
+          "squad_number": 7,
+          "date_of_birth": "1996-10-22",
+          "height_inches": 67
+        },
+        "ellis-simms": {
+          "source_name": "Ellis Simms",
+          "positions": ["ST"],
+          "roster_order": 25,
+          "squad_number": 9,
+          "date_of_birth": "2001-01-05",
+          "height_inches": 75
+        },
+        "loum-tchaouna": {
+          "source_name": "Loum Tchaouna",
+          "positions": ["RW", "RM", "LW"],
+          "roster_order": 21,
+          "squad_number": 18,
+          "date_of_birth": "2003-09-08",
+          "height_inches": 71
+        },
+        "bobby-thomas": {
+          "source_name": "Bobby Thomas",
+          "positions": ["CB"],
+          "roster_order": 7,
+          "squad_number": 4,
+          "date_of_birth": "2001-01-30",
+          "height_inches": 73
+        },
+        "brandon-thomas-asante": {
+          "source_name": "Brandon Thomas-Asante",
+          "positions": ["LW", "AM", "RW", "ST"],
+          "roster_order": 23,
+          "squad_number": 23,
+          "date_of_birth": "1998-12-29",
+          "height_inches": 71
+        },
+        "victor-torp": {
+          "source_name": "Victor Torp",
+          "positions": ["DM", "CM", "AM"],
+          "roster_order": 15,
+          "squad_number": 29,
+          "date_of_birth": "1999-07-30",
+          "height_inches": 72
+        },
+        "ben-wilson": {
+          "source_name": "Ben Wilson",
+          "positions": ["GK"],
+          "roster_order": 0,
+          "squad_number": 13,
+          "date_of_birth": "1992-08-09",
+          "height_inches": 73
+        },
+        "luke-woolfenden": {
+          "source_name": "Luke Woolfenden",
+          "positions": ["CB"],
+          "roster_order": 10,
+          "squad_number": 26,
+          "date_of_birth": "1998-10-21",
+          "height_inches": 76
+        },
+        "haji-wright": {
+          "source_name": "Haji Wright",
+          "positions": ["ST"],
+          "roster_order": 26,
+          "squad_number": 11,
+          "date_of_birth": "1998-03-27",
+          "height_inches": 76
+        },
+        "caleb-yirenkyi": {
+          "source_name": "Caleb Yirenkyi",
+          "positions": ["CM", "CB", "AM", "RWB", "DM", "RB"],
+          "roster_order": 16,
+          "squad_number": 8,
+          "date_of_birth": "2006-01-15",
+          "height_inches": 72
+        },
+        "milan-van-ewijk": {
+          "source_name": "Milan van Ewijk",
+          "positions": ["RB", "RM", "RW"],
+          "roster_order": 4,
+          "squad_number": 27,
+          "date_of_birth": "2000-09-08",
+          "height_inches": 69
+        }
+      }
+    },
+    {
+      "team_tla": "AVL",
+      "source_url": "https://www.fotmob.com/teams/10252/squad/aston-villa",
+      "players": {
+        "tammy-abraham": {
+          "source_name": "Tammy Abraham",
+          "positions": ["ST"],
+          "roster_order": 24,
+          "squad_number": 18,
+          "date_of_birth": "1997-10-02",
+          "height_inches": 76
+        },
+        "ross-barkley": {
+          "source_name": "Ross Barkley",
+          "positions": ["AM", "DM"],
+          "roster_order": 18,
+          "squad_number": 6,
+          "date_of_birth": "1993-12-05",
+          "height_inches": 74
+        },
+        "lamare-bogarde": {
+          "source_name": "Lamare Bogarde",
+          "positions": ["DM", "RB"],
+          "roster_order": 13,
+          "squad_number": 26,
+          "date_of_birth": "2004-01-05",
+          "height_inches": 72
+        },
+        "emiliano-buendia-stati": {
+          "source_name": "Emiliano Buendía",
+          "positions": ["LW", "AM", "LM"],
+          "roster_order": 21,
+          "squad_number": 10,
+          "date_of_birth": "1996-12-25",
+          "height_inches": 67
+        },
+        "matty-cash": {
+          "source_name": "Matty Cash",
+          "positions": ["RB", "RM", "RWB"],
+          "roster_order": 2,
+          "squad_number": 2,
+          "date_of_birth": "1997-08-07",
+          "height_inches": 73
+        },
+        "alejandro-garnacho-ferreyra": {
+          "source_name": "Alejandro Garnacho",
+          "positions": ["LW"],
+          "roster_order": 22,
+          "squad_number": 17,
+          "date_of_birth": "2004-07-01",
+          "height_inches": 71
+        },
+        "george-hemmings": {
+          "source_name": "George Hemmings",
+          "positions": ["DM", "LW", "CM", "AM"],
+          "roster_order": 17,
+          "squad_number": 53,
+          "date_of_birth": "2007-04-03",
+          "height_inches": null
+        },
+        "joao-gomes": {
+          "source_name": "João Gomes",
+          "positions": ["DM", "CM"],
+          "roster_order": 15,
+          "squad_number": 35,
+          "date_of_birth": "2001-02-12",
+          "height_inches": 69
+        },
+        "leon-goretzka": {
+          "source_name": "Leon Goretzka",
+          "positions": ["DM", "AM"],
+          "roster_order": 14,
+          "squad_number": 27,
+          "date_of_birth": "1995-02-06",
+          "height_inches": 74
+        },
+        "boubacar-kamara": {
+          "source_name": "Boubacar Kamara",
+          "positions": ["DM", "CM"],
+          "roster_order": 11,
+          "squad_number": 8,
+          "date_of_birth": "1999-11-23",
+          "height_inches": 70
+        },
+        "victor-lindelof": {
+          "source_name": "Victor Nilsson Lindelöf",
+          "positions": ["CB", "DM", "RB"],
+          "roster_order": 4,
+          "squad_number": 3,
+          "date_of_birth": "1994-07-17",
+          "height_inches": 74
+        },
+        "marco-bizot": {
+          "source_name": "Marco Bizot",
+          "positions": ["GK"],
+          "roster_order": 1,
+          "squad_number": 40,
+          "date_of_birth": "1991-03-10",
+          "height_inches": 76
+        },
+        "ian-maatsen": {
+          "source_name": "Ian Maatsen",
+          "positions": ["LB"],
+          "roster_order": 10,
+          "squad_number": 22,
+          "date_of_birth": "2002-03-10",
+          "height_inches": 70
+        },
+        "brian-madjo": {
+          "source_name": "Brian Madjo",
+          "positions": ["ST"],
+          "roster_order": 25,
+          "squad_number": 39,
+          "date_of_birth": "2009-01-12",
+          "height_inches": 76
+        },
+        "johan-manzambi": {
+          "source_name": "Johan Manzambi",
+          "positions": ["DM", "AM", "LW"],
+          "roster_order": 16,
+          "squad_number": 44,
+          "date_of_birth": "2005-10-14",
+          "height_inches": 72
+        },
+        "john-mcginn": {
+          "source_name": "John McGinn",
+          "positions": ["RW", "DM", "LW", "AM"],
+          "roster_order": 19,
+          "squad_number": 7,
+          "date_of_birth": "1994-10-18",
+          "height_inches": 69
+        },
+        "tyrone-mings": {
+          "source_name": "Tyrone Mings",
+          "positions": ["CB"],
+          "roster_order": 6,
+          "squad_number": 5,
+          "date_of_birth": "1993-03-13",
+          "height_inches": 75
+        },
+        "nicolas-jackson": {
+          "source_name": "Nicolas Jackson",
+          "positions": ["ST", "LW"],
+          "roster_order": 23,
+          "squad_number": 11,
+          "date_of_birth": "2001-06-20",
+          "height_inches": 74
+        },
+        "amadou-onana": {
+          "source_name": "Amadou Onana",
+          "positions": ["DM"],
+          "roster_order": 12,
+          "squad_number": 24,
+          "date_of_birth": "2001-08-16",
+          "height_inches": 77
+        },
+        "pau-torres": {
+          "source_name": "Pau Torres",
+          "positions": ["CB"],
+          "roster_order": 7,
+          "squad_number": 14,
+          "date_of_birth": "1997-01-16",
+          "height_inches": 76
+        },
+        "matteo-ruggeri": {
+          "source_name": "Matteo Ruggeri",
+          "positions": ["LB", "LWB"],
+          "roster_order": 9,
+          "squad_number": 13,
+          "date_of_birth": "2002-07-11",
+          "height_inches": 74
+        },
+        "zion-suzuki": {
+          "source_name": "Zion Suzuki",
+          "positions": ["GK"],
+          "roster_order": 0,
+          "squad_number": 1,
+          "date_of_birth": "2002-08-21",
+          "height_inches": 74
+        },
+        "aaron-wan-bissaka": {
+          "source_name": "Aaron Wan-Bissaka",
+          "positions": ["RB", "RWB", "RM"],
+          "roster_order": 3,
+          "squad_number": 29,
+          "date_of_birth": "1997-11-26",
+          "height_inches": 72
+        }
+      }
+    }
+  ]
+}

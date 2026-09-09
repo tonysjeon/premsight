@@ -370,3 +370,25 @@ def test_wg_has_stats_filters_scout_wingers(client: TestClient) -> None:
     assert scout_wgs["items"][0]["scout_position"] == "RW"
 
 
+
+
+def test_roster_review_hides_players_without_deleting_identity(client: TestClient) -> None:
+    ids = app.state.ids
+    with psycopg.connect(os.environ["DATABASE_URL"]) as conn:
+        player_id = conn.execute(
+            """INSERT INTO players(first_name,last_name,display_name,slug)
+               VALUES('Reiss','Nelson','Nelson','reiss-nelson') RETURNING id"""
+        ).fetchone()[0]
+        conn.execute(
+            """INSERT INTO squad_memberships(season_id,player_id,team_id,position,positions)
+               VALUES(%s,%s,%s,'FWD',ARRAY['RW'])""",
+            (ids["season"], player_id, ids["home"]),
+        )
+    roster = client.get(f"/v1/teams/{ids['home']}/roster")
+    assert roster.status_code == 200
+    assert roster.json() == {"items": [], "count": 0}
+    assert client.get("/v1/players/reiss-nelson").status_code == 200
+    with psycopg.connect(os.environ["DATABASE_URL"]) as conn:
+        assert conn.execute(
+            "SELECT count(*) FROM squad_memberships WHERE player_id=%s", (player_id,)
+        ).fetchone()[0] == 1

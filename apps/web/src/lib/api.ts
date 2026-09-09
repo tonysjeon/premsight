@@ -63,6 +63,8 @@ export type Prediction = {
 export type PlayerPosition = 'GK' | 'DEF' | 'MID' | 'FWD';
 export type DetailedPlayerPosition =
   | PlayerPosition
+  | 'DM'
+  | 'AM'
   | 'LB'
   | 'LWB'
   | 'CB'
@@ -88,6 +90,9 @@ export type Player = {
   position?: PlayerPosition;
   positions?: DetailedPlayerPosition[];
   squad_number?: number | null;
+  date_of_birth?: string | null;
+  age?: number | null;
+  height_inches?: number | null;
   team_id?: string;
   team_name?: string;
   team_short_name?: string | null;
