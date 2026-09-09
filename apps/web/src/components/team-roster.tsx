@@ -1,17 +1,30 @@
 'use client';
 
 import Image from 'next/image';
+import { IoBookmark, IoBookmarkOutline } from 'react-icons/io5';
+import { SignInModal } from '@/components/sign-in-modal';
+import { usePlayerFavorites } from '@/lib/use-player-favorites';
 import type { Player } from '@/lib/api';
 import { nationalityFlagUrl } from '@/lib/draft-artwork';
 import { nationalityName } from '@/lib/nationality';
 
 export function TeamRoster({ players }: { players: Player[] }) {
+  const favorites = usePlayerFavorites();
   if (!players.length) {
     return <p className="empty">No roster information available for this season.</p>;
   }
 
   return (
     <div className="roster-scroll">
+      <SignInModal open={favorites.signIn} onClose={() => favorites.setSignIn(false)} />
+      {favorites.error ? (
+        <p className="save-feedback" role="status">
+          {favorites.error}{' '}
+          <button type="button" onClick={() => void favorites.reload()}>
+            Retry
+          </button>
+        </p>
+      ) : null}
       <table className="league-table league-table--overview roster-list" aria-label="Team roster">
         <thead>
           <tr>
@@ -32,6 +45,9 @@ export function TeamRoster({ players }: { players: Player[] }) {
             </th>
             <th scope="col" className="roster-height">
               Height
+            </th>
+            <th scope="col" className="roster-favorite-column">
+              <span className="sr-only">Favorite</span>
             </th>
           </tr>
         </thead>
@@ -79,6 +95,30 @@ export function TeamRoster({ players }: { players: Player[] }) {
                   {player.height_inches == null
                     ? '—'
                     : `${Math.floor(player.height_inches / 12)}′${player.height_inches % 12}″`}
+                </td>
+                <td className="roster-favorite-column">
+                  <button
+                    type="button"
+                    className="player-favorite"
+                    disabled={favorites.loading}
+                    aria-disabled={favorites.pending.has(player.id)}
+                    aria-pressed={
+                      favorites.loadError
+                        ? undefined
+                        : favorites.players.some((p) => p.id === player.id)
+                    }
+                    title={
+                      favorites.loadError ? 'Saved players unavailable. Click to retry.' : undefined
+                    }
+                    aria-label={`${favorites.players.some((p) => p.id === player.id) ? 'Remove' : 'Save'} ${player.display_name} ${favorites.players.some((p) => p.id === player.id) ? 'from' : 'to'} favorites`}
+                    onClick={() => void favorites.toggle(player)}
+                  >
+                    {favorites.players.some((p) => p.id === player.id) ? (
+                      <IoBookmark aria-hidden="true" />
+                    ) : (
+                      <IoBookmarkOutline aria-hidden="true" />
+                    )}
+                  </button>
                 </td>
               </tr>
             );

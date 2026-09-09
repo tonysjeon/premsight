@@ -1,9 +1,13 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { IoLogOutOutline, IoTrashOutline } from 'react-icons/io5';
 import { SlidingTabs } from '@/components/sliding-tabs';
+import { TeamRoster } from '@/components/team-roster';
+import { usePlayerFavorites, useTeamFavorites } from '@/lib/use-player-favorites';
+import { TeamFollow } from '@/components/team-follow';
 import {
   deleteAccountToHome,
   fetchCurrentUser,
@@ -20,6 +24,8 @@ const TABS: readonly { id: ProfileTab; label: string }[] = [
 ];
 
 export function ProfilePage() {
+  const favorites = usePlayerFavorites();
+  const followed = useTeamFavorites();
   const [tab, setTab] = useState<ProfileTab>('teams');
   const [user, setUser] = useState<AuthUser | null | undefined>(peekCurrentUser);
 
@@ -128,7 +134,53 @@ export function ProfilePage() {
           className="profile-list"
           id="profile-collection-panel"
           role="tabpanel"
-        />
+        >
+          {tab === 'players' ? (
+            favorites.loading ? (
+              <p className="empty">Loading favorites…</p>
+            ) : favorites.error ? (
+              <p className="profile-save-feedback" role="status">
+                {favorites.error} <button onClick={() => void favorites.reload()}>Retry</button>
+              </p>
+            ) : favorites.players.length ? (
+              <div className="team-roster-panel">
+                <TeamRoster players={favorites.players} />
+              </div>
+            ) : (
+              <p className="empty">
+                No favorite players yet. Save players using the bookmark in a team roster.
+              </p>
+            )
+          ) : followed.loading ? (
+            <p className="empty">Loading followed teams…</p>
+          ) : followed.error ? (
+            <p className="profile-save-feedback" role="status">
+              {followed.error}{' '}
+              <button type="button" onClick={() => void followed.reload()}>
+                Retry
+              </button>
+            </p>
+          ) : followed.teams.length ? (
+            <ul className="profile-team-list">
+              {followed.teams.map((team) => (
+                <li key={team.id}>
+                  <Link
+                    href={`/teams/${team.tla?.toLowerCase() || team.id}`}
+                    className="profile-team-link"
+                  >
+                    {team.crest_url ? (
+                      <Image src={team.crest_url} alt="" width={32} height={32} unoptimized />
+                    ) : null}
+                    <span>{team.name}</span>
+                  </Link>
+                  <TeamFollow team={team} />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="empty">No followed teams yet. Follow a team from its team page.</p>
+          )}
+        </div>
       </section>
 
       <div className="profile-actions">

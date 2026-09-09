@@ -8,11 +8,13 @@ export function TeamHero({
   name,
   visual,
   children,
+  action,
 }: {
   competitionName: string;
   name: string;
   visual: TeamVisual;
   children?: ReactNode;
+  action?: ReactNode;
 }) {
   return (
     <header className="match-hero">
@@ -36,6 +38,7 @@ export function TeamHero({
             </p>
           ) : null}
         </div>
+        {action}
       </div>
       {children}
     </header>
