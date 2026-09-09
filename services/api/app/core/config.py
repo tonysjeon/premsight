@@ -1,6 +1,7 @@
 from functools import lru_cache
 from typing import Literal
 
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 DEFAULT_AUTH_SECRET = "dev-insecure-premsight-auth-secret"
@@ -21,7 +22,10 @@ class Settings(BaseSettings):
     database_url: str = "postgresql://premsight:premsight@localhost:5432/premsight"
     redis_url: str = "redis://localhost:6379/0"
     prediction_engine_url: str = "http://localhost:8001"
-    cors_origins: str = "http://localhost:3000"
+    cors_origins: str = Field(
+        default="http://localhost:3000",
+        validation_alias=AliasChoices("API_CORS_ORIGINS", "CORS_ORIGINS"),
+    )
     auth_secret: str = DEFAULT_AUTH_SECRET
     auth_cookie_name: str = "premsight_session"
     auth_cookie_samesite: Literal["lax", "strict", "none"] = "lax"
