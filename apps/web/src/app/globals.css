@@ -6065,170 +6065,114 @@ button.draft-slot {
    Roster & Compare styles
    ========================================================================== */
 
-.team-roster-sections {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  padding: 8px 0 16px;
+.roster-scroll {
+  overflow-x: auto;
+  padding-inline: 20px;
 }
 
-.roster-group {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+.roster-list {
+  min-width: 760px;
+  table-layout: fixed;
 }
 
-.roster-group-heading {
-  font-size: 1.1rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0;
+.team-roster-panel .roster-list thead th {
+  font-size: 0.75rem;
+  text-transform: none;
+  letter-spacing: normal;
+  border-bottom: 1px solid var(--line);
 }
 
-.roster-group-count {
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: var(--chip);
-  color: var(--muted);
-}
-
-.roster-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 12px;
-}
-
-.roster-card {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 12px 14px;
-  border-radius: var(--radius-sm);
-  background: var(--surface-sunken);
-  border: 1px solid var(--line);
-  transition:
-    border-color 0.15s ease,
-    background 0.15s ease;
-}
-
-.roster-card:hover {
-  background: var(--surface-hover);
-  border-color: var(--line-strong);
-}
-
-.roster-card-photo-wrap {
+.team-roster-panel .roster-list tbody tr:not(:last-child) > td {
   position: relative;
-  width: 56px;
-  height: 56px;
-  flex-shrink: 0;
-  border-radius: 12px;
-  overflow: hidden;
-  background: var(--surface);
-  border: 1px solid var(--line);
+  border-bottom: 1px solid transparent;
+}
+
+.team-roster-panel .roster-list tbody tr:not(:last-child) > td::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 1px;
+  background: var(--line);
+  pointer-events: none;
+}
+
+.roster-list th,
+.roster-list td {
+  padding-inline: 20px !important;
+}
+
+.roster-list .roster-name-column {
+  width: 28%;
+  text-align: left;
+}
+
+.roster-list .roster-positions {
+  width: 20%;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.team-roster-panel .roster-list .roster-country-column {
+  width: 18%;
+  text-align: center;
+}
+
+.roster-list .roster-number {
+  width: 8%;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.roster-list .roster-age {
+  width: 8%;
+  font-variant-numeric: tabular-nums;
+}
+
+.roster-list .roster-height {
+  width: 10%;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.roster-country {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 12px;
+  color: color-mix(in srgb, var(--text) 86%, var(--muted));
+  font-size: 0.82rem;
+  font-weight: 700;
 }
 
-.roster-card-photo {
-  width: 100%;
-  height: 100%;
+.roster-flag {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  border-radius: 50%;
   object-fit: cover;
 }
 
-.roster-card-photo-fallback {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--muted);
-}
-
-.roster-squad-number {
-  position: absolute;
-  bottom: 2px;
-  right: 2px;
-  font-size: 0.65rem;
-  font-weight: 800;
-  padding: 1px 4px;
-  border-radius: 4px;
-  background: #000c;
-  color: #fff;
-  line-height: 1.1;
-}
-
-.roster-card-body {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.roster-card-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-}
-
 .roster-player-name {
-  font-size: 0.95rem;
-  font-weight: 700;
   color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.roster-player-flag {
-  border-radius: 2px;
-  flex-shrink: 0;
-}
-
-.roster-card-meta {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.75rem;
-  color: var(--muted);
-}
-
-.roster-pos-badge {
-  font-weight: 700;
-  padding: 1px 5px;
-  border-radius: 4px;
-  background: var(--chip);
-  color: var(--chip-ink);
-  font-size: 0.7rem;
-}
-
-.roster-detailed-positions {
-  color: var(--muted-dim);
-  font-weight: 500;
-}
-
-.roster-card-actions {
-  margin-top: 4px;
-  display: flex;
-  align-items: center;
-}
-
-.roster-compare-btn {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--accent);
   text-decoration: none;
-  transition: opacity 0.15s ease;
 }
 
-.roster-compare-btn:hover {
-  opacity: 0.8;
-  text-decoration: underline;
+.roster-player-name:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+@media (max-width: 600px) {
+  .roster-scroll {
+    padding-inline: 8px;
+  }
+
+  .roster-list th,
+  .roster-list td {
+    padding-inline: 12px !important;
+  }
 }
 
 /* ==========================================================================
@@ -7004,5 +6948,55 @@ button.draft-slot {
 
   .compare-page .compare-expand-slots .compare-expand-slot-wide {
     min-width: 66px;
+  }
+}
+
+/* Keep the three team sections aligned with the roster's horizontal insets. */
+.team-page {
+  --team-list-inset: 20px;
+  --team-cell-inset: 20px;
+}
+
+.team-page .roster-scroll,
+.team-page .team-fixtures .round-list {
+  padding-inline: var(--team-list-inset);
+}
+
+.team-page .match-panel--table .table-scroll {
+  padding-inline: 0;
+}
+
+.team-page .match-panel--table .league-table .col-pos .zone {
+  left: 0;
+}
+
+.team-page .match-panel--table .league-table .col-pos {
+  text-align: left !important;
+  padding-left: calc(var(--team-list-inset) + var(--team-cell-inset) - 12px) !important;
+}
+
+.team-page .team-fixtures .matchday-navigation {
+  padding-inline: calc(var(--team-list-inset) + var(--team-cell-inset));
+}
+
+.team-page .team-fixtures .round-day,
+.team-page .team-fixtures .round-match {
+  padding-inline: var(--team-cell-inset);
+}
+
+.team-page .match-panel--table .league-table thead th:first-child,
+.team-page .match-panel--table .league-table tbody td:first-child {
+  padding-left: calc(var(--team-list-inset) + var(--team-cell-inset));
+}
+
+.team-page .match-panel--table .league-table thead th:last-child,
+.team-page .match-panel--table .league-table tbody td:last-child {
+  padding-right: calc(var(--team-list-inset) + var(--team-cell-inset));
+}
+
+@media (max-width: 600px) {
+  .team-page {
+    --team-list-inset: 8px;
+    --team-cell-inset: 12px;
   }
 }

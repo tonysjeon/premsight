@@ -118,7 +118,10 @@ export function TeamPageView({
         </section>
       ) : null}
       {tab === 'roster' ? (
-        <section aria-labelledby="team-roster-heading" className="match-panel team-roster-panel">
+        <section
+          aria-labelledby="team-roster-heading"
+          className="match-panel match-panel--table table-page-overview team-roster-panel"
+        >
           <h2 className="sr-only" id="team-roster-heading">
             Roster
           </h2>
