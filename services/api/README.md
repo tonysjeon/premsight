@@ -24,6 +24,19 @@ uv run pytest
 
 ## Team roster review
 
+Player favorites are stored per account in `player_favorites`. Authenticated
+`GET /v1/favorites/players`, `PUT /v1/favorites/players/{uuid}`, and
+`DELETE /v1/favorites/players/{uuid}` list, save, and remove them. Saves are
+idempotent; deleting an account cascades to its favorites.
+Team follows use the equivalent GET, PUT and DELETE routes at
+`/v1/favorites/teams` and are stored in `team_favorites`, with the same
+account isolation and deletion behavior.
+
+Apply database migrations to the API's configured `DATABASE_URL` before running
+new endpoints. Compose permits this URL to point at a remote database; migrating
+localhost Postgres does not update that remote schema. Favorites require
+migrations 0015 (players) and 0016 (teams).
+
 The 2026/27 Premier League roster responses exclude existing players absent from their
 club's FotMob squad page in the September 8, 2026 review. The reviewed exclusions and
 source URLs for all 20 clubs live in `app/data/roster_exclusions.json`. Matching uses
